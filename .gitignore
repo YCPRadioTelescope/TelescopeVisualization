@@ -144,3 +144,5 @@ sysinfo.txt
 
 # End of https://www.gitignore.io/api/rider,unity
 RadioTelescope2019/Assets/Asset Store.meta
+RadioTelescope/_temp.zip
+RadioTelescope/Assets/_temp.zip
