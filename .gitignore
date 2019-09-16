@@ -47,6 +47,14 @@ cmake-build-*/
 # File-based project format
 *.iws
 
+#asset folders
+RadioTelescope/Assets/Asset Store
+RadioTelescope/Assets/Materials
+RadioTelescope/Assets/Misc
+RadioTelescope/Assets/Models
+RadioTelescope/Assets/Sprites
+RadioTelescope/Library
+RadioTelescope/build
 # IntelliJ
 out/
 
@@ -135,3 +143,4 @@ sysinfo.txt
 
 
 # End of https://www.gitignore.io/api/rider,unity
+RadioTelescope2019/Assets/Asset Store.meta
