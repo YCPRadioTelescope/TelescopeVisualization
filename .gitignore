@@ -73,6 +73,9 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+#zip
+*.zip
+
 # Editor-based Rest Client
 .idea/httpRequests
 
@@ -106,6 +109,8 @@ fabric.properties
 # Visual Studio cache directory
 .vs/
 
+#temp
+/temp
 # Gradle cache directory
 .gradle/
 
@@ -146,3 +151,5 @@ sysinfo.txt
 RadioTelescope2019/Assets/Asset Store.meta
 RadioTelescope/_temp.zip
 RadioTelescope/Assets/_temp.zip
+RadioTelescope/Temp/ProcessJobs/33db62c263a99d6fe6cf21e51addef9b.bakert
+RadioTelescope/Temp/UnityLockfile
