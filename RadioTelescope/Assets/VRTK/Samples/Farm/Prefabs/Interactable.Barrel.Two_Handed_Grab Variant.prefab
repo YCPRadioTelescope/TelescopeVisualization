@@ -91,11 +91,6 @@ PrefabInstance:
       propertyPath: primaryAction
       value: 
       objectReference: {fileID: 3032259176952711054}
-    - target: {fileID: 551211808913462908, guid: 3f5dc5860f9599c4e8a0ae09a8bbed3c,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3436320855094331562, guid: 3f5dc5860f9599c4e8a0ae09a8bbed3c,
         type: 3}
       propertyPath: followTracking
@@ -116,6 +111,11 @@ PrefabInstance:
       propertyPath: followModifier
       value: 
       objectReference: {fileID: 526418483539257794}
+    - target: {fileID: 551211808913462908, guid: 3f5dc5860f9599c4e8a0ae09a8bbed3c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3469738048191078146, guid: 3f5dc5860f9599c4e8a0ae09a8bbed3c,
         type: 3}
       propertyPath: m_IsActive

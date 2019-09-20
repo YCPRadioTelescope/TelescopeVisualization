@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ContentModelStore">
     <e p="C:\Users\DanRob\.Rider2019.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\DanRob\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_RadioTelescope.-1354596802.00" t="ExcludeRecursive" />
-    <e p="C:\Users\DanRob\Desktop\Visualization Repo - VR\TelescopeVisualization\RadioTelescope" t="IncludeRecursive">
+    <e p="C:\Users\DanRob\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_RadioTelescope.805408109.00" t="ExcludeRecursive" />
+    <e p="C:\Users\DanRob\Desktop\Visualization Repo\TelescopeVisualization\RadioTelescope" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
@@ -578,8 +578,11 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="CameraClass.cs" t="Include" />
+          <e p="MoveTelescope.cs" t="Include" />
           <e p="RotateSky.cs" t="Include" />
           <e p="StickManipulation.cs" t="Include" />
+          <e p="Switcher.cs" t="Include" />
+          <e p="TelescopeController.cs" t="Include" />
         </e>
         <e p="SteamVR" t="Include">
           <e p="Editor" t="Include">
