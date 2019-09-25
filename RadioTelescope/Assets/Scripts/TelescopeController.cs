@@ -7,18 +7,17 @@ public class TelescopeController : MonoBehaviour
     public GameObject xRotation;
     public GameObject yRotation;
 
-    // Update is called once per frame
-    void Update()
+    /**
+     * Takes in a speed and moves the telescope
+     * Returns the current rotation
+     * RotateX returns X rotation
+     * RotateY returns Y roataion
+     */
+    public float RotateZ(float speed)
     {
-        //Debug.Log(RotateX(1));
-       // Debug.Log(RotateY(0.2f));
-    }
+        xRotation.transform.Rotate(0,0,-speed);
 
-    public float RotateX(float speed)
-    {
-        xRotation.transform.Rotate(speed,0,0);
-
-        return xRotation.transform.rotation.x;
+        return xRotation.transform.eulerAngles.x;
         
     }
     
@@ -26,7 +25,7 @@ public class TelescopeController : MonoBehaviour
     {
         yRotation.transform.Rotate(0,speed,0);
 
-        return yRotation.transform.rotation.y;
+        return yRotation.transform.eulerAngles.y;
 
     }
 }
