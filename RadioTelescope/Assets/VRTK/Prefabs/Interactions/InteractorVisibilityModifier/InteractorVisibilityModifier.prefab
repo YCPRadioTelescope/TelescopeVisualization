@@ -257,12 +257,12 @@ MonoBehaviour:
   Shown:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: VRTK.Prefabs.Interactions.Interactors.InteractorVisibilityModifierFacade+UnityEvent,
+    m_TypeName: VRTK.Prefabs.Interactions.InteractorVisibilityModifier.InteractorVisibilityModifierFacade+UnityEvent,
       VRTK.Prefabs.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   Hidden:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: VRTK.Prefabs.Interactions.Interactors.InteractorVisibilityModifierFacade+UnityEvent,
+    m_TypeName: VRTK.Prefabs.Interactions.InteractorVisibilityModifier.InteractorVisibilityModifierFacade+UnityEvent,
       VRTK.Prefabs.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   hideEmitter: {fileID: 114089868139356174}
   showEmitter: {fileID: 114631408721763364}
