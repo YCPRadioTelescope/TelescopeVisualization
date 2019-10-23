@@ -2611,6 +2611,8 @@ GameObject:
   - component: {fileID: 2120281189}
   - component: {fileID: 2120281187}
   - component: {fileID: 2120281186}
+  - component: {fileID: 2120281188}
+  - component: {fileID: 2120281190}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -2645,6 +2647,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   telescope: {fileID: 1370658908}
   tc: {fileID: 0}
+--- !u!114 &2120281188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120281185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e730966bf5ebd784bae5e15867dc3026, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  port: 8081
+  ip: 127.0.0.1
 --- !u!4 &2120281189
 Transform:
   m_ObjectHideFlags: 0
@@ -2659,6 +2675,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2120281190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120281185}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41b548388646c6941ac43fe67fbe7011, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  port: 8080
+  ip: 127.0.0.1
 --- !u!1 &2134545180
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\DanRob\.Rider2019.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\DanRob\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_RadioTelescope.805408109.00" t="ExcludeRecursive" />
-    <e p="C:\Users\DanRob\Desktop\Visualization Repo\TelescopeVisualization\RadioTelescope" t="IncludeRecursive">
+    <e p="C:\Users\Team Saturn\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Team Saturn\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_RadioTelescope.-1556303179.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Team Saturn\Desktop\TelescopeVisualization\RadioTelescope" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
@@ -581,6 +581,7 @@
           <e p="MoveTelescope.cs" t="Include" />
           <e p="RotateSky.cs" t="Include" />
           <e p="Sim.cs" t="Include" />
+          <e p="SimClient.cs" t="Include" />
           <e p="SimServer.cs" t="Include" />
           <e p="StickManipulation.cs" t="Include" />
           <e p="Switcher.cs" t="Include" />

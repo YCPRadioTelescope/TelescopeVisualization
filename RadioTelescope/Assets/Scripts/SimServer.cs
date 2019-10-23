@@ -21,9 +21,11 @@ public class SimServer : MonoBehaviour {
 	/// </summary> 	
 	private TcpClient connectedTcpClient;
 
-	
-	#endregion 	
-		
+
+    #endregion
+
+    public int port;
+    public string ip;
 	// Use this for initialization
 	void Start () { 		
 		// Start TcpServer background thread 		
@@ -45,13 +47,14 @@ public class SimServer : MonoBehaviour {
 	private void ListenForIncommingRequests () { 		
 		try { 			
 			// Create listener on localhost port 8052. 			
-			tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 8052); 			
+			tcpListener = new TcpListener(IPAddress.Parse(ip), port); 			
 			tcpListener.Start();              
-			Debug.Log("Server is listening");              
+			Debug.Log("Server is listening on port " + port);              
 			Byte[] bytes = new Byte[1024];  			
 			while (true) { 				
-				using (connectedTcpClient = tcpListener.AcceptTcpClient()) { 					
-					// Get a stream object for reading 					
+				using (connectedTcpClient = tcpListener.AcceptTcpClient()) {
+                    // Get a stream object for reading 	
+                    Debug.Log("Service connected" + connectedTcpClient.ToString());
 					using (NetworkStream stream = connectedTcpClient.GetStream()) { 						
 						int length; 						
 						// Read incomming stream into byte arrary. 						
@@ -61,7 +64,7 @@ public class SimServer : MonoBehaviour {
 							// Convert byte array to string message. 							
 							string clientMessage = Encoding.ASCII.GetString(incommingData); 							
 							Debug.Log("client message received as: " + clientMessage); 						
-						} 					
+						} 			
 					} 				
 				} 			
 			} 		

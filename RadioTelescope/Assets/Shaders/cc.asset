@@ -32,24 +32,24 @@ MonoBehaviour:
   antialiasing:
     m_Enabled: 1
     m_Settings:
-      method: 0
+      method: 1
       fxaaSettings:
         preset: 0
       taaSettings:
-        jitterSpread: 0.75
+        jitterSpread: 0.362
         sharpen: 0.3
-        stationaryBlending: 0.95
-        motionBlending: 0.85
+        stationaryBlending: 0.973
+        motionBlending: 0.207
   ambientOcclusion:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
-      intensity: 1
+      intensity: 1.23
       radius: 0.3
-      sampleCount: 6
+      sampleCount: 16
       downsampling: 1
-      forceForwardCompatibility: 0
+      forceForwardCompatibility: 1
       ambientOnly: 0
-      highPrecision: 0
+      highPrecision: 1
   screenSpaceReflection:
     m_Enabled: 0
     m_Settings:
@@ -81,12 +81,12 @@ MonoBehaviour:
     m_Enabled: 0
     m_Settings:
       shutterAngle: 270
-      sampleCount: 10
-      frameBlending: 0
+      sampleCount: 32
+      frameBlending: 0.01
   eyeAdaptation:
     m_Enabled: 0
     m_Settings:
-      lowPercent: 45
+      lowPercent: 1
       highPercent: 95
       minLuminance: -5
       maxLuminance: 1
@@ -95,8 +95,8 @@ MonoBehaviour:
       adaptationType: 0
       speedUp: 2
       speedDown: 1
-      logMin: -8
-      logMax: 4
+      logMin: -16
+      logMax: 1
   bloom:
     m_Enabled: 0
     m_Settings:
@@ -104,8 +104,8 @@ MonoBehaviour:
         intensity: 0.5
         threshold: 1.1
         softKnee: 0.5
-        radius: 4
-        antiFlicker: 0
+        radius: 7
+        antiFlicker: 1
       lensDirt:
         texture: {fileID: 0}
         intensity: 3
@@ -122,10 +122,10 @@ MonoBehaviour:
         neutralWhiteClip: 10
       basic:
         postExposure: 0
-        temperature: 0
+        temperature: 3.3
         tint: 0
         hueShift: 0
-        saturation: 1
+        saturation: 1.106
         contrast: 1
       channelMixer:
         red: {x: 1, y: 0, z: 0}
