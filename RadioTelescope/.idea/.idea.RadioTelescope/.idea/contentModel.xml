@@ -579,8 +579,6 @@
         <e p="Scripts" t="Include">
           <e p="CameraClass.cs" t="Include" />
           <e p="MoveTelescope.cs" t="Include" />
-          <e p="MoveTelescopeVR.cs" t="Include" />
-          <e p="OpenController.cs" t="Include" />
           <e p="RotateSky.cs" t="Include" />
           <e p="Sim.cs" t="Include" />
           <e p="SimClient.cs" t="Include" />
