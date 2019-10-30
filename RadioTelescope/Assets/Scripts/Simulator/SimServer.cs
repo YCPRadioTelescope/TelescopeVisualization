@@ -22,21 +22,35 @@ public class SimServer : MonoBehaviour {
 	private TcpClient connectedTcpClient;
 
 	
-	#endregion 	
-		
+	#endregion
+
+	public int port;
+
+	public String ip;
 	// Use this for initialization
 	void Start () { 		
 		// Start TcpServer background thread 		
 		tcpListenerThread = new Thread (new ThreadStart(ListenForIncommingRequests)); 		
 		tcpListenerThread.IsBackground = true; 		
 		tcpListenerThread.Start(); 	
-	}  	
-	
+	}
+
+	void ExitServer()
+	{
+		tcpListener.Server.Close();
+	}
 	// Update is called once per frame
 	void Update () { 		
 		if (Input.GetKeyDown(KeyCode.Space)) {             
 			SendMessage();         
-		} 	
+		}
+
+		if (Input.GetKeyDown((KeyCode.Escape)))
+		{
+			ExitServer();
+			UnityEditor.EditorApplication.isPlaying = false;
+			Application.Quit();
+		}
 	}  	
 	
 	/// <summary> 	
@@ -45,12 +59,13 @@ public class SimServer : MonoBehaviour {
 	private void ListenForIncommingRequests () { 		
 		try { 			
 			// Create listener on localhost port 8052. 			
-			tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 8052); 			
+			tcpListener = new TcpListener(IPAddress.Parse(ip), port); 			
 			tcpListener.Start();              
 			Debug.Log("Server is listening");              
 			Byte[] bytes = new Byte[1024];  			
 			while (true) { 				
-				using (connectedTcpClient = tcpListener.AcceptTcpClient()) { 					
+				using (connectedTcpClient = tcpListener.AcceptTcpClient()) { 
+					Debug.Log("Connected to: " + connectedTcpClient);
 					// Get a stream object for reading 					
 					using (NetworkStream stream = connectedTcpClient.GetStream()) { 						
 						int length; 						
@@ -60,7 +75,7 @@ public class SimServer : MonoBehaviour {
 							Array.Copy(bytes, 0, incommingData, 0, length);  							
 							// Convert byte array to string message. 							
 							string clientMessage = Encoding.ASCII.GetString(incommingData); 							
-							Debug.Log("client message received as: " + clientMessage); 						
+							Debug.Log("client message received as: " + incommingData.ToString()); 						
 						} 					
 					} 				
 				} 			
