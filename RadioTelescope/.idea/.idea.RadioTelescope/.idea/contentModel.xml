@@ -578,6 +578,7 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="CameraClass.cs" t="Include" />
+          <e p="ControlStationMoveDrive.cs" t="Include" />
           <e p="MoveTelescope.cs" t="Include" />
           <e p="MoveTelescopeVR.cs" t="Include" />
           <e p="OpenController.cs" t="Include" />

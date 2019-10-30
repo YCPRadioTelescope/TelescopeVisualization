@@ -33,8 +33,11 @@ public class MoveTelescopeVR : MonoBehaviour
         {
             _rotation.z -= 360;
         }
-        Debug.Log(tc.RotateZ(_rotation.x * (float) 0.01));
-        Debug.Log(tc.RotateY(_rotation.z * (float) 0.01));
+
+        tc.RotateZ(_rotation.x * (float) 0.01);
+        tc.RotateY(_rotation.z * (float) 0.01);
+        //Debug.Log();
+        //Debug.Log();
         
     }
 }
