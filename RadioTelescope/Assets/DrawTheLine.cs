@@ -1,25 +1,78 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class DrawTheLine : MonoBehaviour
 {
     // Start is called before the first frame update
     private LineRenderer lr;
     public GameObject end;
+    public GameObject start;
+    private RaycastHit hitInfo;
+    private Material origMat, tempMat;
+    public Color highlightColor;
+    private Renderer rend = null;
+    private Renderer currRend;
+    public Text text;
     void Start()
     {
         lr = this.transform.GetComponent<LineRenderer>();
     }
 
+    private void OnEnable()
+    {
+        lr.SetPosition(0, start.transform.position);
+        lr.SetPosition(1, end.transform.position);;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        Vector3 newPos = this.transform.position;
-        newPos.y = newPos.y + 0.05f;
-        lr.SetPosition(0, newPos);
+        var dir = start.transform.forward * -10000;
+        lr.SetPosition(0, start.transform.position);
         lr.SetPosition(1, end.transform.position);
-        //lr.SetPosition(0, (this.transform.forward.normalized * 1000));
+        if (Physics.Raycast(start.transform.position, dir, out hitInfo, Vector3.Distance(start.transform.position, end.transform.position)))
+        {
+            Debug.Log("we Hit this: " + hitInfo.transform.name);
+            text.text = hitInfo.transform.name;
+            Debug.DrawRay(start.transform.position, dir);
+            
+            currRend = hitInfo.collider.gameObject.GetComponent<Renderer>();
+ 
+            if (currRend == rend)
+                return;
+ 
+            if (currRend && currRend != rend)
+            {
+                if (rend)
+                {
+                    rend.sharedMaterial = origMat;
+                }
+ 
+            }
+ 
+            if (currRend)
+                rend = currRend;
+            else
+                return;
+ 
+            origMat = rend.sharedMaterial;
+ 
+            tempMat = new Material(origMat);
+            rend.material = tempMat;
+            rend.material.color = highlightColor;
+        }
+        else
+        {
+            if (rend)
+            {
+                rend.sharedMaterial = origMat;
+                rend = null;
+                text.text = "";
+            }
+        }
     }
 }
