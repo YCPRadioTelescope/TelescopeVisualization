@@ -466,16 +466,6 @@ PrefabInstance:
       propertyPath: facade
       value: 
       objectReference: {fileID: 2748488038835702461}
-    - target: {fileID: 2680025304086750293, guid: b5bcf67f1f80d1a4f800327247af655a,
-        type: 3}
-      propertyPath: elements.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2680025304086750293, guid: b5bcf67f1f80d1a4f800327247af655a,
-        type: 3}
-      propertyPath: elements.Array.data[1]
-      value: 
-      objectReference: {fileID: 2560080792642705176}
     - target: {fileID: 1639799280548245475, guid: b5bcf67f1f80d1a4f800327247af655a,
         type: 3}
       propertyPath: Appeared.m_PersistentCalls.m_Calls.Array.size
@@ -556,6 +546,16 @@ PrefabInstance:
       propertyPath: destination
       value: 
       objectReference: {fileID: 303670441478350932}
+    - target: {fileID: 2680025304086750293, guid: b5bcf67f1f80d1a4f800327247af655a,
+        type: 3}
+      propertyPath: elements.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2680025304086750293, guid: b5bcf67f1f80d1a4f800327247af655a,
+        type: 3}
+      propertyPath: elements.Array.data[1]
+      value: 
+      objectReference: {fileID: 2560080792642705176}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5bcf67f1f80d1a4f800327247af655a, type: 3}
 --- !u!4 &1741380858788601439 stripped

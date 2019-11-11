@@ -414,6 +414,7 @@
             <e p="Readme.txt" t="Include" />
           </e>
         </e>
+        <e p="DrawTheLine.cs" t="Include" />
         <e p="PostProcessing" t="Include">
           <e p="Editor" t="Include">
             <e p="Attributes" t="Include">
@@ -593,6 +594,7 @@
           <e p="StickManipulation.cs" t="Include" />
           <e p="Switcher.cs" t="Include" />
           <e p="TelescopeController.cs" t="Include" />
+          <e p="TriggerValue.cs" t="Include" />
         </e>
         <e p="SteamVR" t="Include">
           <e p="Editor" t="Include">
