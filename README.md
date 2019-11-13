@@ -4,4 +4,5 @@ A VR project that represents a real radio telescope stationed in York, Pa. The v
 
 ## Documentation
 The documentation and instruction for how to get started id located:
-![HERE](https://github.com/YCPRadioTelescope/TelescopeVisualization/wiki)
+
+[HERE](https://github.com/YCPRadioTelescope/TelescopeVisualization/wiki)
