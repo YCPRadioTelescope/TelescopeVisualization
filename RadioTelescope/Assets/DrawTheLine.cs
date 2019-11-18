@@ -36,8 +36,8 @@ public class DrawTheLine : MonoBehaviour
         lr.SetPosition(1, end.transform.position);
         if (Physics.Raycast(start.transform.position, dir, out hitInfo, Vector3.Distance(start.transform.position, end.transform.position)))
         {
-            Debug.Log("we Hit this: " + hitInfo.transform.name);
-            text.text = hitInfo.transform.name;
+            Debug.Log("we Hit this: " +  hitInfo.transform.GetComponent<ObjectDesc>().Name);
+            text.text = hitInfo.transform.GetComponent<ObjectDesc>().Name + ": " + hitInfo.transform.GetComponent<ObjectDesc>().Description;
             Debug.DrawRay(start.transform.position, dir);
             
             currRend = hitInfo.collider.gameObject.GetComponent<Renderer>();

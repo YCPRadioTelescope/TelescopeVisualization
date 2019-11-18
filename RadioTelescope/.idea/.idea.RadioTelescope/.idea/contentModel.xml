@@ -415,6 +415,7 @@
           </e>
         </e>
         <e p="DrawTheLine.cs" t="Include" />
+        <e p="ObjectDesc.cs" t="Include" />
         <e p="PostProcessing" t="Include">
           <e p="Editor" t="Include">
             <e p="Attributes" t="Include">
