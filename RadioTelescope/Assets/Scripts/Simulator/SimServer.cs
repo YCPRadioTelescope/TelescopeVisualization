@@ -75,7 +75,7 @@ public class SimServer : MonoBehaviour {
 							Array.Copy(bytes, 0, incommingData, 0, length);  							
 							// Convert byte array to string message. 							
 							string clientMessage = Encoding.ASCII.GetString(incommingData); 							
-							Debug.Log("client message received as: " + incommingData.ToString()); 						
+							Debug.Log("client message received as: " + clientMessage); 						
 						} 					
 					} 				
 				} 			
