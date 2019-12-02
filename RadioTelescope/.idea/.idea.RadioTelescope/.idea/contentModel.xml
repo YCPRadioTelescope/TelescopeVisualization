@@ -414,8 +414,6 @@
             <e p="Readme.txt" t="Include" />
           </e>
         </e>
-        <e p="DrawTheLine.cs" t="Include" />
-        <e p="ObjectDesc.cs" t="Include" />
         <e p="PostProcessing" t="Include">
           <e p="Editor" t="Include">
             <e p="Attributes" t="Include">
@@ -580,9 +578,12 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="CameraClass.cs" t="Include" />
+          <e p="DrawTheLine.cs" t="Include" />
           <e p="MoveJoystick.cs" t="Include" />
           <e p="MoveTelescope.cs" t="Include" />
           <e p="MoveTelescopeVR.cs" t="Include" />
+          <e p="ObjDescList.cs" t="Include" />
+          <e p="ObjectDesc.cs" t="Include" />
           <e p="OpenController.cs" t="Include" />
           <e p="RotateSky.cs" t="Include" />
           <e p="Simulator" t="Include">
@@ -596,6 +597,9 @@
           <e p="Switcher.cs" t="Include" />
           <e p="TelescopeController.cs" t="Include" />
           <e p="TriggerValue.cs" t="Include" />
+        </e>
+        <e p="Shaders" t="Include">
+          <e p="UltimateOutline.shader" t="Include" />
         </e>
         <e p="SteamVR" t="Include">
           <e p="Editor" t="Include">

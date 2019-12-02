@@ -2968,6 +2968,7 @@ GameObject:
   - component: {fileID: 186518530}
   - component: {fileID: 186518529}
   - component: {fileID: 186518528}
+  - component: {fileID: 186518531}
   m_Layer: 0
   m_Name: Cylinder (1)
   m_TagString: Untagged
@@ -3049,6 +3050,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 186518526}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &186518531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186518526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c42537bbeb51b94ab9d4f54aab15f0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Feed Horn Stand
+  Description: 
 --- !u!1001 &187609080
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7078,6 +7093,20 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 377997315}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &604231500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 604231499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c42537bbeb51b94ab9d4f54aab15f0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Dish
+  Description: Collects radio waves from the sky
 --- !u!64 &604231502
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11467,8 +11496,9 @@ GameObject:
   - component: {fileID: 1009876144}
   - component: {fileID: 1009876143}
   - component: {fileID: 1009876142}
+  - component: {fileID: 1009876145}
   m_Layer: 0
-  m_Name: Cylinder
+  m_Name: FeedHorn
   m_TagString: Telescope
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11548,6 +11578,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1009876140}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1009876145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1009876140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c42537bbeb51b94ab9d4f54aab15f0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Feed Horn
+  Description: 
 --- !u!1001 &1015009370
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12779,6 +12823,7 @@ GameObject:
   - component: {fileID: 1169986574}
   - component: {fileID: 1169986573}
   - component: {fileID: 1169986572}
+  - component: {fileID: 1169986575}
   m_Layer: 0
   m_Name: Cylinder (2)
   m_TagString: Untagged
@@ -12794,7 +12839,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1169986570}
   m_LocalRotation: {x: 0.61237246, y: -0.61237246, z: 0.3535533, w: 0.3535533}
-  m_LocalPosition: {x: -156, y: -0, z: -0}
+  m_LocalPosition: {x: -156, y: 0, z: 0}
   m_LocalScale: {x: 5, y: 150.00017, z: 5}
   m_Children: []
   m_Father: {fileID: 1393513222}
@@ -12860,6 +12905,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1169986570}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1169986575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169986570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c42537bbeb51b94ab9d4f54aab15f0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Feed Horn Stand
+  Description: 
 --- !u!1 &1180697096
 GameObject:
   m_ObjectHideFlags: 0
@@ -14125,6 +14184,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1296651329}
   - component: {fileID: 1296651330}
+  - component: {fileID: 1296651331}
   m_Layer: 0
   m_Name: RealTelescope
   m_TagString: Telescope
@@ -14162,6 +14222,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xRotation: {fileID: 508402512}
   yRotation: {fileID: 1687376674}
+--- !u!114 &1296651331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296651328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c94f2f4a5ca364c4fa869950e12a83e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  descriptions:
+  - {fileID: 1882066455}
+  - {fileID: 604231499}
+  - {fileID: 1772695271}
+  - {fileID: 1009876140}
+  - {fileID: 186518526}
+  - {fileID: 1829624360}
+  - {fileID: 1169986570}
 --- !u!1001 &1302723395
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22761,6 +22841,7 @@ GameObject:
   - component: {fileID: 1829624364}
   - component: {fileID: 1829624363}
   - component: {fileID: 1829624362}
+  - component: {fileID: 1829624365}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -22842,6 +22923,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1829624360}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1829624365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1829624360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c42537bbeb51b94ab9d4f54aab15f0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Feed Horn Stand
+  Description: 
 --- !u!1 &1843247196 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6798345259485616301, guid: 4d59fbab1c4ee044c8113025ad94de18,
@@ -23244,6 +23339,20 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 14
   m_Mesh: {fileID: -2432090755550338912, guid: 7fe3a57e108a4794abd1de7e26a79a15, type: 3}
+--- !u!114 &1882066460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882066455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c42537bbeb51b94ab9d4f54aab15f0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Middle
+  Description: Turns the telescope around the Y axis.
 --- !u!1 &1883795968
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,6 +14,7 @@ public class DrawTheLine : MonoBehaviour
     private RaycastHit hitInfo;
     private Material origMat, tempMat;
     public Color highlightColor;
+    public Shader shader;
     private Renderer rend = null;
     private Renderer currRend;
     public Text text;
@@ -26,6 +27,13 @@ public class DrawTheLine : MonoBehaviour
     {
         lr.SetPosition(0, start.transform.position);
         lr.SetPosition(1, end.transform.position);;
+    }
+
+    private void OnDisable()
+    {
+        rend.sharedMaterial = origMat;
+        rend = null;
+        text.text = "";
     }
 
     // Update is called once per frame
@@ -60,10 +68,10 @@ public class DrawTheLine : MonoBehaviour
                 return;
  
             origMat = rend.sharedMaterial;
- 
+
             tempMat = new Material(origMat);
             rend.material = tempMat;
-            rend.material.color = highlightColor;
+            rend.material.shader = shader;
         }
         else
         {

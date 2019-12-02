@@ -49,11 +49,4 @@ public class TriggerValue : MonoBehaviour
             rightLine.SetActive(false);
         }
     }
-
-    // Update is called once per frame
-    void OnDrawGizmos()
-    {
-       
-        
-    }
 }
