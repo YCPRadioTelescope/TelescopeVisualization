@@ -34,7 +34,7 @@ MonoBehaviour:
     m_Settings:
       method: 1
       fxaaSettings:
-        preset: 0
+        preset: 4
       taaSettings:
         jitterSpread: 0.362
         sharpen: 0.3
