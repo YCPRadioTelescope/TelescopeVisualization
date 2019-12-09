@@ -23,6 +23,7 @@
     <explicitExcludes>
       <Path>.idea</Path>
       <Path>.vs</Path>
+      <Path>AssetsOld</Path>
       <Path>Library</Path>
       <Path>Logs</Path>
       <Path>Temp</Path>

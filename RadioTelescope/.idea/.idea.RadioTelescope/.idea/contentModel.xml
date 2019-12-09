@@ -8,6 +8,40 @@
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Asset Store" t="Include">
+          <e p="AllSkyFree" t="Include">
+            <e p="AllSkyFree_Menu.cs" t="Include" />
+            <e p="AllSkyFree_Readme.txt" t="Include" />
+          </e>
+          <e p="Birch Trees Package" t="Include">
+            <e p="Birches Version 2.0 [Tree Creator]" t="Include">
+              <e p="Birch Trees Assets" t="Include">
+                <e p="readme_Trees.txt" t="Include" />
+              </e>
+            </e>
+            <e p="Birches Version 3.0" t="Include">
+              <e p="Demos" t="Include">
+                <e p="Additional Content" t="Include">
+                  <e p="ExtendedFlycamBirchTrees.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="CTI HDRP" t="Include">
+            <e p="CTI Runtime Components HDRP" t="Include">
+              <e p="Scripts" t="Include">
+                <e p="CTI_SRP_CustomWind.cs" t="Include" />
+              </e>
+              <e p="Shaders" t="Include">
+                <e p="CTI Bark HDRP HLSL.shader" t="Include" />
+                <e p="CTI Billboard HDRP HLSL.shader" t="Include" />
+                <e p="CTI Leaves HDRP HLSL.shader" t="Include" />
+                <e p="Includes" t="Include">
+                  <e p="CTI_HDRP_BillboardVertex.hlsl" t="Include" />
+                  <e p="CTI_HDRP_Wind.hlsl" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
           <e p="NatureStarterKit2" t="Include">
             <e p="Editor" t="Include">
               <e p="ImageEffects" t="Include">
@@ -177,6 +211,48 @@
                 </e>
               </e>
             </e>
+          </e>
+          <e p="Oak Trees Package" t="Include">
+            <e p="Oak Trees Version 1.0 (deprecated)" t="Include">
+              <e p="readme_OakTrees.txt" t="Include" />
+            </e>
+            <e p="Oak Trees Version 2.0" t="Include">
+              <e p="CTI Runtime Components" t="Include">
+                <e p="Resources" t="Include">
+                  <e p="CTI_Camera-DepthNormalTexture_301.shader" t="Include" />
+                  <e p="CTI_Internal-DeferredReflections.shader" t="Include" />
+                  <e p="CTI_Internal-DeferredShading.shader" t="Include" />
+                </e>
+                <e p="Scripts" t="Include">
+                  <e p="CTI_CustomWind.cs" t="Include" />
+                  <e p="CTI_Utils.cs" t="Include" />
+                  <e p="Editor" t="Include">
+                    <e p="CTI_AdvancedEdgeFluttering.cs" t="Include" />
+                    <e p="CTI_DetailsEnum.cs" t="Include" />
+                    <e p="CTI_ShaderGUI.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="Shaders" t="Include">
+                  <e p="CTI_LOD_Bark_301.shader" t="Include" />
+                  <e p="CTI_LOD_Bark_Array_301.shader" t="Include" />
+                  <e p="CTI_LOD_Billboard_301.shader" t="Include" />
+                  <e p="CTI_LOD_Leaves_301.shader" t="Include" />
+                  <e p="Includes" t="Include">
+                    <e p="CTI_BillboardVertex_301.cginc" t="Include" />
+                    <e p="CTI_Builtin4xTreeLibraryTumbling_301.cginc" t="Include" />
+                    <e p="CTI_indirect.cginc" t="Include" />
+                    <e p="CTI_TranslucentLighting_301.cginc" t="Include" />
+                  </e>
+                </e>
+              </e>
+              <e p="Demos" t="Include">
+                <e p="Additional Content" t="Include">
+                  <e p="SetRealTimeShadowDistance.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Getting started.txt" t="Include" />
+            </e>
+            <e p="Oak Trees Version 2.0 HDRP README.txt" t="Include" />
           </e>
           <e p="SampleScenes" t="Include">
             <e p="Menu" t="Include">
@@ -597,9 +673,6 @@
           <e p="Switcher.cs" t="Include" />
           <e p="TelescopeController.cs" t="Include" />
           <e p="TriggerValue.cs" t="Include" />
-        </e>
-        <e p="Shaders" t="Include">
-          <e p="UltimateOutline.shader" t="Include" />
         </e>
         <e p="SteamVR" t="Include">
           <e p="Editor" t="Include">

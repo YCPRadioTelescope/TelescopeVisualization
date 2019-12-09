@@ -9,7 +9,6 @@ public class TriggerValue : MonoBehaviour
     public UnityAxis1DAction rightTrigger;
     public GameObject rightLine;
 
-    public GameObject controller;
     // Start is called before the first frame update
     void Start()
     {
