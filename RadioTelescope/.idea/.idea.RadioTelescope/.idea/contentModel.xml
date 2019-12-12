@@ -674,6 +674,9 @@
           <e p="TelescopeController.cs" t="Include" />
           <e p="TriggerValue.cs" t="Include" />
         </e>
+        <e p="Shaders" t="Include">
+          <e p="Outline.shader" t="Include" />
+        </e>
         <e p="SteamVR" t="Include">
           <e p="Editor" t="Include">
             <e p="SteamVR_AutoEnableVR.cs" t="Include" />
