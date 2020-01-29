@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\DanRob\.Rider2019.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\DanRob\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_RadioTelescope.805408109.00" t="ExcludeRecursive" />
-    <e p="C:\Users\DanRob\Desktop\Visualization Repo\TelescopeVisualization\RadioTelescope" t="IncludeRecursive">
+    <e p="C:\Users\Team Saturn\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Team Saturn\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_RadioTelescope.-1556303179.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Team Saturn\Desktop\TelescopeVisualization\RadioTelescope" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
@@ -490,6 +490,15 @@
             <e p="Readme.txt" t="Include" />
           </e>
         </e>
+        <e p="Packages" t="Include">
+          <e p="NModbus4.2.1.0" t="Include">
+            <e p="lib" t="Include">
+              <e p="net40" t="Include">
+                <e p="NModbus4.xml" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
         <e p="PostProcessing" t="Include">
           <e p="Editor" t="Include">
             <e p="Attributes" t="Include">
@@ -672,6 +681,7 @@
           <e p="StickManipulation.cs" t="Include" />
           <e p="Switcher.cs" t="Include" />
           <e p="TelescopeController.cs" t="Include" />
+          <e p="TelescopeControllerSim.cs" t="Include" />
           <e p="TriggerValue.cs" t="Include" />
         </e>
         <e p="Shaders" t="Include">

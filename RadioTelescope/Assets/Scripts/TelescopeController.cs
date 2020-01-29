@@ -21,7 +21,7 @@ public class TelescopeController : MonoBehaviour
         
     }
     
-   public float RotateY(float speed)
+    public float RotateY(float speed)
     {
         yRotation.transform.Rotate(0,speed,0);
 
