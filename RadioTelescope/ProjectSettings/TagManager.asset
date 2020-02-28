@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Telescope
+  - ShowOnPause
   layers:
   - Default
   - TransparentFX
