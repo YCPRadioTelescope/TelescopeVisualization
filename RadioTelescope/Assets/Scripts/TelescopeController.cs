@@ -6,6 +6,7 @@ public class TelescopeController : MonoBehaviour
 {
     public GameObject xRotation;
     public GameObject yRotation;
+    private float rotateX;
 
     /**
      * Takes in a speed and moves the telescope
@@ -15,9 +16,18 @@ public class TelescopeController : MonoBehaviour
      */
     public float RotateZ(float speed)
     {
-        xRotation.transform.Rotate(0,0,-speed);
+        
+        //xRotation.transform.Rotate(0,0,-speed);
 
-        return xRotation.transform.eulerAngles.x;
+        rotateX = xRotation.transform.eulerAngles.z;
+        rotateX += speed;
+        rotateX = Mathf.Clamp(rotateX, 0, 100);
+
+        xRotation.transform.localRotation = Quaternion.Euler(0, 0, rotateX);
+
+        Debug.Log("rotating X on telescope");
+
+        return xRotation.transform.eulerAngles.z;
         
     }
     
