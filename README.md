@@ -7,19 +7,22 @@ The documentation and instruction for how to get started is located:
 
 [HERE](https://github.com/YCPRadioTelescope/TelescopeVisualization/wiki)
 
-The simulation scene is located at:
+________________________________________________________________________________________________________________________________________
 
-/Assets/Scenes/Simulator
+**The simulation scene is located at:**
 
-and the scripts for the simulator are located at:
+>/Assets/Scenes/Simulator
 
-/Assets/Scripts/Simulator
+**and the scripts for the simulator are located at:**
 
+>/Assets/Scripts/Simulator
 
-The VR/Education mode scene is located at:
+________________________________________________________________________________________________________________________________________
 
-/Assets/Scenes/RadioTelescope
+**The VR/Education mode scene is located at:**
 
-and the scripts for the simulator are located at:
+>/Assets/Scenes/RadioTelescope
 
-/Assets/Scripts
+**and the scripts for the simulator are located at:**
+
+>/Assets/Scripts
