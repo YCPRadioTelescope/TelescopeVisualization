@@ -10,6 +10,7 @@ using Modbus.Data;
 using Modbus.Device;
 using System.Linq;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class SimServer : MonoBehaviour {  	
 	#region private members 	

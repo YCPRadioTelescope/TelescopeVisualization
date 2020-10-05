@@ -18,22 +18,22 @@ public class MoveTelescope : MonoBehaviour
     {
         if (Input.GetKey("up"))
         {
-            Debug.Log(tc.RotateZ(0.5f));
+            tc.RotateZ(0.5f);
         }
         
         if (Input.GetKey("down"))
         {
-            Debug.Log(tc.RotateZ(-0.5f));
+            tc.RotateZ(-0.5f);
         }
         
         if (Input.GetKey("right"))
         {
-            Debug.Log(tc.RotateY(0.5f));
+            tc.RotateY(0.5f);
         }
         
         if (Input.GetKey("left"))
         {
-            Debug.Log(tc.RotateY(-0.5f));
+            tc.RotateY(-0.5f);
         }
     }
 }

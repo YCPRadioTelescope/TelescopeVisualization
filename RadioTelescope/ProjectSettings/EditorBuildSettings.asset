@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/RadioTelescope.unity
+    guid: 5abde33a144e7d84c8f77c96412e3600
   m_configObjects: {}
