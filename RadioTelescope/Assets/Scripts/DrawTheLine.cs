@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class DrawTheLine : MonoBehaviour
 {
-    // Start is called before the first frame update
     private LineRenderer lr;
     public GameObject end;
     public GameObject start;
@@ -18,6 +17,8 @@ public class DrawTheLine : MonoBehaviour
     private Renderer rend = null;
     private Renderer currRend;
     public Text text;
+	
+    // Start is called before the first frame update
     void Start()
     {
         lr = this.transform.GetComponent<LineRenderer>();
