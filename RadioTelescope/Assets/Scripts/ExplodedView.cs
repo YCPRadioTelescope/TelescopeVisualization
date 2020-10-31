@@ -1,9 +1,10 @@
-﻿// Coded by Abishek J Reuben
+﻿// Originally coded by Abishek J Reuben
 // https://abishekjreuben.wixsite.com/portfolio/post/creating-a-exploded-view-for-3d-models-in-unity
 
 using UnityEngine;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using VRTK.Prefabs.CameraRig.UnityXRCameraRig.Input;
 
 [Serializable]
 
@@ -21,6 +22,8 @@ public class ExplodedView : MonoBehaviour
 	bool isInExplodedView = false;
 	public float explosionSpeed = 1.0f;
 	bool isMoving = false;
+	int delay;
+	public UnityAxis1DAction leftTrigger;
 	#endregion
 
 	#region UnityFunctions
@@ -39,8 +42,13 @@ public class ExplodedView : MonoBehaviour
 
 	private void Update()
 	{
-		if(Input.GetButtonDown("Toggle Exploded View"))
+		if(delay == 0 && (Input.GetButtonDown("Toggle Exploded View") || leftTrigger.Value > 0.2f))
+		{
 			ToggleExplodedView();
+			delay = 60;
+		}
+		if(delay > 0)
+			delay--;
 
 		if(isMoving)
 		{
