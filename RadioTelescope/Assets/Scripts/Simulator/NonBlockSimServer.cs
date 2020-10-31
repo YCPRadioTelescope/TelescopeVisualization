@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class NonBlockSimServer : MonoBehaviour
 {
-    public int port;
+	public int port;
 
-    public string ip;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	public string ip;
+	// Start is called before the first frame update
+	void Start()
+	{
+		
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	// Update is called once per frame
+	void Update()
+	{
+		
+	}
 }

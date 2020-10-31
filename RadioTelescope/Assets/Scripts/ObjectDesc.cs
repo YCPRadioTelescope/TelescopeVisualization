@@ -5,6 +5,6 @@ using UnityEngine;
 
 public class ObjectDesc : MonoBehaviour
 {
-    public String Name;
-    public String Description;
+	public String Name;
+	public String Description;
 }

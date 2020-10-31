@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class ObjDescList : MonoBehaviour
 {
-    public List<GameObject> descriptions;
+	public List<GameObject> descriptions;
 
-    private void Start()
-    {
-        
-    }
+	private void Start()
+	{
+		
+	}
 }
