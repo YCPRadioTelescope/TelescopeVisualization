@@ -2,73 +2,60 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// This script controls the players movement.
 public class PlayerMovement : MonoBehaviour
 {
 	public CharacterController controller;
+	
+	public Vector3 velocity;
 	public float speed = 12f;
-	Vector3 velocity;
 	public float gravity = -9.81f;
 	public float jumpHeight = 3f;
 
-	public float FlySpeedVertical = 5f;
+	public bool fly = false;
+	public float flySpeedVertical = 5f;
 
-	public Transform GroundCheck;
-	public float groundDistance = 0.4f;
+	public Transform groundCheck;
 	public LayerMask groundMask;
+	public float groundDistance = 0.4f;
 
-	public bool fly;
-
-	bool isGrounded;
+	
 	// Update is called once per frame
 	void Update()
 	{
-		if (Input.GetButtonDown("Toggle Fly"))
-		{
-			if (fly == true)
-			{
-				fly = false;
-			} else
-			{
-				fly = true;
-			}
-		}
+		// Toggle flight if Q is pressed.
+		if(Input.GetButtonDown("Toggle Fly"))
+			fly = !fly;
 		
-		isGrounded = Physics.CheckSphere(GroundCheck.position, groundDistance, groundMask);
-
-		if (isGrounded && velocity.y < 0)
-		{
-			velocity.y = -2f;
-		}
+		// Get the status of the WASD keys and move the player's X and Z location according to that.
 		float x = Input.GetAxis("Horizontal");
 		float z = Input.GetAxis("Vertical");
-
 		Vector3 move = transform.right * x + transform.forward * z;
-
 		controller.Move(move * speed * Time.deltaTime);
 
-		if (fly)
+		if(fly)
 		{
-			if (Input.GetButtonDown("Jump") && isGrounded)
-			{
-				velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-			}
-			velocity.y += gravity * Time.deltaTime;
-
-			
+			// If the player is in flight mode, Space and E simply move the player up and down.
+			// When neither is pressed, no gravity is applied.
+			if(Input.GetButton("Jump"))
+				velocity.y = flySpeedVertical;
+			else if(Input.GetButton("Fly Down"))
+				velocity.y = -flySpeedVertical;
+			else
+				velocity.y = 0;
 		}
 		else
 		{
-			if (Input.GetButton("Jump"))
-			{
-				velocity.y = FlySpeedVertical;
-			} else if (Input.GetButton("Fly Down")) {
-				velocity.y = -FlySpeedVertical;
-			}
+			// If the player is not in flight mode, they can only jump while grounded.
+			if(Input.GetButtonDown("Jump") && Physics.CheckSphere(groundCheck.position, groundDistance, groundMask))
+				velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
 			else
-			{
-				velocity.y = 0;
-			}
+				// Gravity is only applied if the player isn't grounded.
+				// Gravity is acceleration, so it must be multiplied by Time.deltaTime twice.
+				// (Once here and once when velocity is finally applied.)
+				velocity.y += gravity * Time.deltaTime;
 		}
+		// Move the player's Y location according to their flight velocity or their jump and gravity.
 		controller.Move(velocity * Time.deltaTime);
 	}
 }

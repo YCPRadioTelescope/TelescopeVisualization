@@ -12,40 +12,15 @@ public class TriggerValue : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		//Debug.Log(rightTrigger.Value);
-		if (rightTrigger.Value > 0.2f)
-		{
-			rightLine.SetActive(true);
-		}
-		else
-		{
-			rightLine.SetActive(false);
-		}
+		rightLine.SetActive(false);
 	}
-
-	private void OnEnable()
+	
+	void Update()
 	{
 		//Debug.Log(rightTrigger.Value);
 		if (rightTrigger.Value > 0.2f)
-		{
 			rightLine.SetActive(true);
-		}
 		else
-		{
 			rightLine.SetActive(false);
-		}
-	}
-
-	private void Update()
-	{
-		//Debug.Log(rightTrigger.Value);
-		if (rightTrigger.Value > 0.2f)
-		{
-			rightLine.SetActive(true);
-		}
-		else
-		{
-			rightLine.SetActive(false);
-		}
 	}
 }

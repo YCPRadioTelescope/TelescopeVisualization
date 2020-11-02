@@ -27,10 +27,12 @@ public class ExplodedView : MonoBehaviour
 	#endregion
 
 	#region UnityFunctions
+	// Awake is called on the initalization of all game objects.
 	private void Awake()
 	{
+		// Create a list of all objects to explode and generate an exploded position for each.
 		childMeshRenderers = new List<SubMeshes>();
-		foreach (var item in GetComponentsInChildren<MeshRenderer>())
+		foreach(var item in GetComponentsInChildren<MeshRenderer>())
 		{
 			SubMeshes mesh = new SubMeshes();
 			mesh.meshRenderer = item;
@@ -40,11 +42,16 @@ public class ExplodedView : MonoBehaviour
 		}
 	}
 
+	// Update is called once per frame.
 	private void Update()
 	{
+		// Both R and the left trigger can activate the exploded view.
 		if(delay == 0 && (Input.GetButtonDown("Toggle Exploded View") || leftTrigger.Value > 0.2f))
 		{
 			ToggleExplodedView();
+			// The exploded view can only be toggled every 60 frames.
+			// Otherwise, holding the left trigger would cause the
+			// exploded view to rapidly toggle.
 			delay = 60;
 		}
 		if(delay > 0)
@@ -55,6 +62,7 @@ public class ExplodedView : MonoBehaviour
 			if(isInExplodedView)
 			{
 				Debug.Log("Exploding");
+				// Move all objects to their exploded position.
 				foreach(var item in childMeshRenderers)
 				{
 					item.meshRenderer.transform.position = Vector3.Lerp(item.meshRenderer.transform.position, item.explodedPosition, explosionSpeed);
@@ -64,10 +72,11 @@ public class ExplodedView : MonoBehaviour
 			}
 			else
 			{
+				// Move all objects back to their original position.
 				foreach(var item in childMeshRenderers)
 				{
 					item.meshRenderer.transform.localPosition = Vector3.Lerp(item.meshRenderer.transform.localPosition, item.originalPosition, explosionSpeed);
-					if (Vector3.Distance(item.meshRenderer.transform.localPosition, item.originalPosition) < 0.001f)
+					if(Vector3.Distance(item.meshRenderer.transform.localPosition, item.originalPosition) < 0.001f)
 						isMoving = false;
 				}
 			}
@@ -78,16 +87,8 @@ public class ExplodedView : MonoBehaviour
 	#region CustomFunctions
 	public void ToggleExplodedView()
 	{
-		if(isInExplodedView)
-		{
-			isInExplodedView = false;
-			isMoving = true;
-		}
-		else
-		{
-			isInExplodedView = true;
-			isMoving = true;
-		}
+		isInExplodedView = !isInExplodedView;
+		isMoving = true;
 	}
 	#endregion
 }

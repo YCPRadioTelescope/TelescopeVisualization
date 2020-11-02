@@ -46,12 +46,14 @@ public class Starfield : MonoBehaviour
 	
 	// A function to compute the angle per frame necessary to cause the
 	// given number of hours to elapse in the given number of seconds.
+	// Assumes 60 frames per second.
 	float RotationalSpeed(float hours, float seconds)
 	{
 		return 360.0f / (24.0f / hours) / seconds / 60.0f;
 	}
 	
 	// LastUpdate is called once per frame after every Update function has been called.
+	// This is what creates the stars.
 	void LateUpdate()
 	{
 		// Split the starCSV file into each line.
@@ -67,7 +69,7 @@ public class Starfield : MonoBehaviour
 			// The first component of each line is the magnitude.
 			float mag = float.Parse(components[0]);
 			
-			// 
+			// Change the alpha value of this star given its magnitude.
 			int mode = 0;
 			if(mode == 0)
 			{
@@ -99,7 +101,7 @@ public class Starfield : MonoBehaviour
 			
 			// Normalize the vector to a length of one, then move it out to
 			// 900 units from the particle system. This puts the stars just
-			// before the far clipping plane of the camera.
+			// before the far clipping plane of the camera, which is at 1000.
 			particleStars[i].position = Vector3.Normalize(starPosition) * 900;
 			// Particles only exist for one frame before a new one is created.
 			particleStars[i].remainingLifetime = 1;

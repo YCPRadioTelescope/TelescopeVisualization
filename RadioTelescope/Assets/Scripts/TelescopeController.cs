@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// A script that moves the radio telescope. Must be called to from a separate script.
 public class TelescopeController : MonoBehaviour
 {
 	public GameObject xRotation;
@@ -15,27 +16,19 @@ public class TelescopeController : MonoBehaviour
 	 * RotateY returns Y roataion
 	 */
 	public float RotateZ(float speed)
-	{
-		
+	{	
 		//xRotation.transform.Rotate(0,0,-speed);
-
 		rotateX = xRotation.transform.eulerAngles.z;
 		rotateX += speed;
 		rotateX = Mathf.Clamp(rotateX, 0, 100);
-
 		xRotation.transform.localRotation = Quaternion.Euler(0, 0, rotateX);
-
 		Debug.Log("rotating X on telescope");
-
 		return xRotation.transform.eulerAngles.z;
-		
 	}
 	
 	public float RotateY(float speed)
 	{
-		yRotation.transform.Rotate(0,speed,0);
-
+		yRotation.transform.Rotate(0, speed, 0);
 		return yRotation.transform.eulerAngles.y;
-
 	}
 }

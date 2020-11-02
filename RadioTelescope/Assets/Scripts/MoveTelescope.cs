@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// A script to control the telescope via the arrow keys.
 public class MoveTelescope : MonoBehaviour
 {
 	public GameObject telescope;
@@ -16,24 +17,16 @@ public class MoveTelescope : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (Input.GetKey("up"))
-		{
+		if(Input.GetKey("up"))
 			tc.RotateZ(0.5f);
-		}
 		
-		if (Input.GetKey("down"))
-		{
+		if(Input.GetKey("down"))
 			tc.RotateZ(-0.5f);
-		}
 		
-		if (Input.GetKey("right"))
-		{
+		if(Input.GetKey("right"))
 			tc.RotateY(0.5f);
-		}
 		
-		if (Input.GetKey("left"))
-		{
+		if(Input.GetKey("left"))
 			tc.RotateY(-0.5f);
-		}
 	}
 }

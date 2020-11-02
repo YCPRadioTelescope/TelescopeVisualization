@@ -5,6 +5,8 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
 
+// A script for moving the VR joystick according to the player grabbing it.
+// This drives the MoveTelescopeVR script.
 public class MoveJoystick : MonoBehaviour
 {
     /*

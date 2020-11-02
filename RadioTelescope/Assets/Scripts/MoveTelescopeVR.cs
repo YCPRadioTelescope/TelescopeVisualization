@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zinnia.Extension;
 
+// A script to control the telescope via the VR controlled joystick.
 public class MoveTelescopeVR : MonoBehaviour
 {
 	public GameObject telescope;
 	public TelescopeController tc;
 	public GameObject joystick;
-	private Vector3 _rotation;
+	private Vector3 rotation;
 
 	// Start is called before the first frame update
 	void Start()
@@ -19,18 +20,14 @@ public class MoveTelescopeVR : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		_rotation = joystick.TryGetEulerRotation(true);
-		if (_rotation.x > 180)
-		{
-			_rotation.x -= 360;
-		}
+		rotation = joystick.TryGetEulerRotation(true);
+		if(rotation.x > 180)
+			rotation.x -= 360;
 
-		if (_rotation.z > 190)
-		{
-			_rotation.z -= 360;
-		}
+		if(rotation.z > 190)
+			rotation.z -= 360;
 
-		tc.RotateZ(_rotation.x * (float) 0.01);
-		tc.RotateY(_rotation.z * (float) 0.01);
+		tc.RotateZ(rotation.x * (float) 0.01);
+		tc.RotateY(rotation.z * (float) 0.01);
 	}
 }
