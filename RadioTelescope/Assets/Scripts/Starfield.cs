@@ -32,8 +32,7 @@ public class Starfield : MonoBehaviour
 		// Rotate the particleSystem about the global axis, simulating the latitude of the observer.
 		// TODO: Accurately rotate the particleSystem to position the stars as they are in person.
 		// TODO: Figure out the angles to rotate the particleSystem by given the time of year.
-		// Testing with a random tilt right now.
-		particleSystem.transform.Rotate(0.0f, 23.0f, 0.0f, Space.World);
+		particleSystem.transform.Rotate(0.0f, 0.0f, 0.0f, Space.World);
 		rotationalAxis = new Vector3(0.0f, 1.0f, 0.0f);
 	}
 	
