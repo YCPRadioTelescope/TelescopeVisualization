@@ -38,7 +38,8 @@ public class ExplodedView : MonoBehaviour
 			SubMeshes mesh = new SubMeshes();
 			mesh.meshRenderer = item;
 			mesh.originalPosition = item.transform.localPosition;
-			mesh.explodedPosition = ((item.bounds.center - this.transform.position) * 1.5f) + this.transform.position;
+			mesh.explodedPosition = ((item.bounds.center - this.transform.position) * 1.2f) + this.transform.position;
+			mesh.explodedPosition.y += 1;
 			childMeshRenderers.Add(mesh);
 		}
 	}
