@@ -19,11 +19,12 @@ public class ExplodedView : MonoBehaviour
 {
 	#region Variables
 	public List<SubMeshes> childMeshRenderers;
-	bool isInExplodedView = false;
 	public float explosionSpeed = 1.0f;
-	bool isMoving = false;
-	int delay;
 	public UnityAxis1DAction leftTrigger;
+	
+	private bool isMoving = false;
+	private bool isInExplodedView = false;
+	private float delay;
 	#endregion
 
 	#region UnityFunctions
@@ -46,16 +47,16 @@ public class ExplodedView : MonoBehaviour
 	private void Update()
 	{
 		// Both R and the left trigger can activate the exploded view.
-		if(delay == 0 && (Input.GetButtonDown("Toggle Exploded View") || leftTrigger.Value > 0.2f))
+		if(delay <= 0 && (Input.GetButtonDown("Toggle Exploded View") || leftTrigger.Value > 0.2f))
 		{
 			ToggleExplodedView();
 			// The exploded view can only be toggled every 60 frames.
 			// Otherwise, holding the left trigger would cause the
 			// exploded view to rapidly toggle.
-			delay = 60;
+			delay = 1;
 		}
 		if(delay > 0)
-			delay--;
+			delay -= Time.deltaTime;
 
 		if(isMoving)
 		{

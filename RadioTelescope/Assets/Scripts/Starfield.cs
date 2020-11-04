@@ -44,10 +44,9 @@ public class Starfield : MonoBehaviour
 	
 	// A function to compute the angle per frame necessary to cause the
 	// given number of hours to elapse in the given number of seconds.
-	// Assumes 60 frames per second.
 	float RotationalSpeed(float hours, float seconds)
 	{
-		return 360.0f / (24.0f / hours) / seconds / 60.0f;
+		return 360.0f / (24.0f / hours) / seconds * Time.deltaTime;
 	}
 	
 	// LastUpdate is called once per frame after every Update function has been called.
