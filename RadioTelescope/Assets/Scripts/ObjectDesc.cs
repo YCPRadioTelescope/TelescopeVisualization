@@ -10,4 +10,6 @@ public class ObjectDesc : MonoBehaviour
 {
 	public String Name;
 	public String Description;
+	public float yOffset;
+	public float xOffset;
 }

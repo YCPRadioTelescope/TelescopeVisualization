@@ -29,7 +29,7 @@ public class ExplodedView : MonoBehaviour
 
 	#region UnityFunctions
 	// Awake is called on the initalization of all game objects.
-	private void Awake()
+	private void Start()
 	{
 		// Create a list of all objects to explode and generate an exploded position for each.
 		childMeshRenderers = new List<SubMeshes>();
@@ -38,8 +38,12 @@ public class ExplodedView : MonoBehaviour
 			SubMeshes mesh = new SubMeshes();
 			mesh.meshRenderer = item;
 			mesh.originalPosition = item.transform.localPosition;
-			mesh.explodedPosition = ((item.bounds.center - this.transform.position) * 1.2f) + this.transform.position;
-			mesh.explodedPosition.y += 1;
+			mesh.explodedPosition = ((item.bounds.center - this.transform.position) * 1.5f) + this.transform.position;
+			if(item.transform.GetComponent<ObjectDesc>())
+			{
+				mesh.explodedPosition.y += item.transform.GetComponent<ObjectDesc>().yOffset;
+				mesh.explodedPosition.z += item.transform.GetComponent<ObjectDesc>().xOffset;
+			}
 			childMeshRenderers.Add(mesh);
 		}
 	}
@@ -68,7 +72,7 @@ public class ExplodedView : MonoBehaviour
 				foreach(var item in childMeshRenderers)
 				{
 					item.meshRenderer.transform.position = Vector3.Lerp(item.meshRenderer.transform.position, item.explodedPosition, explosionSpeed);
-					if(Vector3.Distance(item.meshRenderer.transform.position, item.explodedPosition) < 0.001f)
+					if(Vector3.Distance(item.meshRenderer.transform.position, item.explodedPosition) < 0.0001f)
 						isMoving = false;
 				}
 			}
@@ -78,7 +82,7 @@ public class ExplodedView : MonoBehaviour
 				foreach(var item in childMeshRenderers)
 				{
 					item.meshRenderer.transform.localPosition = Vector3.Lerp(item.meshRenderer.transform.localPosition, item.originalPosition, explosionSpeed);
-					if(Vector3.Distance(item.meshRenderer.transform.localPosition, item.originalPosition) < 0.001f)
+					if(Vector3.Distance(item.meshRenderer.transform.localPosition, item.originalPosition) < 0.0001f)
 						isMoving = false;
 				}
 			}
