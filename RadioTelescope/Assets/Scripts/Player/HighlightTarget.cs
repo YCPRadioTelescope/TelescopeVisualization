@@ -46,7 +46,7 @@ public class HighlightTarget : MonoBehaviour
 	void Update()
 	{
 		// The direction of the ray cast is forward the direction of the start object.
-		var dir = start.transform.forward * 10000
+		var dir = start.transform.forward * 10000;
 		
 		// If this script has vrActive set to true, a line is drawn between the start
 		// and end positions.
