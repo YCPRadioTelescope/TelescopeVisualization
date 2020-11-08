@@ -31,11 +31,32 @@ public class HighlightTarget : MonoBehaviour
 	// The renderer that was hit last frame by the raycast.
 	private Renderer rend = null;
 
+	// A line that gets drawn when this script is active. Only drawn if in VR.
+	private LineRenderer lr;
+	public bool vrActive;
+	
+	// Start is called before the first frame update.
+	void Start()
+	{
+		if(vrActive)
+			lr = this.transform.GetComponent<LineRenderer>();
+	}
+	
 	// Update is called once per frame
 	void Update()
 	{
 		// The direction of the ray cast is forward the direction of the start object.
-		var dir = start.transform.forward * 10000;
+		var dir = start.transform.forward * 10000
+		
+		// If this script has vrActive set to true, a line is drawn between the start
+		// and end positions.
+		if(vrActive)
+		{
+			dir *= -1;
+			lr.SetPosition(0, start.transform.position);
+			lr.SetPosition(1, end.transform.position);
+		}
+		
 		// Cast a ray between the start object and end object. If a part of the telescope
 		// is hit, hitInfo is changed.
 		if(Physics.Raycast(start.transform.position, dir, out hitInfo, Vector3.Distance(start.transform.position, end.transform.position)))
@@ -68,6 +89,15 @@ public class HighlightTarget : MonoBehaviour
 			rend.sharedMaterial = origMat;
 			rend = null;
 			text.text = "";
+		}
+	}
+	
+	void OnEnable()
+	{
+		if(vrActive)
+		{
+			lr.SetPosition(0, start.transform.position);
+			lr.SetPosition(1, end.transform.position);
 		}
 	}
 	

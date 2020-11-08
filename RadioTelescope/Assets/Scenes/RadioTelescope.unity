@@ -19619,12 +19619,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1423774306}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac9cd77e946cb99489cf92199a127fee, type: 3}
+  m_Script: {fileID: 11500000, guid: 31a6244d4edda9144b788133f7e9917c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   start: {fileID: 1912070517}
   end: {fileID: 1381367531}
-  highlightColor: {r: 0, g: 0.97699356, b: 1, a: 0}
+  highlightColor: {r: 0, g: 0.9764706, b: 1, a: 0}
   shader: {fileID: -6465566751694194690, guid: 1c0a65243a41bb1418544cacfd1cde96, type: 3}
   text: {fileID: 1355749995}
 --- !u!1 &1424162520
@@ -20067,7 +20067,6 @@ GameObject:
   - component: {fileID: 1436024168}
   - component: {fileID: 1436024170}
   - component: {fileID: 1436024172}
-  - component: {fileID: 1436024173}
   - component: {fileID: 1436024174}
   m_Layer: 0
   m_Name: Scripts
@@ -20137,20 +20136,6 @@ MonoBehaviour:
   telescope: {fileID: 1296651328}
   tc: {fileID: 0}
   joystick: {fileID: 86215410096099099}
---- !u!114 &1436024173
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1436024167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3c6bdd950aec54ebf4ce7521348b2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rightTrigger: {fileID: 1228576311}
-  rightLine: {fileID: 1423774306}
 --- !u!114 &1436024174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20164,6 +20149,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlight: {fileID: 1434264596}
+  vrHighlight: {fileID: 1423774306}
+  rightTrigger: {fileID: 1228576311}
 --- !u!1 &1437236982
 GameObject:
   m_ObjectHideFlags: 0
@@ -20413,7 +20400,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1452428802
 Transform:
   m_ObjectHideFlags: 0
@@ -25702,7 +25689,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1729211312
 Transform:
   m_ObjectHideFlags: 0
@@ -28439,7 +28426,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1852452505
 Transform:
   m_ObjectHideFlags: 0
