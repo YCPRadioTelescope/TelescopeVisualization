@@ -19627,6 +19627,7 @@ MonoBehaviour:
   highlightColor: {r: 0, g: 0.9764706, b: 1, a: 0}
   shader: {fileID: -6465566751694194690, guid: 1c0a65243a41bb1418544cacfd1cde96, type: 3}
   text: {fileID: 1355749995}
+  vrActive: 1
 --- !u!1 &1424162520
 GameObject:
   m_ObjectHideFlags: 0
@@ -19953,6 +19954,7 @@ MonoBehaviour:
   highlightColor: {r: 0, g: 0.97699356, b: 1, a: 0}
   shader: {fileID: -6465566751694194690, guid: 1c0a65243a41bb1418544cacfd1cde96, type: 3}
   text: {fileID: 940888257}
+  vrActive: 0
 --- !u!120 &1434264599
 LineRenderer:
   m_ObjectHideFlags: 0

@@ -23,9 +23,8 @@ public class ActivateDescription : MonoBehaviour
 	// Update is called once per frame.
 	void Update()
 	{
-		// Check if the mouse button is being held. If so, activate
-		// the hightlighted game object, which causes its name and
-		// description to be shown..
+		// Check if the mouse button is being held or the right trigger
+		// is being pressed. If so, activate the highlight script.
 		if(Input.GetMouseButtonDown(0))
 			highlight.SetActive(true);
 		else if(Input.GetMouseButtonUp(0))
