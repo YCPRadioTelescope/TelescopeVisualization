@@ -1396,6 +1396,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Kaydon
   Description: 
+  yOffset: -1.7
+  xOffset: 0
 --- !u!64 &40809881
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1927,6 +1929,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Top Flange
   Description: 
+  yOffset: -2
+  xOffset: 0
 --- !u!64 &113608179
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2785,6 +2789,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Sensor Plate
   Description: 
+  yOffset: -1.8
+  xOffset: 0
 --- !u!64 &173576379
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3349,6 +3355,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Feed Horn Stand
   Description: 
+  yOffset: 1.1
+  xOffset: 1.5
 --- !u!1001 &199338400
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3877,6 +3885,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Top Triangle Supports
   Description: 
+  yOffset: -1.9
+  xOffset: 0
 --- !u!64 &230703956
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -4564,6 +4574,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Post
   Description: 
+  yOffset: -0.4
+  xOffset: 0
 --- !u!64 &317012013
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5096,6 +5108,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Lower Gearbox
   Description: 
+  yOffset: -1.7
+  xOffset: 0
 --- !u!64 &346175133
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5646,6 +5660,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Fenner Drive
   Description: 
+  yOffset: -2
+  xOffset: 0
 --- !u!64 &388299045
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5878,6 +5894,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: McMaster
   Description: 
+  yOffset: -1.75
+  xOffset: 0
 --- !u!64 &395839160
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -6944,6 +6962,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Fenner Drive
   Description: 
+  yOffset: 0
+  xOffset: 0
 --- !u!64 &474519948
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -7466,7 +7486,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 508402512}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -8344,21 +8364,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Dish
   Description: Collects radio waves from the sky
---- !u!114 &604231501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 604231499}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 238df990ef444024ea0c75ec2e12efa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  childMeshRenderers: []
-  explosionSpeed: 1
-  leftTrigger: {fileID: 0}
+  yOffset: 0
+  xOffset: 0
 --- !u!64 &604231502
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -8517,6 +8524,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Gear Box Assembly
   Description: 
+  yOffset: -2.3
+  xOffset: 0.3
 --- !u!64 &613354031
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -8629,6 +8638,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Bottom Triangle Supports
   Description: 
+  yOffset: 1
+  xOffset: 0
 --- !u!64 &625788027
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -9350,6 +9361,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Retractor
   Description: 
+  yOffset: -1.75
+  xOffset: 0
 --- !u!64 &651970295
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10234,7 +10247,7 @@ BoxCollider:
   m_GameObject: {fileID: 745247456}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -10245,7 +10258,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 745247456}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -12746,6 +12759,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Stop Bar
   Description: 
+  yOffset: -1.75
+  xOffset: 0
 --- !u!64 &865172377
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -13568,6 +13583,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Baseplate
   Description: 
+  yOffset: -1.7
+  xOffset: 0
 --- !u!64 &984505432
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -13834,6 +13851,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Feed Horn
   Description: 
+  yOffset: 1.1
+  xOffset: 1.5
 --- !u!1 &1018810089
 GameObject:
   m_ObjectHideFlags: 0
@@ -14360,6 +14379,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Drive Gearbox
   Description: 
+  yOffset: -1.75
+  xOffset: 0
 --- !u!64 &1085145829
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -14887,6 +14908,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Drive Axle
   Description: 
+  yOffset: -1.9
+  xOffset: 0
 --- !u!64 &1139111242
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -14944,7 +14967,7 @@ BoxCollider:
   m_GameObject: {fileID: 1147548851}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -14955,7 +14978,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1147548851}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -15484,6 +15507,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Feed Horn Stand
   Description: 
+  yOffset: 1.1
+  xOffset: 1.5
 --- !u!1 &1180697096
 GameObject:
   m_ObjectHideFlags: 0
@@ -16978,6 +17003,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Mount Plate
   Description: 
+  yOffset: 1.1
+  xOffset: 0
 --- !u!64 &1254460377
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -18456,6 +18483,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Dish Supports 2
   Description: 
+  yOffset: -2.4
+  xOffset: -0.6
 --- !u!64 &1375277917
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -18490,6 +18519,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Rigid Connector
   Description: 
+  yOffset: -2.2
+  xOffset: 0
 --- !u!64 &1376810775
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -18871,7 +18902,7 @@ BoxCollider:
   m_GameObject: {fileID: 1393513221}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -18882,7 +18913,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1393513221}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -18941,6 +18972,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Dish Supports
   Description: 
+  yOffset: -2.2
+  xOffset: 0
 --- !u!64 &1400430489
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -18975,6 +19008,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Dish
   Description: 
+  yOffset: -2.2
+  xOffset: 0
 --- !u!64 &1400883944
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -19343,6 +19378,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Stop Block
   Description: 
+  yOffset: -1.75
+  xOffset: 0
 --- !u!64 &1418339784
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -20203,7 +20240,7 @@ BoxCollider:
   m_GameObject: {fileID: 1441851161}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -20214,7 +20251,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1441851161}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -20719,6 +20756,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Gear Box Stand
   Description: 
+  yOffset: -2
+  xOffset: 0
 --- !u!64 &1467960425
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -22073,6 +22112,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Mainframe
   Description: 
+  yOffset: -2.5
+  xOffset: 0
 --- !u!64 &1556670827
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -24606,6 +24647,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Axle Mount
   Description: 
+  yOffset: 0
+  xOffset: 0
 --- !u!64 &1680787481
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -26149,6 +26192,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5975033157549033438, guid: 2685272d38c59164da7757909a98741c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2416733968201007103, guid: 2685272d38c59164da7757909a98741c,
+        type: 3}
+      propertyPath: m_RendererPriority
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2685272d38c59164da7757909a98741c, type: 3}
 --- !u!1001 &1759077118
@@ -26260,6 +26313,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Pole
   Description: It holds up the telescope.
+  yOffset: 0
+  xOffset: 0
 --- !u!1 &1778605396
 GameObject:
   m_ObjectHideFlags: 0
@@ -26959,6 +27014,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Counter Weights
   Description: 
+  yOffset: -2.5
+  xOffset: 0
 --- !u!64 &1808850738
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -28025,6 +28082,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Feed Horn Stand
   Description: 
+  yOffset: 1.1
+  xOffset: 1.5
 --- !u!1 &1831893543
 GameObject:
   m_ObjectHideFlags: 0
@@ -28284,27 +28343,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1840738559}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1841115965 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 661405e28fcba7d4d9b0d6e84d01c781,
-    type: 3}
-  m_PrefabInstance: {fileID: 471139467}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1841115966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1841115965}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 238df990ef444024ea0c75ec2e12efa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  childMeshRenderers: []
-  explosionSpeed: 1
-  leftTrigger: {fileID: 0}
 --- !u!1 &1843247196 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6798345259485616301, guid: 4d59fbab1c4ee044c8113025ad94de18,
@@ -28679,21 +28717,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1497917451}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1882066456
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1882066455}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 238df990ef444024ea0c75ec2e12efa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  childMeshRenderers: []
-  explosionSpeed: 1
-  leftTrigger: {fileID: 0}
 --- !u!64 &1882066459
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -28722,6 +28745,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Middle
   Description: Turns the telescope around the Y axis.
+  yOffset: 0
+  xOffset: 0
 --- !u!1 &1883795968
 GameObject:
   m_ObjectHideFlags: 0
@@ -36815,6 +36840,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Main Dish Support
   Description: 
+  yOffset: -2.2
+  xOffset: 0
 --- !u!64 &2118954047
 MeshCollider:
   m_ObjectHideFlags: 0
