@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using VRTK.Prefabs.CameraRig.UnityXRCameraRig.Input;
+using Valve.VR;
 
 // This script controls the activation of the HightlightTarget scripts,
 // which highlight the part of the radio telescope that is clicked on
@@ -10,7 +10,7 @@ public class ActivateDescription : MonoBehaviour
 {
 	public GameObject highlight;
 	public GameObject vrHighlight;
-	public UnityAxis1DAction rightTrigger;
+	public SteamVR_Action_Single rightTrigger;
 	
 	// Start is called before the first frame update.
 	void Start()
@@ -30,7 +30,7 @@ public class ActivateDescription : MonoBehaviour
 		else if(Input.GetMouseButtonUp(0))
 			highlight.SetActive(false);
 		
-		if(rightTrigger.Value > 0.2f)
+		if(rightTrigger.GetAxis(SteamVR_Input_Sources.RightHand) > 0.2f)
 			vrHighlight.SetActive(true);
 		else
 			vrHighlight.SetActive(false);

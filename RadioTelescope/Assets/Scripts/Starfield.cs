@@ -39,7 +39,7 @@ public class Starfield : MonoBehaviour
 	{
 		// Rotate the sky about the Earth's axis at the given rotational speed.
 		// This rotates the particleSystem relative to itself.
-		particleSystem.transform.Rotate(rotationalAxis, RotationalSpeed(24.0f, 60.0f), Space.Self);
+		particleSystem.transform.Rotate(rotationalAxis, RotationalSpeed(6.0f, 60.0f), Space.Self);
 	}
 	
 	// A function to compute the angle per frame necessary to cause the

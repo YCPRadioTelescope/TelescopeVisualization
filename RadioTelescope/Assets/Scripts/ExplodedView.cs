@@ -4,7 +4,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using VRTK.Prefabs.CameraRig.UnityXRCameraRig.Input;
+using Valve.VR;
 
 [Serializable]
 
@@ -20,7 +20,7 @@ public class ExplodedView : MonoBehaviour
 	#region Variables
 	public List<SubMeshes> childMeshRenderers;
 	public float explosionSpeed = 1.0f;
-	public UnityAxis1DAction leftTrigger;
+	public SteamVR_Action_Single leftTrigger;
 	
 	private bool isMoving = false;
 	private bool isInExplodedView = false;
@@ -52,7 +52,7 @@ public class ExplodedView : MonoBehaviour
 	private void Update()
 	{
 		// Both R and the left trigger can activate the exploded view.
-		if(delay <= 0 && (Input.GetButtonDown("Toggle Exploded View") || leftTrigger.Value > 0.2f))
+		if(delay <= 0 && (Input.GetButtonDown("Toggle Exploded View") || leftTrigger.GetAxis(SteamVR_Input_Sources.LeftHand) > 0.2f))
 		{
 			ToggleExplodedView();
 			// The exploded view can only be toggled every 60 frames.

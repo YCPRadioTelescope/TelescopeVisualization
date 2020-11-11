@@ -25,14 +25,6 @@ namespace Valve.VR
             }
         }
         
-        public virtual SteamVR_Action_Boolean Teleport
-        {
-            get
-            {
-                return SteamVR_Actions.default_Teleport;
-            }
-        }
-        
         public virtual SteamVR_Action_Boolean GrabPinch
         {
             get
@@ -89,11 +81,11 @@ namespace Valve.VR
             }
         }
         
-        public virtual SteamVR_Action_Boolean NewAction
+        public virtual SteamVR_Action_Vector2 TouchpadTouch
         {
             get
             {
-                return SteamVR_Actions.default_NewAction;
+                return SteamVR_Actions.default_TouchpadTouch;
             }
         }
         

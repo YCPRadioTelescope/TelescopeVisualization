@@ -5,10 +5,6 @@
       "type": "boolean"
     },
     {
-      "name": "/actions/default/in/Teleport",
-      "type": "boolean"
-    },
-    {
       "name": "/actions/default/in/GrabPinch",
       "type": "boolean"
     },
@@ -41,8 +37,8 @@
       "requirement": "optional"
     },
     {
-      "name": "/actions/default/in/NewAction",
-      "type": "boolean"
+      "name": "/actions/default/in/TouchpadTouch",
+      "type": "vector2"
     },
     {
       "name": "/actions/default/out/Haptic",
@@ -235,7 +231,6 @@
       "/actions/default/in/Pose": "Pose",
       "/actions/default/in/SkeletonLeftHand": "Skeleton (Left)",
       "/actions/default/in/SkeletonRightHand": "Skeleton (Right)",
-      "/actions/default/in/Teleport": "Teleport",
       "/actions/default/out/Haptic": "Haptic",
       "/actions/platformer/in/Jump": "Jump",
       "/actions/vrtk/in/SkeletonLeftHand": "Skeleton (Left)",
