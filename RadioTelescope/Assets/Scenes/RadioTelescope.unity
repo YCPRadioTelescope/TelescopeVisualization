@@ -3683,7 +3683,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &216173877
 Transform:
   m_ObjectHideFlags: 0
@@ -20070,6 +20070,7 @@ GameObject:
   - component: {fileID: 1436024170}
   - component: {fileID: 1436024172}
   - component: {fileID: 1436024174}
+  - component: {fileID: 1436024171}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -20123,6 +20124,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   telescope: {fileID: 1296651328}
   tc: {fileID: 0}
+--- !u!114 &1436024171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436024167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47ebaa0e9d64efc4f888479d9e8fbe92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  telescope: {fileID: 1296651328}
+  tc: {fileID: 0}
+  leftTouchpadVertical: {fileID: 668600620}
+  leftTouchpadHorizontal: {fileID: 313800105}
 --- !u!114 &1436024172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49255,7 +49272,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5844989439607434998
 Transform:
   m_ObjectHideFlags: 0
