@@ -27,7 +27,7 @@ public class MoveTelescopeVR : MonoBehaviour
 		if(rotation.z > 190)
 			rotation.z -= 360;
 
-		tc.RotateZ(rotation.x * (float) 0.01);
+		tc.RotateX(rotation.x * (float) 0.01);
 		tc.RotateY(rotation.z * (float) 0.01);
 	}
 }

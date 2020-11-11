@@ -18,10 +18,10 @@ public class MoveTelescope : MonoBehaviour
 	void Update()
 	{
 		if(Input.GetKey("up"))
-			tc.RotateZ(0.5f);
+			tc.RotateX(0.5f);
 		
 		if(Input.GetKey("down"))
-			tc.RotateZ(-0.5f);
+			tc.RotateX(-0.5f);
 		
 		if(Input.GetKey("right"))
 			tc.RotateY(0.5f);

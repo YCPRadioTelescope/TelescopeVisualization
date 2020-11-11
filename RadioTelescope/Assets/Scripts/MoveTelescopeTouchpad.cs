@@ -21,6 +21,6 @@ public class MoveTelescopeTouchpad : MonoBehaviour
 	void Update()
 	{
 		tc.RotateY(leftTouchpadHorizontal.Value);
-		tc.RotateZ(leftTouchpadVertical.Value);
+		tc.RotateX(leftTouchpadVertical.Value);
 	}
 }
