@@ -6,9 +6,12 @@ using UnityEngine;
 // This script controls the creation and movement of the stars in the sky.
 public class Starfield : MonoBehaviour
 {
-	public ParticleSystem particleSystem;
+	public GameObject telescope;
+	
 	public int maxParticles;
+	public ParticleSystem particleSystem;
 	public TextAsset starCSV;
+	
 	private Vector3 rotationalAxis;
 	
 	// Awake is called on the initalization of all game objects.
@@ -29,8 +32,10 @@ public class Starfield : MonoBehaviour
 	// Start is called before the first frame update.
 	void Start()
 	{
-		// Rotate the particleSystem about the global axis, simulating the latitude of the observer.
-		particleSystem.transform.Rotate(50.0f, 0.0f, 0.0f, Space.World);
+		// Rotate the particleSystem about the global axis, simulating the
+		// latitude of the observer.
+		TelescopeInfo ti = telescope.GetComponent<TelescopeInfo>();
+		particleSystem.transform.Rotate(90.0f - ti.latitude, 0.0f, 0.0f, Space.World);
 		rotationalAxis = new Vector3(0.0f, 1.0f, 0.0f);
 	}
 	
@@ -39,7 +44,7 @@ public class Starfield : MonoBehaviour
 	{
 		// Rotate the sky about the Earth's axis at the given rotational speed.
 		// This rotates the particleSystem relative to itself.
-		particleSystem.transform.Rotate(rotationalAxis, RotationalSpeed(24.0f, 60.0f), Space.Self);
+		particleSystem.transform.Rotate(rotationalAxis, RotationalSpeed(3.0f, 60.0f), Space.Self);
 	}
 	
 	// A function to compute the angle per frame necessary to cause the
