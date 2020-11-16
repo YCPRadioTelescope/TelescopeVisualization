@@ -17199,6 +17199,7 @@ GameObject:
   - component: {fileID: 1296651331}
   - component: {fileID: 1296651330}
   - component: {fileID: 1296651332}
+  - component: {fileID: 1296651333}
   m_Layer: 9
   m_Name: RealTelescope
   m_TagString: Telescope
@@ -17263,6 +17264,19 @@ MonoBehaviour:
   childMeshRenderers: []
   explosionSpeed: 0.05
   leftTrigger: {fileID: 1113077147}
+--- !u!114 &1296651333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296651328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 294d2d061b5d3894fb8751b1b1bf2a25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  latitude: 40.02442
 --- !u!1001 &1302723395
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29136,8 +29150,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75b93095c6c7c68478273e36f1a85a92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particleSystem: {fileID: 1908533020}
+  telescope: {fileID: 1296651328}
   maxParticles: 5000
+  particleSystem: {fileID: 1908533020}
   starCSV: {fileID: 4900000, guid: fcc30760538c5b34ba622b82a0c8bd0c, type: 3}
 --- !u!199 &1908533019
 ParticleSystemRenderer:
