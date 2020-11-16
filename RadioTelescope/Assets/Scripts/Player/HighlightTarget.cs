@@ -69,7 +69,7 @@ public class HighlightTarget : MonoBehaviour
 				return;
 			
 			// Get the name and description from the part that was hit.
-			text.text = hitInfo.transform.GetComponent<ObjectDesc>().Name + ": " + hitInfo.transform.GetComponent<ObjectDesc>().Description;
+			text.text = hitInfo.transform.GetComponent<TelescopePartInfo>().Name + ": " + hitInfo.transform.GetComponent<TelescopePartInfo>().Description;
 			
 			// If we've hit a different object, reset the old object to its original material.
 			if(rend)

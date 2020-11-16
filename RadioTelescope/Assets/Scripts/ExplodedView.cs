@@ -45,11 +45,11 @@ public class ExplodedView : MonoBehaviour
 			mesh.originalPosition = item.transform.localPosition;
 			// Generate an exploded position that is 50% further away from the center of the object than the original position.
 			mesh.explodedPosition = ((item.bounds.center - this.transform.position) * 1.5f) + this.transform.position;
-			if(item.transform.GetComponent<ObjectDesc>())
+			if(item.transform.GetComponent<TelescopePartInfo>())
 			{
 				// The exploded position of each piece is tweaked slightly to result in better positions for viewing.
-				mesh.explodedPosition.y += item.transform.GetComponent<ObjectDesc>().yOffset;
-				mesh.explodedPosition.z += item.transform.GetComponent<ObjectDesc>().xOffset;
+				mesh.explodedPosition.y += item.transform.GetComponent<TelescopePartInfo>().yOffset;
+				mesh.explodedPosition.z += item.transform.GetComponent<TelescopePartInfo>().xOffset;
 			}
 			childMeshRenderers.Add(mesh);
 		}
