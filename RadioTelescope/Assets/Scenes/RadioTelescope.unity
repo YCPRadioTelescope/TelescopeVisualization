@@ -1408,7 +1408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Kaydon
+  Name: Azimuth Slew Ring Bearing
   Description: 
   yOffset: -1.7
   xOffset: 0
@@ -1927,8 +1927,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Top Flange
-  Description: 
+  Name: Pier Top Flange Mounting Plate
+  Description: The top flange connects the pier to the rest of the telescope.
   yOffset: -2
   xOffset: 0
 --- !u!64 &113608179
@@ -1993,7 +1993,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &119522861
 Transform:
   m_ObjectHideFlags: 0
@@ -2334,6 +2334,51 @@ PrefabInstance:
       propertyPath: m_Name
       value: HTC_Vive_controller
       objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.001
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2403,51 +2448,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.08
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.001
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.001
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.001
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ac8abbf337fd2944e9dc7bc2bad450d8, type: 3}
@@ -3353,8 +3353,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Feed Horn Stand
-  Description: 
+  Name: Feed Horn Supports
+  Description: These supports are what hold the feed horn in front of the dish.
   yOffset: 1.1
   xOffset: 1.5
 --- !u!1001 &199338400
@@ -3549,7 +3549,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &200267176
 Transform:
   m_ObjectHideFlags: 0
@@ -3916,8 +3916,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Top Triangle Supports
-  Description: 
+  Name: Pier Top Flange Gussets
+  Description: These gussets act as additional support for the telescope, strengthening
+    the connection between the pier and the top flange.
   yOffset: -1.9
   xOffset: 0
 --- !u!64 &230703956
@@ -4396,6 +4397,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: 958f164369049e14fb8c1a57926d5416,
+        type: 3}
+      propertyPath: m_Name
+      value: Counterweights
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 958f164369049e14fb8c1a57926d5416,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4605,8 +4611,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Post
-  Description: 
+  Name: Pier
+  Description: The pier is the main support structure for the telescope, holding the
+    dish and other components above the ground.
   yOffset: -0.4
   xOffset: 0
 --- !u!64 &317012013
@@ -4801,6 +4808,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 1365414782529414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1396516904902414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1800540137983010, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 4344470648180242, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.91
@@ -4844,18 +4863,6 @@ PrefabInstance:
     - target: {fileID: 4344470648180242, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1396516904902414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1365414782529414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1800540137983010, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
@@ -5153,7 +5160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Lower Gearbox
+  Name: Azimuth Drive Gear Box
   Description: 
   yOffset: -1.7
   xOffset: 0
@@ -5256,6 +5263,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: 7482e3431e8a92f4f911ecbc86224565,
+        type: 3}
+      propertyPath: m_Name
+      value: DriveAxle
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 7482e3431e8a92f4f911ecbc86224565,
         type: 3}
@@ -6405,11 +6417,6 @@ PrefabInstance:
       propertyPath: elements.Array.data[0]
       value: 
       objectReference: {fileID: 405414544}
-    - target: {fileID: 4714943977382568984, guid: c653ae62cc25a3447b25602aa098c379,
-        type: 3}
-      propertyPath: processInactiveGameObjects
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2308899400092309998, guid: c653ae62cc25a3447b25602aa098c379,
         type: 3}
       propertyPath: elements.Array.size
@@ -6420,6 +6427,11 @@ PrefabInstance:
       propertyPath: elements.Array.data[0]
       value: 
       objectReference: {fileID: 1941168339}
+    - target: {fileID: 4714943977382568984, guid: c653ae62cc25a3447b25602aa098c379,
+        type: 3}
+      propertyPath: processInactiveGameObjects
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c653ae62cc25a3447b25602aa098c379, type: 3}
 --- !u!4 &424140948 stripped
@@ -7273,6 +7285,11 @@ PrefabInstance:
     m_TransformParent: {fileID: 242987818}
     m_Modifications:
     - target: {fileID: -927199367670048503, guid: cfc035b03a634e34892f3a9732ce272d,
+        type: 3}
+      propertyPath: m_Name
+      value: TopTriangleSupports
+      objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: cfc035b03a634e34892f3a9732ce272d,
         type: 3}
       propertyPath: m_Name
       value: TopTriangleSupports
@@ -8403,10 +8420,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c42537bbeb51b94ab9d4f54aab15f0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Dish
-  Description: Collects radio waves from the sky
-  yOffset: 0
-  xOffset: 0
 --- !u!64 &604231502
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -8577,7 +8590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Gear Box Assembly
+  Name: Elevation Gear Box Assembly
   Description: 
   yOffset: -2.3
   xOffset: 0.3
@@ -8677,8 +8690,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Bottom Triangle Supports
-  Description: 
+  Name: Pier Base Mounting Plate Gussets
+  Description: These gussets act as additional support for the telescope, strengthening
+    the connection between the pier and the mounting plate.
   yOffset: 1
   xOffset: 0
 --- !u!64 &625788027
@@ -9653,6 +9667,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BottomTriangleSupports
       objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: 7802f9346c8e1444aabd903611ebac9c,
+        type: 3}
+      propertyPath: m_Name
+      value: BottomTriangleSupports
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 7802f9346c8e1444aabd903611ebac9c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10176,7 +10195,7 @@ GameObject:
   - component: {fileID: 745247459}
   - component: {fileID: 745247458}
   m_Layer: 9
-  m_Name: Cube
+  m_Name: Feed Horn Supports
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10196,7 +10215,6 @@ Transform:
   - {fileID: 1441851162}
   - {fileID: 1147548852}
   - {fileID: 1393513222}
-  - {fileID: 1009876141}
   m_Father: {fileID: 408958343}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 21.045, y: 179.99998, z: 0}
@@ -10342,6 +10360,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: b9eb0d07ac9c32048a82d8d688d5326f,
+        type: 3}
+      propertyPath: m_Name
+      value: DishSupports2
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: b9eb0d07ac9c32048a82d8d688d5326f,
         type: 3}
@@ -11224,6 +11247,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 1038887569887598, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1426439134877918, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1682125241493300, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 4350558997761946, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.4400787
@@ -11267,18 +11302,6 @@ PrefabInstance:
     - target: {fileID: 4350558997761946, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1426439134877918, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1038887569887598, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1682125241493300, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
@@ -12395,6 +12418,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: 592c9ec46d817064c907dcf7d4ad5b29,
+        type: 3}
+      propertyPath: m_Name
+      value: Mainframe
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 592c9ec46d817064c907dcf7d4ad5b29,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -12433,7 +12461,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 592c9ec46d817064c907dcf7d4ad5b29,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 592c9ec46d817064c907dcf7d4ad5b29,
         type: 3}
@@ -12640,6 +12668,11 @@ PrefabInstance:
     m_TransformParent: {fileID: 242987818}
     m_Modifications:
     - target: {fileID: -927199367670048503, guid: 3b68e75df959cb74a87141a63091c7a0,
+        type: 3}
+      propertyPath: m_Name
+      value: Post
+      objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: 3b68e75df959cb74a87141a63091c7a0,
         type: 3}
       propertyPath: m_Name
       value: Post
@@ -13557,7 +13590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Baseplate
+  Name: Azimuth and Elevation Motor Drive Base Plate
   Description: 
   yOffset: -1.7
   xOffset: 0
@@ -13732,12 +13765,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1009876140}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 285.4, y: 0, z: 0}
-  m_LocalScale: {x: 20, y: 20, z: 20}
+  m_LocalRotation: {x: 0.6952159, y: 0.69521606, z: -0.12913075, w: 0.12913074}
+  m_LocalPosition: {x: -373.8, y: 389.09988, z: -0.46017778}
+  m_LocalScale: {x: 20.000015, y: 20.000025, z: 20.000021}
   m_Children: []
-  m_Father: {fileID: 745247457}
-  m_RootOrder: 3
+  m_Father: {fileID: 408958343}
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!136 &1009876142
 CapsuleCollider:
@@ -13812,7 +13845,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Feed Horn
-  Description: 
+  Description: The feedhorn receives the focused radio emissions collected by the
+    dish antenna and directs it inside the feedhorn. A probe located inside the back
+    end of the feedhorn picks up this emission and transfers it to a low noise amplifier
+    (LNA) mounted to the outside of the feedhorn. The feedhorn probe would be optically
+    equivalent to a telescope eyepiece.
   yOffset: 1.1
   xOffset: 1.5
 --- !u!1 &1018810089
@@ -13861,6 +13898,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 1365414782529414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1396516904902414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1800540137983010, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 4344470648180242, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8.14
@@ -13904,18 +13953,6 @@ PrefabInstance:
     - target: {fileID: 4344470648180242, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1396516904902414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1365414782529414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1800540137983010, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
@@ -14353,7 +14390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Drive Gearbox
+  Name: Elevation Drive Shaft Bearing
   Description: 
   yOffset: -1.75
   xOffset: 0
@@ -14754,6 +14791,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 1163828448221890, guid: eea8e68a217656b4b8be9f33ca4e98a8, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1605853657458092, guid: eea8e68a217656b4b8be9f33ca4e98a8, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1695070997321238, guid: eea8e68a217656b4b8be9f33ca4e98a8, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 4239474092739554, guid: eea8e68a217656b4b8be9f33ca4e98a8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 14.6455765
@@ -14797,18 +14846,6 @@ PrefabInstance:
     - target: {fileID: 4239474092739554, guid: eea8e68a217656b4b8be9f33ca4e98a8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1605853657458092, guid: eea8e68a217656b4b8be9f33ca4e98a8, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1695070997321238, guid: eea8e68a217656b4b8be9f33ca4e98a8, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1163828448221890, guid: eea8e68a217656b4b8be9f33ca4e98a8, type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eea8e68a217656b4b8be9f33ca4e98a8, type: 3}
@@ -14882,7 +14919,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Drive Axle
+  Name: Elevation Drive Shaft
   Description: 
   yOffset: -1.9
   xOffset: 0
@@ -15467,8 +15504,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Feed Horn Stand
-  Description: 
+  Name: Feed Horn Supports
+  Description: These supports are what hold the feed horn in front of the dish.
   yOffset: 1.1
   xOffset: 1.5
 --- !u!1 &1180697096
@@ -16430,6 +16467,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: b48516238204fc64095822c243b287b2,
+        type: 3}
+      propertyPath: m_Name
+      value: DriveGearbox
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: b48516238204fc64095822c243b287b2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -16571,6 +16613,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: cf0baec30f5a7e644aaebe13c1c957e7,
+        type: 3}
+      propertyPath: m_Name
+      value: MainDishSupport
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: cf0baec30f5a7e644aaebe13c1c957e7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -16609,7 +16656,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: cf0baec30f5a7e644aaebe13c1c957e7,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: cf0baec30f5a7e644aaebe13c1c957e7,
         type: 3}
@@ -16963,8 +17010,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Mount Plate
-  Description: 
+  Name: Pier Base Mounting Plate
+  Description: The mounting plate is what holds the telescope to the ground, preventing
+    it from moving.
   yOffset: 1.1
   xOffset: 0
 --- !u!64 &1254460377
@@ -18211,7 +18259,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 250, y: 100}
+  m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1355749995
 MonoBehaviour:
@@ -18235,7 +18283,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 18
+    m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
@@ -18244,7 +18292,7 @@ MonoBehaviour:
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 
 --- !u!222 &1355749996
@@ -18344,6 +18392,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 1365414782529414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1396516904902414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1800540137983010, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 4344470648180242, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
       propertyPath: m_LocalPosition.x
       value: -41.63
@@ -18387,18 +18447,6 @@ PrefabInstance:
     - target: {fileID: 4344470648180242, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1396516904902414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1365414782529414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1800540137983010, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
@@ -18471,7 +18519,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Dish Supports 2
+  Name: Dish Hub Supports
   Description: 
   yOffset: -2.4
   xOffset: -0.6
@@ -18960,7 +19008,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Dish Supports
+  Name: Dish Panel Supports
   Description: 
   yOffset: -2.2
   xOffset: 0
@@ -18997,7 +19045,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Dish
-  Description: 
+  Description: The dish antenna is in the form of a parabola and is the primary radio
+    energy collecting element of the radio telescope. Optically it is equivalent to
+    a parabolic mirror used in a reflecting telescope. When the dish antenna is pointed
+    to a radio source the incoming radio waves are collected and reflected off the
+    curved surface of the antenna and brought to a focus where it enters the feedhorn.
   yOffset: -2.2
   xOffset: 0
 --- !u!1 &1407145041
@@ -20395,7 +20447,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1452428802
 Transform:
   m_ObjectHideFlags: 0
@@ -20750,7 +20802,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Gear Box Stand
+  Name: Elevation Gear Box Support Structure
   Description: 
   yOffset: -2
   xOffset: 0
@@ -21026,6 +21078,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2926426679950814022, guid: e19ab9d364442524ba42cfddc686477c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 5734414120425621157, guid: e19ab9d364442524ba42cfddc686477c,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -21056,11 +21113,6 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[5]
       value: 
       objectReference: {fileID: 2100000, guid: dbbb1f927a5103645bc10d6baf34acd1, type: 2}
-    - target: {fileID: 2926426679950814022, guid: e19ab9d364442524ba42cfddc686477c,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e19ab9d364442524ba42cfddc686477c, type: 3}
 --- !u!4 &1485244093 stripped
@@ -21671,6 +21723,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TopFlange
       objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: 42ddc47b762411343b25bdfeaa27f3b7,
+        type: 3}
+      propertyPath: m_Name
+      value: TopFlange
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 42ddc47b762411343b25bdfeaa27f3b7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -22106,8 +22163,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Mainframe
-  Description: 
+  Name: Counter Weight and Dish Support Structure
+  Description: This support structure is what holds the wieght of the counter weight
+    and dish and is driven by the gears to move the dish.
   yOffset: -2.5
   xOffset: 0
 --- !u!1 &1568031986
@@ -23077,7 +23135,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 7fe3a57e108a4794abd1de7e26a79a15,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 7fe3a57e108a4794abd1de7e26a79a15,
         type: 3}
@@ -23851,6 +23909,51 @@ PrefabInstance:
       propertyPath: m_Name
       value: HTC_Vive_controller
       objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.05
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -23905,51 +24008,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.001
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.001
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.001
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.08
-      objectReference: {fileID: 0}
-    - target: {fileID: -6818831276395136792, guid: ac8abbf337fd2944e9dc7bc2bad450d8,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ac8abbf337fd2944e9dc7bc2bad450d8, type: 3}
@@ -25816,6 +25874,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 1038887569887598, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1426439134877918, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1682125241493300, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 4350558997761946, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
       propertyPath: m_LocalPosition.x
       value: -45.5
@@ -25859,18 +25929,6 @@ PrefabInstance:
     - target: {fileID: 4350558997761946, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1426439134877918, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1038887569887598, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1682125241493300, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58fac817ae2fe9c4b8d4d46db195d9fb, type: 3}
@@ -25977,6 +26035,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: MountPlate
       objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: 2685272d38c59164da7757909a98741c,
+        type: 3}
+      propertyPath: m_Name
+      value: MountPlate
+      objectReference: {fileID: 0}
+    - target: {fileID: -5975033157549033438, guid: 2685272d38c59164da7757909a98741c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 2685272d38c59164da7757909a98741c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -26030,11 +26098,6 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 2685272d38c59164da7757909a98741c,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -5975033157549033438, guid: 2685272d38c59164da7757909a98741c,
-        type: 3}
-      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -2416733968201007103, guid: 2685272d38c59164da7757909a98741c,
@@ -26151,10 +26214,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c42537bbeb51b94ab9d4f54aab15f0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Pole
-  Description: It holds up the telescope.
-  yOffset: 0
-  xOffset: 0
 --- !u!1 &1778605396
 GameObject:
   m_ObjectHideFlags: 0
@@ -26598,6 +26657,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: a13de0d40d1639a4a9813acf234ef74b,
+        type: 3}
+      propertyPath: m_Name
+      value: Dish
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: a13de0d40d1639a4a9813acf234ef74b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -26867,7 +26931,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Counter Weights
-  Description: 
+  Description: The counter weights are heavy weights located opposite the dish. Having
+    these weights balances the center of mass of the top of the telescope to above
+    the pier.
   yOffset: -2.5
   xOffset: 0
 --- !u!1001 &1809913739
@@ -27920,8 +27986,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Feed Horn Stand
-  Description: 
+  Name: Feed Horn Supports
+  Description: These supports are what hold the feed horn in front of the dish.
   yOffset: 1.1
   xOffset: 1.5
 --- !u!1 &1831893543
@@ -28583,10 +28649,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c42537bbeb51b94ab9d4f54aab15f0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Middle
-  Description: Turns the telescope around the Y axis.
-  yOffset: 0
-  xOffset: 0
 --- !u!1 &1883795968
 GameObject:
   m_ObjectHideFlags: 0
@@ -28831,6 +28893,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 1365414782529414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1396516904902414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1800540137983010, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 4344470648180242, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
       propertyPath: m_LocalPosition.x
       value: -38.78
@@ -28886,18 +28960,6 @@ PrefabInstance:
     - target: {fileID: 4344470648180242, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
       propertyPath: m_LocalScale.z
       value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 1396516904902414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1365414782529414, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1800540137983010, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b1b8c18f2947ef40b27473e1c8bcbcd, type: 3}
@@ -34196,6 +34258,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: 8cb9bd4fef3f18349ac3758f367a0432,
+        type: 3}
+      propertyPath: m_Name
+      value: DishSupports
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 8cb9bd4fef3f18349ac3758f367a0432,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -36693,7 +36760,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5290593a7283a4b8a749a3e3eedd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Main Dish Support
+  Name: Dish Hub
   Description: 
   yOffset: -2.2
   xOffset: 0
