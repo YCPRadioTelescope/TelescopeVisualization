@@ -60,7 +60,8 @@ public class HighlightTarget : MonoBehaviour
 		
 		// Cast a ray between the start object and end object. If a part of the telescope
 		// is hit, hitInfo is changed.
-		if(Physics.Raycast(start.transform.position, dir, out hitInfo, Vector3.Distance(start.transform.position, end.transform.position)))
+		if(Physics.Raycast(start.transform.position, dir, out hitInfo, Vector3.Distance(start.transform.position, end.transform.position))
+			&& hitInfo.transform.GetComponent<TelescopePartInfo>())
 		{
 			// Get the renderer object of the impacted game object.
 			currRend = hitInfo.collider.gameObject.GetComponent<Renderer>();
