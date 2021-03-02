@@ -98,6 +98,7 @@ public class HighlightTarget : MonoBehaviour
 		}
 	}
 	
+	// Runs when the user presses the highlight control.
 	void OnEnable()
 	{
 		if(vrActive)
@@ -105,16 +106,5 @@ public class HighlightTarget : MonoBehaviour
 			lr.SetPosition(0, start.transform.position);
 			lr.SetPosition(1, end.transform.position);
 		}
-	}
-	
-	// When this highlighter is disabled, reset any renderer that might have been highlighted.
-	void OnDisable()
-	{
-		if(rend)
-			rend.sharedMaterial = origMat;
-		rend = null;
-		text.text = "";
-		if(background)
-			background.SetActive(false);
 	}
 }
