@@ -18,8 +18,9 @@ public class HighlightTarget : MonoBehaviour
 	// HighlightColor and shader are applied to the object being highlighted.
 	public Color highlightColor;
 	public Shader shader;
-	// Text saves the name and description of the 
+	// Text saves the name and description of the highlighted part.
 	public Text text;
+	public GameObject background;
 	
 	// The object that the raycast hit.
 	private RaycastHit hitInfo;
@@ -70,6 +71,8 @@ public class HighlightTarget : MonoBehaviour
 			
 			// Get the name and description from the part that was hit.
 			text.text = hitInfo.transform.GetComponent<TelescopePartInfo>().Name + ": " + hitInfo.transform.GetComponent<TelescopePartInfo>().Description;
+			if(background)
+				background.SetActive(true);
 			
 			// If we've hit a different object, reset the old object to its original material.
 			if(rend)
@@ -89,6 +92,8 @@ public class HighlightTarget : MonoBehaviour
 			rend.sharedMaterial = origMat;
 			rend = null;
 			text.text = "";
+			if(background)
+				background.SetActive(false);
 		}
 	}
 	
@@ -108,5 +113,7 @@ public class HighlightTarget : MonoBehaviour
 			rend.sharedMaterial = origMat;
 		rend = null;
 		text.text = "";
+		if(background)
+			background.SetActive(false);
 	}
 }
