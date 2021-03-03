@@ -6,18 +6,11 @@ using UnityEngine.UI;
 // This script controls the behavior of the escape menu.
 public class EscMenu : MonoBehaviour
 {
-	private bool pause = false;
+	public bool pause;
 	public GameObject pauseMenu;
 	public Button resumeButton;
 	public Button exitButton;
 	public MouseLook mouseLook;
-	
-	// Start is called before the first frame update.
-	void Start()
-	{
-		// Don't show the pause menu when the game is started.
-		pauseMenu.SetActive(false);
-	}
 	
 	// Update is called once per frame.
 	void Update()

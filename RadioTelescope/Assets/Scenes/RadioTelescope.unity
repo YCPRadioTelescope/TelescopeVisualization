@@ -20673,6 +20673,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f12cd2002540bbd449718f4c344f4169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pause: 1
   pauseMenu: {fileID: 1852452504}
   resumeButton: {fileID: 2033433163}
   exitButton: {fileID: 769922447}
