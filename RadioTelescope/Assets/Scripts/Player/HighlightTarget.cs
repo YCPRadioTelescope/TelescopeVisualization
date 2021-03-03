@@ -22,6 +22,10 @@ public class HighlightTarget : MonoBehaviour
 	public Text text;
 	public GameObject background;
 	
+	// The player game object to be teleported when shift+clicking.
+	public GameObject player;
+	private int delayTimer;
+	
 	// The object that the raycast hit.
 	private RaycastHit hitInfo;
 	// The original material of the object that was hit, and the material that
@@ -60,9 +64,25 @@ public class HighlightTarget : MonoBehaviour
 		
 		// Cast a ray between the start object and end object. If a part of the telescope
 		// is hit, hitInfo is changed.
-		if(Physics.Raycast(start.transform.position, dir, out hitInfo, Vector3.Distance(start.transform.position, end.transform.position))
-			&& hitInfo.transform.GetComponent<TelescopePartInfo>())
+		if(Physics.Raycast(start.transform.position, dir, out hitInfo, Vector3.Distance(start.transform.position, end.transform.position)))
 		{
+			// If shift is held down, then the player is attempting to teleport. Move the player to the point that was hit.
+			if(player && Input.GetKey(KeyCode.LeftShift) && delayTimer <= 0)
+			{
+				delayTimer = 10;
+				player.transform.position = hitInfo.point;
+				return;
+			}
+			delayTimer--;
+			
+			// If shift wasn't held down and we hit something that isn't a telescope part,
+			// reset any previously highlighted part and return.
+			if(!hitInfo.transform.GetComponent<TelescopePartInfo>())
+			{
+				Reset();
+				return;
+			}
+			
 			// Get the renderer object of the impacted game object.
 			currRend = hitInfo.collider.gameObject.GetComponent<Renderer>();
 			
@@ -89,13 +109,7 @@ public class HighlightTarget : MonoBehaviour
 		}
 		// If nothing was hit but something had previously been hit, reset the material of that object.
 		else if(rend)
-		{
-			rend.sharedMaterial = origMat;
-			rend = null;
-			text.text = "";
-			if(background)
-				background.SetActive(false);
-		}
+			Reset();
 	}
 	
 	// Runs when the user presses the highlight control.
@@ -106,5 +120,16 @@ public class HighlightTarget : MonoBehaviour
 			lr.SetPosition(0, start.transform.position);
 			lr.SetPosition(1, end.transform.position);
 		}
+	}
+	
+	// Resets the state of the last highlighted part, if any, and the description text GUI.
+	void Reset()
+	{
+		if(rend)
+			rend.sharedMaterial = origMat;
+		rend = null;
+		text.text = "";
+		if(background)
+			background.SetActive(false);
 	}
 }

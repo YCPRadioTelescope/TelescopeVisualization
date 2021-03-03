@@ -19792,6 +19792,7 @@ MonoBehaviour:
   shader: {fileID: -6465566751694194690, guid: 1c0a65243a41bb1418544cacfd1cde96, type: 3}
   text: {fileID: 1355749995}
   background: {fileID: 0}
+  player: {fileID: 0}
   vrActive: 1
 --- !u!1 &1424162520
 GameObject:
@@ -20120,6 +20121,7 @@ MonoBehaviour:
   shader: {fileID: -6465566751694194690, guid: 1c0a65243a41bb1418544cacfd1cde96, type: 3}
   text: {fileID: 940888257}
   background: {fileID: 1420086305}
+  player: {fileID: 1452428801}
   vrActive: 0
 --- !u!120 &1434264599
 LineRenderer:
