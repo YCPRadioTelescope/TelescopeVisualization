@@ -11,6 +11,7 @@ using Modbus.Device;
 using System.Linq;
 using TMPro;
 using UnityEngine.UI;
+using Valve.VR.InteractionSystem;
 
 public class SimServer : MonoBehaviour {
     /// <summary> 	
@@ -35,7 +36,7 @@ public class SimServer : MonoBehaviour {
     
     //for controlling the VR telescope
     public TelescopeControllerSim tc;
-    public float speed = 0.1f;
+    public float speed = 0.01f;
     private float azDeg = -42069;
     private float elDeg = -42069;
     
@@ -55,17 +56,24 @@ public class SimServer : MonoBehaviour {
     //START BUTTON
     void Start()
     {
+        tc.speed = speed;
+        tc.SetY(0);
+        tc.SetZ(0.0f + 15.0f);
         //startButton = GetComponent<Button>();
         startButton.onClick.AddListener(StartServer);
         fillButton.onClick.AddListener(AutoFillInput);
+        
+        //fix the fullscreen stuff
+        Screen.fullScreen = false;
+        Screen.SetResolution(1024,768, FullScreenMode.Windowed);
     }
 
     public void AutoFillInput()
     {
         plcIP.text = "127.0.0.1";
         mcuIP.text = "127.0.0.1";
-        plcPort.text = "8080";
-        mcuPort.text = "8081";
+        plcPort.text = "8082";
+        mcuPort.text = "8083";
     }
     
     //START THE SERVER THREADS
@@ -115,7 +123,7 @@ public class SimServer : MonoBehaviour {
         float errorCondition = -42069;
         if (azDeg != errorCondition)
         {
-            
+            //Debug.Log("Y Move");
             tc.SetY(azDeg);
             azDeg = errorCondition;
 
@@ -123,6 +131,7 @@ public class SimServer : MonoBehaviour {
 
         if (elDeg != errorCondition)
         {
+            //Debug.Log("Z Move");
             tc.SetZ(elDeg);
             elDeg = errorCondition;
         }
@@ -130,8 +139,6 @@ public class SimServer : MonoBehaviour {
         //press escape to exit the program cleanly
         if (Input.GetKeyDown((KeyCode.Escape)))
         {
-            ExitServer();
-            //UnityEditor.EditorApplication.isPlaying = false;
             Application.Quit();
         }
     }
@@ -282,28 +289,57 @@ public class SimServer : MonoBehaviour {
 
     private bool handleCMD(ushort[] data)
     {
+        isconfigured = true;
         string outstr = "";
         for(int v = 0; v < data.Length; v++) {
             outstr += Convert.ToString( data[v] , 16 ).PadLeft( 5 ) + ",";
         }
-        Debug.Log(outstr);
-        Debug.Log(data[0]);
-        Debug.Log(data[1]);
+        //Debug.Log(outstr);
+        //Debug.Log("Head: " + data[0]);
+        //Debug.Log(data[1]);
         jogging = false;
-        if(data[0] == 0x8400) {//if not configured dont move
+        /*if(data[0] == 0x8400) {//if not configured dont move
 
             isconfigured = true;
         } else if(!isconfigured) {
             return true;
-        }
+        }*/
 
         if (data[0] == 4)
         {
             Debug.Log("Recieved immediate stop.");
         }
         
+        //TEST
+        int test = data[0];
+        Debug.Log(test);
+        if (test == 2)
+        {
+            //Debug.Log("THIS IS MOVE");
+            //convert az to somethin unity can use, 2 parts
+            int frontAz = (data[2])  << 16;
+            int backAz = (data[3]);
+
+            //convert Elivation into something unity can use, 2 parts
+            int frontEl = (data[12]) << 16;
+            int backEl = (data[13]);
+            
+            //Add the 2 parts of each into a single int
+            int az = frontAz + backAz;
+            int el = frontEl + backEl;
+            
+            //take the converted ints and put it in unitys prefered values
+            //also let the use know *logging needs to happen
+            azDeg = az * 360.0f / (20000.0f * 500.0f);
+            Debug.Log("The degree azimuth is: " + azDeg); 
+            elDeg = el * 360.0f / (20000.0f * 50.0f);
+            Debug.Log("The degree elevation is: " + elDeg);
+
+
+        }
+        
         if(data[1] == 0x0403) {//move cmd
-            Debug.Log("MOVE");
+            //Debug.Log("MOVE");
             mooving = true;
             MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
             MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
@@ -313,40 +349,6 @@ public class SimServer : MonoBehaviour {
             acc = data[4];
             distAZ = (data[6] << 16) + data[7];
             distEL = (data[12] << 16) + data[13];
-            return true;
-        } else if(data[0] == 0x0080 || data[0] == 0x0100 || data[10] == 0x0080 || data[10] == 0x0100) {
-            Debug.Log("JOG");
-            jogging = true;
-            MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
-            MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
-            if(data[0] == 0x0080) {
-                AZ_speed = ((data[4] << 16) + data[5]) / 20;
-            } else if(data[0] == 0x0100) {
-                AZ_speed = -((data[4] << 16) + data[5]) / 20;
-            } else {
-                AZ_speed = 0;
-            }
-            if(data[10] == 0x0080) {
-                EL_speed = ((data[14] << 16) + data[15]) / 20;
-            } else if(data[10] == 0x0100) {
-                EL_speed = -((data[14] << 16) + data[15]) / 20;
-            } else {
-                EL_speed = 0;
-            }
-            return true;
-        } else if(data[0] == 0x0002 || data[0] == 0x0002) {//move cmd
-            Debug.Log("RELATIVE MOVE");
-            mooving = true;
-            MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
-            MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
-            AZ_speed = ((data[4] << 16) + data[5]) / 5;
-            EL_speed = ((data[14] << 16) + data[15]) / 5;
-            acc = data[6];
-            distAZ = (data[2] << 16) + data[3];
-            Debug.Log("DIST A:" + distAZ);
-            distEL = (data[12] << 16) + data[13];
-            Debug.Log("DIST E:" + distEL);
-            
             //Convert to unity speak
             string[] packetInfo = outstr.Split(',');
             
@@ -367,6 +369,82 @@ public class SimServer : MonoBehaviour {
             azDeg = az * 360.0f / (20000.0f * 500.0f);
             Debug.Log("The degree azimuth is: " + azDeg); 
             elDeg = el * 360.0f / (20000.0f * 50.0f);
+            Debug.Log("The degree elevation is: " + elDeg);
+            return true;
+        } else if(data[0] == 0x0080 || data[0] == 0x0100 || data[10] == 0x0080 || data[10] == 0x0100) {
+            //Debug.Log("JOG");
+            jogging = true;
+            MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
+            MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
+            if(data[0] == 0x0080) {
+                AZ_speed = ((data[4] << 16) + data[5]) / 20;
+            } else if(data[0] == 0x0100) {
+                AZ_speed = -((data[4] << 16) + data[5]) / 20;
+            } else {
+                AZ_speed = 0;
+            }
+            if(data[10] == 0x0080) {
+                EL_speed = ((data[14] << 16) + data[15]) / 20;
+            } else if(data[10] == 0x0100) {
+                EL_speed = -((data[14] << 16) + data[15]) / 20;
+            } else {
+                EL_speed = 0;
+            }
+            //Convert to unity speak
+            string[] packetInfo = outstr.Split(',');
+            
+            //convert az to somethin unity can use, 2 parts
+            int frontAz = (Convert.ToInt32(packetInfo[2].Trim(), 16))  << 16;
+            int backAz = (Convert.ToInt32(packetInfo[3].Trim(), 16));
+
+            //convert Elivation into something unity can use, 2 parts
+            int frontEl = Convert.ToInt32(packetInfo[12].Trim(), 16) << 16;
+            int backEl = Convert.ToInt32(packetInfo[13].Trim(), 16);
+            
+            //Add the 2 parts of each into a single int
+            int az = frontAz + backAz;
+            int el = frontEl + backEl;
+            
+            //take the converted ints and put it in unitys prefered values
+            //also let the use know *logging needs to happen
+            azDeg = az * 360.0f / (20000.0f * 500.0f);
+            Debug.Log("The degree azimuth is: " + azDeg); 
+            elDeg = el * 360.0f / (20000.0f * 50.0f);
+            Debug.Log("The degree elevation is: " + elDeg);
+            return true;
+        } else if(data[0] == 0x0002 || data[0] == 0x0002) {//move cmd
+            //Debug.Log("RELATIVE MOVE");
+            mooving = true;
+            MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
+            MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
+            AZ_speed = ((data[4] << 16) + data[5]) / 5;
+            EL_speed = ((data[14] << 16) + data[15]) / 5;
+            acc = data[6];
+            distAZ = (data[2] << 16) + data[3];
+            //Debug.Log("DIST A:" + distAZ);
+            distEL = (data[12] << 16) + data[13];
+            //Debug.Log("DIST E:" + distEL);
+            
+            //Convert to unity speak
+            string[] packetInfo = outstr.Split(',');
+            
+            //convert az to somethin unity can use, 2 parts
+            int frontAz = (Convert.ToInt32(packetInfo[2].Trim(), 16))  << 16;
+            int backAz = (Convert.ToInt32(packetInfo[3].Trim(), 16));
+
+            //convert Elivation into something unity can use, 2 parts
+            int frontEl = Convert.ToInt32(packetInfo[12].Trim(), 16) << 16;
+            int backEl = Convert.ToInt32(packetInfo[13].Trim(), 16);
+            
+            //Add the 2 parts of each into a single int
+            int az = frontAz + backAz;
+            int el = frontEl + backEl;
+            
+            //take the converted ints and put it in unitys prefered values
+            //also let the use know *logging needs to happen
+            azDeg = az * 360.0f / (20000.0f * 500.0f);
+            Debug.Log("The degree azimuth is: " + azDeg); 
+            elDeg = (el * 360.0f / (20000.0f * 50.0f)) * -1;
             Debug.Log("The degree elevation is: " + elDeg);
             return true;
         }
