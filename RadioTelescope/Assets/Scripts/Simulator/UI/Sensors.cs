@@ -3,23 +3,15 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+// This script can be accessed to update the sensors UI with
+// the status of sensors.
 public class Sensors : MonoBehaviour
 {
-    public TMP_Text elevation;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void updateElSensor(string res)
-    {
-        elevation.text = "Elevation Limit: " + res;
-    }
+	public TMP_Text elevation;
+	
+	// Update the elevation limit sensor UI.
+	public void UpdateElevationSensor(string status)
+	{
+		elevation.text = "Elevation Limit: " + status;
+	}
 }
