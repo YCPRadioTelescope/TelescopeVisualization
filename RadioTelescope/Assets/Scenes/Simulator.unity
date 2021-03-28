@@ -182,7 +182,7 @@ GameObject:
   - component: {fileID: 31453318}
   - component: {fileID: 31453317}
   m_Layer: 5
-  m_Name: AzPos
+  m_Name: Azimuth Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -405,7 +405,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 40096329}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -38.73, y: 4.93, z: -49.49}
+  m_LocalPosition: {x: -38.41893, y: 4.93, z: -49.49}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1251,7 +1251,7 @@ GameObject:
   - component: {fileID: 205231890}
   - component: {fileID: 205231889}
   m_Layer: 5
-  m_Name: targetX
+  m_Name: Target Elevation Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5052,7 +5052,7 @@ GameObject:
   - component: {fileID: 1037877852}
   - component: {fileID: 1037877851}
   m_Layer: 5
-  m_Name: Speed
+  m_Name: Speed Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5944,7 +5944,7 @@ GameObject:
   - component: {fileID: 1224302191}
   - component: {fileID: 1224302190}
   m_Layer: 5
-  m_Name: ElPos
+  m_Name: Elevation Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6101,7 +6101,7 @@ GameObject:
   - component: {fileID: 1283250070}
   - component: {fileID: 1283250069}
   m_Layer: 5
-  m_Name: targetY
+  m_Name: Target Azimuth Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6672,25 +6672,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f6409fddc3585144824113a53a3d03b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xRotation: {fileID: 879300291}
-  yRotation: {fileID: 1525520883}
-  targetZ: 0
-  targetY: 0
-  currentZ: 0
-  currentY: 0
+  elevation: {fileID: 879300291}
+  azimuth: {fileID: 1525520883}
   speed: 1
   sen: {fileID: 2120281192}
   ZPos: {fileID: 1970712149}
   YPos: {fileID: 186378141}
-  ElPos: {fileID: 1224302190}
-  AzPos: {fileID: 31453317}
-  SpeedTxt: {fileID: 1037877851}
-  TargetYY: {fileID: 1283250069}
-  TargetXX: {fileID: 205231889}
-  yRemainder: 0
-  isNeg: 0
-  isMovingY: 0
-  isMovingZ: 0
+  elevationText: {fileID: 1224302190}
+  azimuthText: {fileID: 31453317}
+  speedText: {fileID: 1037877851}
+  targetAzimuthText: {fileID: 1283250069}
+  targetElevationText: {fileID: 205231889}
 --- !u!1001 &1372149470
 PrefabInstance:
   m_ObjectHideFlags: 0

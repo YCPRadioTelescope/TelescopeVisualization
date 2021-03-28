@@ -64,7 +64,7 @@ public class ExplodedView : MonoBehaviour
 			ToggleExplodedView();
 			// Causing the telescope to explode resets its rotation to the default position.
 			if(isInExplodedView)
-				tc.ResetRotation();
+				tc.ResetOrientation();
 			// The exploded view can only be toggled once per second.
 			// Otherwise, holding the left trigger would cause the
 			// exploded view to rapidly toggle.

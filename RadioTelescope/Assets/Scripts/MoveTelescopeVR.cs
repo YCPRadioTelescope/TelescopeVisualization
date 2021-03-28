@@ -6,17 +6,10 @@ using Zinnia.Extension;
 // A script to control the telescope via the VR controlled joystick.
 public class MoveTelescopeVR : MonoBehaviour
 {
-	public GameObject telescope;
 	public TelescopeController tc;
 	public GameObject joystick;
 	private Vector3 rotation;
-
-	// Start is called before the first frame update
-	void Start()
-	{
-		tc = telescope.GetComponent<TelescopeController>();
-	}
-
+	
 	// Update is called once per frame
 	void Update()
 	{
@@ -27,7 +20,7 @@ public class MoveTelescopeVR : MonoBehaviour
 		if(rotation.z > 190)
 			rotation.z -= 360;
 
-		tc.RotateX(rotation.x * (float) 0.01);
-		tc.RotateY(rotation.z * (float) 0.01);
+		tc.ChangeAzimuth(rotation.z * (float) 0.01);
+		tc.ChangeElevation(rotation.x * (float) 0.01);
 	}
 }

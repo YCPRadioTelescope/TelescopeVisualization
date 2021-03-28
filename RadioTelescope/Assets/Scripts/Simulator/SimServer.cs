@@ -33,13 +33,13 @@ public class SimServer : MonoBehaviour {
 	public ModbusIpMaster PLCModbusMaster;
 	private Thread MCU_emulator_thread;
 	private Thread PLC_emulator_thread;
-
+	
 	//for controlling the VR telescope
 	public TelescopeControllerSim tc;
 	public float speed = 0.01f;
 	private float azDeg = -42069;
 	private float elDeg = -42069;
-
+	
 	//UI Related variables
 	public string PLC_ip;
 	public string MCU_ip;
@@ -49,25 +49,25 @@ public class SimServer : MonoBehaviour {
 	public TMP_InputField mcuPort;
 	public Button startButton;
 	public Button fillButton;
-
+	
 	private bool runsimulator = true, mooving = false, jogging = false, isconfigured = false, isTest = false;
 	private int acc, distAZ, distEL, currentAZ, currentEL, AZ_speed, EL_speed, PLC_port, MCU_port;
-
+	
 	//START BUTTON
 	void Start()
 	{
 		tc.speed = speed;
-		tc.SetY(0);
-		tc.SetZ(0.0f + 15.0f);
+		tc.TargetAzimuth(0.0f);
+		tc.TargetElevation(15.0f);
 		//startButton = GetComponent<Button>();
 		startButton.onClick.AddListener(StartServer);
 		fillButton.onClick.AddListener(AutoFillInput);
 		
 		//fix the fullscreen stuff
 		Screen.fullScreen = false;
-		Screen.SetResolution(1024,768, FullScreenMode.Windowed);
+		Screen.SetResolution(1024, 768, FullScreenMode.Windowed);
 	}
-
+	
 	public void AutoFillInput()
 	{
 		plcIP.text = "127.0.0.1";
@@ -75,16 +75,15 @@ public class SimServer : MonoBehaviour {
 		plcPort.text = "8082";
 		mcuPort.text = "8083";
 	}
-
+	
 	//START THE SERVER THREADS
 	public void StartServer()
 	{
 		Debug.Log("Start Button clicked");
 		tc.speed = speed;
-		tc.targetY = 0.0f;
-		tc.targetZ = 0.0f;
-		tc.SetY(0);
-		tc.SetZ(0.0f + 15.0f);
+		tc.TargetAzimuth(0.0f);
+		tc.TargetElevation(15.0f);
+		
 		try
 		{
 			//MCU_TCPListener = new TcpListener(new IPEndPoint(IPAddress.Parse("127.0.0.2"), 8080));
@@ -94,20 +93,24 @@ public class SimServer : MonoBehaviour {
 		}
 		catch (Exception e)
 		{
-			if ((e is ArgumentNullException) || (e is ArgumentOutOfRangeException))
+			if((e is ArgumentNullException) || (e is ArgumentOutOfRangeException))
 			{
 				Debug.Log(e);
 				return;
 			}
-			else { throw e; }// Unexpected exception
+			else
+			{
+				throw e;
+			}
 		}
+		
 		try
 		{
 			MCU_TCPListener.Start(1);
 		}
 		catch (Exception e)
 		{
-			if ((e is SocketException) || (e is ArgumentOutOfRangeException) || (e is InvalidOperationException))
+			if((e is SocketException) || (e is ArgumentOutOfRangeException) || (e is InvalidOperationException))
 			{
 				Debug.Log(e);
 				return;
@@ -116,33 +119,31 @@ public class SimServer : MonoBehaviour {
 		runsimulator = true;
 		MCU_emulator_thread.Start();
 	}
-
+	
 	// Update is called once per frame
 	void Update () { 		
 		//Check for an impossible or incorrect value and display a number so you can tell it errord
 		float errorCondition = -42069;
-		if (azDeg != errorCondition)
+		if(azDeg != errorCondition)
 		{
 			//Debug.Log("Y Move");
-			tc.SetY(azDeg);
+			tc.TargetAzimuth(azDeg);
 			azDeg = errorCondition;
 
 		}
-
-		if (elDeg != errorCondition)
+		
+		if(elDeg != errorCondition)
 		{
 			//Debug.Log("Z Move");
-			tc.SetZ(elDeg);
+			tc.TargetElevation(elDeg);
 			elDeg = errorCondition;
 		}
 		
 		//press escape to exit the program cleanly
-		if (Input.GetKeyDown((KeyCode.Escape)))
-		{
+		if(Input.GetKeyDown((KeyCode.Escape)))
 			Application.Quit();
-		}
 	}
-
+	
 	public void startPLC()
 	{
 		try
@@ -152,19 +153,17 @@ public class SimServer : MonoBehaviour {
 		}
 		catch (Exception e)
 		{
-			if ((e is ArgumentNullException) || (e is ArgumentOutOfRangeException))
+			if((e is ArgumentNullException) || (e is ArgumentOutOfRangeException))
 			{
 				//Debug.Log(e);
 				return;
 			}
-
 		}
 	}
-
-
+	
 	private void Run_PLC_emulator_thread()
 	{
-		while (runsimulator)
+		while(runsimulator)
 		{
 			try
 			{
@@ -179,37 +178,37 @@ public class SimServer : MonoBehaviour {
 			}
 			Debug.Log("________________PLC sim running");
 			//PLCModbusMaster.WriteMultipleRegisters((ushort)PLC_modbus_server_register_mapping.Safty_INTERLOCK - 1, new ushort[] { 1 });
-			while (runsimulator)
+			while(runsimulator)
 			{
-				if (isTest)
+				if(isTest)
 				{
 				   // PLCModbusMaster.WriteMultipleRegisters((ushort)PLC_modbus_server_register_mapping.Safty_INTERLOCK - 1, new ushort[] { 1 });
 					Thread.Sleep(5);
 					continue;
 				}
-
-				Debug.Log(tc.getCurrentY());
-				Debug.Log(tc.getCurrentZ());
+				
+				Debug.Log(tc.GetAzimuthDegrees());
+				Debug.Log(tc.GetElevationDegrees());
 				
 				Thread.Sleep(50);
 			}
 		}
 	}
-
+	
 	private void Server_Written_to_handler(object sender, DataStoreEventArgs e)
 	{
 		MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
 		MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
 		//Debug.Log("plcdriver data writen 1 reg "+ e.Data.B[0]+" start adr "+ e.StartAddress);
 		ushort[] data = new ushort[e.Data.B.Count];
-		for (int i = 0; i < e.Data.B.Count; i++)
+		for(int i = 0; i < e.Data.B.Count; i++)
 		{
 			data[i] = e.Data.B[i];
 			Debug.Log(data[i]);
 		}
 		handleTestCMD(data);
 	}
-
+	
 	private void Run_MCU_server_thread()
 	{
 		byte slaveId = 1;
@@ -218,38 +217,37 @@ public class SimServer : MonoBehaviour {
 		//coils, inputs, holdingRegisters, inputRegisters
 		MCU_Modbusserver.DataStore = DataStoreFactory.CreateDefaultDataStore(0, 0, 1054, 0);
 		// PLC_Modbusserver.DataStore.SyncRoot.ToString();
-
+		
 		//MCU_Modbusserver.ModbusSlaveRequestReceived += new EventHandler<ModbusSlaveRequestEventArgs>(Server_Read_handler);
-		if (isTest)
+		if(isTest)
 		{
 			MCU_Modbusserver.DataStore.DataStoreWrittenTo += new EventHandler<DataStoreEventArgs>(Server_Written_to_handler);
 		}
-
+		
 		MCU_Modbusserver.Listen();
 		
 		//did something connect?
-	   
 		
 		// prevent the main thread from exiting
 		ushort[] previos_out, current_out;
 		previos_out = Copy_modbus_registers(1025, 20);
 		while (runsimulator)
 		{
-			if (isTest)
+			if(isTest)
 			{
 				Thread.Sleep(5);
 				continue;
 			}
 			Thread.Sleep(50);
 			current_out = Copy_modbus_registers(1025, 20);
-			if (!current_out.SequenceEqual(previos_out))
+			if(!current_out.SequenceEqual(previos_out))
 			{
 				handleCMD(current_out);
 				//Debug.Log("data changed");
 			}
-			if (mooving)
+			if(mooving)
 			{
-				if (distAZ != 0 || distEL != 0)
+				if(distAZ != 0 || distEL != 0)
 				{
 					int travAZ = (distAZ < -AZ_speed) ? -AZ_speed : (distAZ > AZ_speed) ? AZ_speed : distAZ;
 					int travEL = (distEL < -EL_speed) ? -EL_speed : (distEL > EL_speed) ? EL_speed : distEL;
@@ -262,16 +260,14 @@ public class SimServer : MonoBehaviour {
 					MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] | 0x0080);
 				}
 			}
-			if (jogging)
+			if(jogging)
 			{
 				move(AZ_speed, EL_speed);
 			}
 			previos_out = current_out;
 		}
-
-
 	}
-
+	
 	private bool move(int travAZ, int travEL)
 	{
 		distAZ -= travAZ;
@@ -285,8 +281,7 @@ public class SimServer : MonoBehaviour {
 		MCU_Modbusserver.DataStore.HoldingRegisters[14] = (ushort)(currentEL & 0xffff);
 		return true;
 	}
-
-
+	
 	private bool handleCMD(ushort[] data)
 	{
 		isconfigured = true;
@@ -304,8 +299,8 @@ public class SimServer : MonoBehaviour {
 		} else if(!isconfigured) {
 			return true;
 		}*/
-
-		if (data[0] == 4)
+		
+		if(data[0] == 4)
 		{
 			Debug.Log("Recieved immediate stop.");
 		}
@@ -313,7 +308,7 @@ public class SimServer : MonoBehaviour {
 		//TEST
 		int test = data[0];
 		Debug.Log(test);
-		if (test == 2)
+		if(test == 2)
 		{
 			//Debug.Log("THIS IS MOVE");
 			//convert az to somethin unity can use, 2 parts
@@ -334,8 +329,6 @@ public class SimServer : MonoBehaviour {
 			Debug.Log("The degree azimuth is: " + azDeg); 
 			elDeg = el * 360.0f / (20000.0f * 50.0f);
 			Debug.Log("The degree elevation is: " + elDeg);
-
-
 		}
 		
 		if(data[1] == 0x0403) {//move cmd
@@ -459,7 +452,7 @@ public class SimServer : MonoBehaviour {
 		// Debug.Log(outstr);
 		string[] packetInfo = outstr.Split(',');
 		Debug.Log("ERROR: " + packetInfo[0]);
-		if (Int32.Parse(packetInfo[0]) == 2)
+		if(Int32.Parse(packetInfo[0]) == 2)
 		{
 			//convert az to somethin unity can use, 2 parts
 			int frontAz = (Convert.ToInt32(packetInfo[2].Trim(), 16))  << 16;
@@ -484,17 +477,17 @@ public class SimServer : MonoBehaviour {
 		}
 		//Debug.Log("===========================================================================================================================");
 		jogging = false;
-		if (data[0] == 0x8400)
+		if(data[0] == 0x8400)
 		{//if not configured dont move
 
 			isconfigured = true;
 		}
-		else if (!isconfigured)
+		else if(!isconfigured)
 		{
 			return true;
 		}
 
-		if (data[1] == 0x0403)
+		if(data[1] == 0x0403)
 		{//move cmd
 			mooving = true;
 			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
@@ -507,16 +500,16 @@ public class SimServer : MonoBehaviour {
 			distEL = (data[12] << 16) + data[13];
 			return true;
 		}
-		else if (data[0] == 0x0080 || data[0] == 0x0100 || data[10] == 0x0080 || data[10] == 0x0100)
+		else if(data[0] == 0x0080 || data[0] == 0x0100 || data[10] == 0x0080 || data[10] == 0x0100)
 		{
 			jogging = true;
 			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
 			MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
-			if (data[0] == 0x0080)
+			if(data[0] == 0x0080)
 			{
 				AZ_speed = ((data[4] << 16) + data[5]) / 20;
 			}
-			else if (data[0] == 0x0100)
+			else if(data[0] == 0x0100)
 			{
 				AZ_speed = -((data[4] << 16) + data[5]) / 20;
 			}
@@ -524,11 +517,11 @@ public class SimServer : MonoBehaviour {
 			{
 				AZ_speed = 0;
 			}
-			if (data[10] == 0x0080)
+			if(data[10] == 0x0080)
 			{
 				EL_speed = ((data[14] << 16) + data[15]) / 20;
 			}
-			else if (data[10] == 0x0100)
+			else if(data[10] == 0x0100)
 			{
 				EL_speed = -((data[14] << 16) + data[15]) / 20;
 			}
@@ -538,7 +531,7 @@ public class SimServer : MonoBehaviour {
 			}
 			return true;
 		}
-		else if (data[0] == 0x0002 || data[0] == 0x0002)
+		else if(data[0] == 0x0002 || data[0] == 0x0002)
 		{//move cmd
 			mooving = true;
 			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
@@ -553,17 +546,16 @@ public class SimServer : MonoBehaviour {
 		return false;
 		#endregion*/
 	}
-
-
+	
 	private bool handleTestCMD(ushort[] data)
 	{
 		string outstr = " inreg";
-		for (int v = 0; v < data.Length; v++)
+		for(int v = 0; v < data.Length; v++)
 		{
 			outstr += Convert.ToString(data[v], 16).PadLeft(5) + ",";
 		}
 		// Debug.Log(outstr);
-		if (data[1] == 0x0403)//move cmd
+		if(data[1] == 0x0403)//move cmd
 		{
 			distAZ = (data[6] << 16) + data[7];
 			distEL = (data[12] << 16) + data[13];
@@ -582,7 +574,7 @@ public class SimServer : MonoBehaviour {
 
 			return true;
 		}
-		else if (data[0] == 0x0002 || data[0] == 0x0002)
+		else if(data[0] == 0x0002 || data[0] == 0x0002)
 		{//move cmd
 			Debug.Log("Move command");
 			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
@@ -598,16 +590,17 @@ public class SimServer : MonoBehaviour {
 		}
 		return false;
 	}
-
+	
 	private ushort[] Copy_modbus_registers(int start_index, int length)
 	{
 		ushort[] data = new ushort[length];
-		for (int i = 0; i < length; i++)
+		for(int i = 0; i < length; i++)
 		{
 			data[i] = MCU_Modbusserver.DataStore.HoldingRegisters[i + start_index];
 		}
 		return data;
 	}
+	
 	public void Bring_down()
 	{
 		runsimulator = false;
@@ -618,11 +611,9 @@ public class SimServer : MonoBehaviour {
 		MCU_TCPListener.Stop();
 		MCU_Modbusserver.Dispose();
 	}
-
-		
+	
 	void ExitServer()
 	{
 		tcpListener.Server.Close();
 	}
-
 }

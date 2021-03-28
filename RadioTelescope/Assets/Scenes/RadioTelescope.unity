@@ -17295,7 +17295,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1296651329}
-  - component: {fileID: 1296651331}
   - component: {fileID: 1296651330}
   - component: {fileID: 1296651332}
   - component: {fileID: 1296651333}
@@ -17334,20 +17333,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0af6e97d1b65c174f9784b526a43e856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xRotation: {fileID: 508402512}
-  yRotation: {fileID: 1687376674}
---- !u!114 &1296651331
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1296651328}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c94f2f4a5ca364c4fa869950e12a83e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  elevation: {fileID: 508402512}
+  azimuth: {fileID: 1687376674}
 --- !u!114 &1296651332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20291,8 +20278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc2355f769ccaa641a8ccea7387df284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  telescope: {fileID: 1296651328}
-  tc: {fileID: 0}
+  tc: {fileID: 1296651330}
 --- !u!114 &1436024171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20305,8 +20291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47ebaa0e9d64efc4f888479d9e8fbe92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  telescope: {fileID: 1296651328}
-  tc: {fileID: 0}
+  tc: {fileID: 1296651330}
   leftTouchpadVertical: {fileID: 668600620}
   leftTouchpadHorizontal: {fileID: 313800105}
 --- !u!114 &1436024172
@@ -20321,8 +20306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e9641c11a343fc43a78352ab5c1a864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  telescope: {fileID: 1296651328}
-  tc: {fileID: 0}
+  tc: {fileID: 1296651330}
   joystick: {fileID: 86215410096099099}
 --- !u!114 &1436024173
 MonoBehaviour:

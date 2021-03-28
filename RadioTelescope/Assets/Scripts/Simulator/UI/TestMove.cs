@@ -24,8 +24,8 @@ public class TestMove : MonoBehaviour
 	// telescope controller.
 	private void TestMovement()
 	{
-		tc.SetZ(float.Parse(elevation.text));
-		tc.SetY(float.Parse(azimuth.text));
+		tc.TargetElevation(float.Parse(elevation.text));
+		tc.TargetAzimuth(float.Parse(azimuth.text));
 		tc.speed = float.Parse(speed.text);
 	}
 }

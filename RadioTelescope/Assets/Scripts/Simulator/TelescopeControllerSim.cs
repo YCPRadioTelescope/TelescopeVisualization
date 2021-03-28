@@ -9,153 +9,148 @@ using UnityStandardAssets.Vehicles.Car;
 // This script controls the telescope according to the inputs from the simulator.
 public class TelescopeControllerSim : MonoBehaviour
 {
-	public GameObject xRotation;
-	public GameObject yRotation;
-	public float targetZ = 0.0f;
-	public float targetY = 0.0f;
-	public float currentZ = 0.0f;
-	public float currentY = 0.0f;
+	public GameObject elevation;
+	public GameObject azimuth;
 	public float speed = 1.0f;
 	public Sensors sen;
 	
 	public TMP_Text ZPos;
 	public TMP_Text YPos;
-	public TMP_Text ElPos;
-	public TMP_Text AzPos;
-	public TMP_Text SpeedTxt;
-	public TMP_Text TargetYY;
-	public TMP_Text TargetXX;
+	public TMP_Text elevationText;
+	public TMP_Text azimuthText;
+	public TMP_Text speedText;
+	public TMP_Text targetAzimuthText;
+	public TMP_Text targetElevationText;
 	
-	public float yRemainder = 0;
+	private float targetElevation = 0.0f;
+	private float targetAzimuth = 0.0f;
+	private float elevationDegrees = 0.0f;
+	private float azimuthDegrees = 0.0f;
 	
-	public bool isNeg = false;
-	public bool isMovingY = false;
-	public bool isMovingZ = false;
+	private float azimuthRemainder = 0.0f;
+	
+	private bool negativeAzimuthTarget = false;
+	private bool movingAzimuth = false;
+	private bool movingElevation = false;
 	
 	public void Update()
 	{	
-		if(targetZ < 0)
-			targetZ += 360.0f;
-		
-		if(Math.Round(currentY, 1) != Math.Round(targetY, 1))
-			currentY = RotateY(!isNeg ? speed : -speed);
+		if(Math.Round(azimuthDegrees, 1) != Math.Round(targetAzimuth, 1))
+			azimuthDegrees = ChangeAzimuth(!negativeAzimuthTarget ? speed : -speed);
 		else
-			targetY = currentY;
+			targetAzimuth = azimuthDegrees;
 		
-		if(targetY == currentY && yRemainder > 0)
+		if(targetAzimuth == azimuthDegrees && azimuthRemainder > 0.0f)
 		{
-			if(isNeg)
+			if(negativeAzimuthTarget)
 			{
-				targetY = (targetY + yRemainder) - 360;
-				yRemainder = 0;
+				targetAzimuth = (targetAzimuth - azimuthRemainder) - 360.0f;
+				azimuthRemainder = 0.0f;
 			}
 			else
 			{
-				targetY = (targetY + yRemainder) - 360;
-				yRemainder = 0;
+				targetAzimuth = (targetAzimuth + azimuthRemainder) - 360.0f;
+				azimuthRemainder = 0.0f;
 			}
 		}
-		else if(targetY == currentY && yRemainder == 0)
-			isMovingY = false;
+		else if(targetAzimuth == azimuthDegrees && azimuthRemainder == 0.0f)
+			movingAzimuth = false;
 		
-		if((int)xRotation.transform.localEulerAngles.z != (int) targetZ)
+		if((int)elevation.transform.localEulerAngles.z != (int) targetElevation)
 		{
-			if(targetZ <= 105.0f && targetZ >= 0)
+			if(targetElevation <= 109.0f && targetElevation >= 0.0f)
 			{
-				if(targetZ >= xRotation.transform.localEulerAngles.z)
-					currentZ = RotateZ(-speed);
+				if(targetElevation >= elevation.transform.localEulerAngles.z)
+					elevationDegrees = ChangeElevation(-speed);
 				else
-					currentZ = RotateZ(speed);
+					elevationDegrees = ChangeElevation(speed);
 				sen.UpdateElevationSensor("Good");
 			}
 			else
 			{
-				if(targetZ <= 105.0f)
-					targetZ = 1;
-				else
-					targetZ = 0;
+				targetElevation = (targetElevation > 109.0f ? 109.0f : 0.0f);
 				sen.UpdateElevationSensor("Hit");
 			}
 		}
 		else
-			isMovingZ = false;
+			movingElevation = false;
 		
-		YPos.text = "Unity Y Position: " + System.Math.Round(currentY, 0);
-		ZPos.text = "Unity Z Position: " + System.Math.Round(currentZ, 0);
-		if(Math.Round(currentY, 0) == 359)
-			AzPos.text = "Y Degrees: " + (System.Math.Round(currentY, 0) + 1);
+		YPos.text = "Unity Az Position: " + System.Math.Round(azimuthDegrees, 0);
+		ZPos.text = "Unity El Position: " + System.Math.Round(elevationDegrees, 0);
+		if(Math.Round(azimuthDegrees, 0) == 359)
+			azimuthText.text = "Azimuth Degrees: " + (System.Math.Round(azimuthDegrees, 0) + 1);
 		else
-			AzPos.text = "Y Degrees: " + System.Math.Round(currentY, 2);
-		ElPos.text = "X Degrees: " + System.Math.Round((currentZ - 16.0), 0);
-		SpeedTxt.text = "Speed: " + System.Math.Round(speed, 2);
+			azimuthText.text = "Azimuth Degrees: " + System.Math.Round(azimuthDegrees, 2);
+		elevationText.text = "Elevation Degrees: " + System.Math.Round((elevationDegrees - 16.0f), 0);
+		speedText.text = "Speed: " + System.Math.Round(speed, 2);
 	}
 	
-	public float RotateZ(float speed)
+	private float ChangeElevation(float speed)
 	{
-		xRotation.transform.Rotate(0, 0, -speed);
-		return xRotation.transform.eulerAngles.z;
+		elevation.transform.Rotate(0, 0, -speed);
+		return elevation.transform.eulerAngles.z;
 	}
 	
-	public float RotateY(float speed)
+	private float ChangeAzimuth(float speed)
 	{
-		yRotation.transform.Rotate(0, speed, 0);
-		currentY += speed + (isNeg ? 360 : 0);
-		return currentY - (currentY >= 360 ? 360 : 0);
+		azimuth.transform.Rotate(0, speed, 0);
+		azimuthDegrees += speed + (negativeAzimuthTarget ? 360.0f : 0.0f);
+		return azimuthDegrees - (azimuthDegrees >= 360.0f ? 360.0f : 0.0f);
 	}
 	
-	public void SetZ(float z)
+	public void TargetElevation(float el)
 	{
-		if(!isMovingZ)
+		if(!movingElevation)
 		{
-			TargetXX.text = "Target X: " + z;
-			targetZ = targetZ + z;
-			isMovingZ = true;
+			targetElevationText.text = "Target Elevation: " + el;
+			targetElevation = targetElevation + el;
+			movingElevation = true;
 		}
 	}
 	
-	public void SetY(float y)
+	public void TargetAzimuth(float az)
 	{
-		if(!isMovingY)
+		if(!movingAzimuth)
 		{
-			TargetYY.text = "Target Y: " + y;
-			isNeg = false;
-			if(y < 0)
+			targetAzimuthText.text = "Target Azimuth: " + az;
+			negativeAzimuthTarget = false;
+			if(az < 0.0f)
 			{
-				isNeg = true;
-				y = y * -1;
+				negativeAzimuthTarget = true;
+				az = az * -1;
 			}
 			
-			if(isNeg)
+			if(negativeAzimuthTarget)
 			{
-				if(currentY == 0)
-					targetY = 360 - y;
+				if(azimuthDegrees == 0.0f)
+					targetAzimuth = 360.0f - az;
 				else
-					targetY = currentY - y;
+					targetAzimuth = azimuthDegrees - az;
 			}
 			else
-				targetY = currentY + y;
+				targetAzimuth = azimuthDegrees + az;
 			
-			if(isNeg && targetY <= 0)
+			if(negativeAzimuthTarget && targetAzimuth <= 0.0f)
 			{
-				yRemainder = targetY + 359;
-				targetY = 1;
+				azimuthRemainder = targetAzimuth + 359.0f;
+				targetAzimuth = 1.0f;
 			}
-			else if(targetY >= 360)
+			else if(targetAzimuth >= 360.0f)
 			{
-				yRemainder = targetY - 359;
-				targetY = 359;
+				azimuthRemainder = targetAzimuth - 359.0f;
+				targetAzimuth = 359.0f;
 			}
-			isMovingY = true;
+			movingAzimuth = true;
 		}
 	}
 	
-	public float getCurrentZ()
+	public float GetElevationDegrees()
 	{
-		return currentZ;
+		return elevationDegrees;
 	}
 	
-	public float getCurrentY()
+	public float GetAzimuthDegrees()
 	{
-		return currentY;
+		return azimuthDegrees;
 	}
 }
