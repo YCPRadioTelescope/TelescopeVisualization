@@ -30,8 +30,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	private float azimuthRemainder = 0.0f;
 	
 	private bool negativeAzimuthTarget = false;
-	private bool movingAzimuth = false;
-	private bool movingElevation = false;
+	private bool executingCommand = false;
 	
 	public void Update()
 	{	
@@ -54,7 +53,7 @@ public class TelescopeControllerSim : MonoBehaviour
 			}
 		}
 		else if(targetAzimuth == azimuthDegrees && azimuthRemainder == 0.0f)
-			movingAzimuth = false;
+			executingCommand = false;
 		
 		if((int)elevation.transform.localEulerAngles.z != (int) targetElevation)
 		{
@@ -73,7 +72,7 @@ public class TelescopeControllerSim : MonoBehaviour
 			}
 		}
 		else
-			movingElevation = false;
+			executingCommand = false;
 		
 		YPos.text = "Unity Az Position: " + System.Math.Round(azimuthDegrees, 0);
 		ZPos.text = "Unity El Position: " + System.Math.Round(elevationDegrees, 0);
@@ -100,17 +99,17 @@ public class TelescopeControllerSim : MonoBehaviour
 	
 	public void TargetElevation(float el)
 	{
-		if(!movingElevation)
+		if(!executingCommand)
 		{
 			targetElevationText.text = "Target Elevation: " + el;
 			targetElevation = targetElevation + el;
-			movingElevation = true;
+			executingCommand = true;
 		}
 	}
 	
 	public void TargetAzimuth(float az)
 	{
-		if(!movingAzimuth)
+		if(!executingCommand)
 		{
 			targetAzimuthText.text = "Target Azimuth: " + az;
 			negativeAzimuthTarget = false;
@@ -140,7 +139,7 @@ public class TelescopeControllerSim : MonoBehaviour
 				azimuthRemainder = targetAzimuth - 359.0f;
 				targetAzimuth = 359.0f;
 			}
-			movingAzimuth = true;
+			executingCommand = true;
 		}
 	}
 	
