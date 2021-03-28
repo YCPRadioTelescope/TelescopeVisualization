@@ -74,14 +74,63 @@ public class TelescopeControllerSim : MonoBehaviour
 		else
 			executingCommand = false;
 		
-		YPos.text = "Unity Az Position: " + System.Math.Round(azimuthDegrees, 0);
-		ZPos.text = "Unity El Position: " + System.Math.Round(elevationDegrees, 0);
-		if(Math.Round(azimuthDegrees, 0) == 359)
-			azimuthText.text = "Azimuth Degrees: " + (System.Math.Round(azimuthDegrees, 0) + 1);
+		UpdateUI();
+	}
+	
+	public void TargetElevation(float el)
+	{
+		if(executingCommand)
+			return;
+		executingCommand = true;
+		
+		targetElevationText.text = "Target Elevation: " + el;
+		targetElevation = targetElevation + el;
+	}
+	
+	public void TargetAzimuth(float az)
+	{
+		if(executingCommand)
+			return;
+		executingCommand = true;
+		
+		targetAzimuthText.text = "Target Azimuth: " + az;
+		negativeAzimuthTarget = false;
+		if(az < 0.0f)
+		{
+			negativeAzimuthTarget = true;
+			az = az * -1;
+		}
+		
+		if(negativeAzimuthTarget)
+		{
+			if(azimuthDegrees == 0.0f)
+				targetAzimuth = 360.0f - az;
+			else
+				targetAzimuth = azimuthDegrees - az;
+		}
 		else
-			azimuthText.text = "Azimuth Degrees: " + System.Math.Round(azimuthDegrees, 2);
-		elevationText.text = "Elevation Degrees: " + System.Math.Round((elevationDegrees - 16.0f), 0);
-		speedText.text = "Speed: " + System.Math.Round(speed, 2);
+			targetAzimuth = azimuthDegrees + az;
+		
+		if(negativeAzimuthTarget && targetAzimuth <= 0.0f)
+		{
+			azimuthRemainder = targetAzimuth + 359.0f;
+			targetAzimuth = 1.0f;
+		}
+		else if(targetAzimuth >= 360.0f)
+		{
+			azimuthRemainder = targetAzimuth - 359.0f;
+			targetAzimuth = 359.0f;
+		}
+	}
+	
+	public float GetElevationDegrees()
+	{
+		return elevationDegrees;
+	}
+	
+	public float GetAzimuthDegrees()
+	{
+		return azimuthDegrees;
 	}
 	
 	private float ChangeElevation(float speed)
@@ -97,59 +146,15 @@ public class TelescopeControllerSim : MonoBehaviour
 		return azimuthDegrees - (azimuthDegrees >= 360.0f ? 360.0f : 0.0f);
 	}
 	
-	public void TargetElevation(float el)
+	private void UpdateUI()
 	{
-		if(!executingCommand)
-		{
-			targetElevationText.text = "Target Elevation: " + el;
-			targetElevation = targetElevation + el;
-			executingCommand = true;
-		}
-	}
-	
-	public void TargetAzimuth(float az)
-	{
-		if(!executingCommand)
-		{
-			targetAzimuthText.text = "Target Azimuth: " + az;
-			negativeAzimuthTarget = false;
-			if(az < 0.0f)
-			{
-				negativeAzimuthTarget = true;
-				az = az * -1;
-			}
-			
-			if(negativeAzimuthTarget)
-			{
-				if(azimuthDegrees == 0.0f)
-					targetAzimuth = 360.0f - az;
-				else
-					targetAzimuth = azimuthDegrees - az;
-			}
-			else
-				targetAzimuth = azimuthDegrees + az;
-			
-			if(negativeAzimuthTarget && targetAzimuth <= 0.0f)
-			{
-				azimuthRemainder = targetAzimuth + 359.0f;
-				targetAzimuth = 1.0f;
-			}
-			else if(targetAzimuth >= 360.0f)
-			{
-				azimuthRemainder = targetAzimuth - 359.0f;
-				targetAzimuth = 359.0f;
-			}
-			executingCommand = true;
-		}
-	}
-	
-	public float GetElevationDegrees()
-	{
-		return elevationDegrees;
-	}
-	
-	public float GetAzimuthDegrees()
-	{
-		return azimuthDegrees;
+		YPos.text = "Unity Az Position: " + System.Math.Round(azimuthDegrees, 0);
+		ZPos.text = "Unity El Position: " + System.Math.Round(elevationDegrees, 0);
+		if(Math.Round(azimuthDegrees, 0) == 359)
+			azimuthText.text = "Azimuth Degrees: " + (System.Math.Round(azimuthDegrees, 0) + 1);
+		else
+			azimuthText.text = "Azimuth Degrees: " + System.Math.Round(azimuthDegrees, 2);
+		elevationText.text = "Elevation Degrees: " + System.Math.Round((elevationDegrees - 16.0f), 0);
+		speedText.text = "Speed: " + System.Math.Round(speed, 2);
 	}
 }
