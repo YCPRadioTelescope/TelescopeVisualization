@@ -24,8 +24,13 @@ public class TestMove : MonoBehaviour
 	// telescope controller.
 	private void TestMovement()
 	{
-		tc.TargetElevation(float.Parse(elevation.text));
-		tc.TargetAzimuth(float.Parse(azimuth.text));
+		// TODO: Match behavior of control room custom orientation script. You provide a value
+		// equal to the angle that you want to end at, not the angle that you want to move by.
+		// This would also bound test elevation movements to allowable values.
+		float el = float.Parse(elevation.text);
+		float az = float.Parse(azimuth.text);
+		tc.TargetElevation(el);
+		tc.TargetAzimuth(az);
 		tc.speed = float.Parse(speed.text);
 	}
 }
