@@ -134,17 +134,17 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	// Rotate the telescope game object azimuth.
-	private float ChangeAzimuth(float speed)
+	private float ChangeAzimuth(float moveBy)
 	{
-		azimuth.transform.Rotate(0, speed, 0);
-		return BoundAzimuth(azimuthDegrees + speed);
+		azimuth.transform.Rotate(0, moveBy, 0);
+		return BoundAzimuth(azimuthDegrees + moveBy);
 	}
 	
 	// Rotate the telescope game object elevation.
-	private float ChangeElevation(float speed)
+	private float ChangeElevation(float moveBy)
 	{
-		elevation.transform.Rotate(0, 0, speed);
-		return ElevationTransform();
+		elevation.transform.Rotate(0, 0, moveBy);
+		return elevationDegrees + moveBy;
 	}
 	
 	// Bound the given azimuth to a value between 0 and 360.
