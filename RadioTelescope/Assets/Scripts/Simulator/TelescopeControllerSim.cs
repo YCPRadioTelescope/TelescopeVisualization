@@ -28,11 +28,11 @@ public class TelescopeControllerSim : MonoBehaviour
 	public TMP_Text inputElevationText;
 	public TMP_Text speedText;
 	
-	// The target and current value of the azimuth and elevation.
-	private float targetAzimuth = 0.0f;
-	private float targetElevation = 0.0f;
+	// The target and current values of the azimuth and elevation.
 	private float azimuthDegrees;
 	private float elevationDegrees;
+	private float targetAzimuth;
+	private float targetElevation;
 	
 	// Keeps track of whether the azimuth is moving clockwise or counter clockwise.
 	private bool moveCCW = false;
@@ -46,6 +46,8 @@ public class TelescopeControllerSim : MonoBehaviour
 	{
 		azimuthDegrees = azimuth.transform.eulerAngles.y;
 		elevationDegrees = elevation.transform.eulerAngles.z;
+		targetAzimuth = azimuthDegrees;
+		targetElevation = elevationDegrees;
 	}
 	
 	// Update is called every frame.
@@ -68,7 +70,10 @@ public class TelescopeControllerSim : MonoBehaviour
 	{
 		// No new commands are taken if one is already executing.
 		if(executingCommand)
+		{
+			inputAzimuthText.text = "Input Azimuth: IGNORED";
 			return;
+		}
 		inputAzimuthText.text = "Input Azimuth: " + System.Math.Round(az, 1);
 		
 		// If the azimuth we were given is negative, we are moving counter clockwise.
@@ -81,7 +86,10 @@ public class TelescopeControllerSim : MonoBehaviour
 	{
 		// No new commands are taken if one is already executing.
 		if(executingCommand)
+		{
+			inputElevationText.text = "Input Elevation: IGNORED";
 			return;
+		}
 		inputElevationText.text = "Input Elevation: " + System.Math.Round(el, 1);
 		
 		targetElevation += el;
