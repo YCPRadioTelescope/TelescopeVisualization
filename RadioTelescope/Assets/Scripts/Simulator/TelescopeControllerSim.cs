@@ -136,6 +136,10 @@ public class TelescopeControllerSim : MonoBehaviour
 	// Rotate the telescope game object azimuth.
 	private float ChangeAzimuth(float moveBy)
 	{
+		// If we're closer to the target than the movement speed, lower the movement
+		// speed so that we don't overshoot.
+		if(Mathf.Abs(targetAzimuth - azimuthDegrees) < Mathf.Abs(moveBy))
+			moveBy = Mathf.Abs(targetAzimuth - azimuthDegrees) * (moveCCW ? -1 : 1);
 		azimuth.transform.Rotate(0, moveBy, 0);
 		return BoundAzimuth(azimuthDegrees + moveBy);
 	}
@@ -143,6 +147,10 @@ public class TelescopeControllerSim : MonoBehaviour
 	// Rotate the telescope game object elevation.
 	private float ChangeElevation(float moveBy)
 	{
+		// If we're closer to the target than the movement speed, lower the movement
+		// speed so that we don't overshoot.
+		if(Mathf.Abs(targetElevation - elevationDegrees) < Mathf.Abs(moveBy))
+			moveBy = targetElevation - elevationDegrees;
 		elevation.transform.Rotate(0, 0, moveBy);
 		return elevationDegrees + moveBy;
 	}
