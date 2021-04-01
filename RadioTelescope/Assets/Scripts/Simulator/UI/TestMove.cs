@@ -4,7 +4,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// This script handles manually inputted movement from the simulation.
+// This script handles manually inputted movement from the simulation. The behavior of the inputted
+// values matches the behavior of the custom orientation movement script from the control room. That is,
+// the inputted values are the angle to be moved to, and the script calculates how much the telescope
+// need to move by to reach that target.
 public class TestMove : MonoBehaviour
 {
 	public TelescopeControllerSim tc;
@@ -21,14 +24,24 @@ public class TestMove : MonoBehaviour
 	}
 	
 	// If the test button is clicked, send the values from the UI to the
-	// telescope controller.
+	// telescope controller. 
 	private void TestMovement()
 	{
-		// TODO: Match behavior of control room custom orientation script. You provide a value
-		// equal to the angle that you want to end at, not the angle that you want to move by.
-		// This would also bound test elevation movements to allowable values.
-		float el = float.Parse(elevation.text);
-		float az = float.Parse(azimuth.text);
+		// Get the azimuth and elevation values from the UI, clamping them to allowable values.
+		float az = Mathf.Clamp(float.Parse(azimuth.text), 0.0f, 360.0f);
+		float el = Mathf.Clamp(float.Parse(elevation.text), -15.0f, 94.0f);
+		// Send the clamped values back to the UI in case the user provided out of bounds input.
+		elevation.text = el.ToString();
+		azimuth.text = az.ToString();
+		
+		// Calculate how far we want to move from the current location.
+		az = az - tc.GetAzimuthDegrees();
+		el = el - tc.GetElevationDegrees() + 15.0f;
+		// Account for if it's quicker to spin counter clockwise.
+		if(az > 180.0f)
+			az -= 360.0f;
+		
+		// Send the command.
 		tc.TargetElevation(el);
 		tc.TargetAzimuth(az);
 		tc.speed = float.Parse(speed.text);
