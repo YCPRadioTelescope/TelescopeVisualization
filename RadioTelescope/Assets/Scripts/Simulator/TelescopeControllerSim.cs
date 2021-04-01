@@ -18,13 +18,15 @@ public class TelescopeControllerSim : MonoBehaviour
 	public Sensors sen;
 	
 	// UI elements that get updated with the state of variables.
-	public TMP_Text ZPos;
-	public TMP_Text YPos;
+	public TMP_Text unityAzimuthText;
+	public TMP_Text unityElevationText;
 	public TMP_Text azimuthText;
 	public TMP_Text elevationText;
-	public TMP_Text speedText;
 	public TMP_Text targetAzimuthText;
 	public TMP_Text targetElevationText;
+	public TMP_Text inputAzimuthText;
+	public TMP_Text inputElevationText;
+	public TMP_Text speedText;
 	
 	// The target and current value of the azimuth and elevation.
 	private float targetAzimuth = 0.0f;
@@ -60,6 +62,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		// No new commands are taken if one is already executing.
 		if(executingCommand)
 			return;
+		inputAzimuthText.text = "Input Azimuth: " + System.Math.Round(az, 1);
 		
 		// If the azimuth we were given is negative, we are moving counter clockwise.
 		moveCCW = (az < 0.0f);
@@ -72,6 +75,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		// No new commands are taken if one is already executing.
 		if(executingCommand)
 			return;
+		inputElevationText.text = "Input Elevation: " + System.Math.Round(el, 1);
 		
 		targetElevation += el;
 	}
@@ -157,12 +161,12 @@ public class TelescopeControllerSim : MonoBehaviour
 	// Update the UI according to the current state of the variables when called.
 	private void UpdateUI()
 	{
-		YPos.text = "Unity Az Position: " + System.Math.Round(azimuthDegrees, 1);
-		ZPos.text = "Unity El Position: " + System.Math.Round(elevationDegrees, 1);
+		unityAzimuthText.text = "Unity Az Position: " + System.Math.Round(azimuth.transform.eulerAngles.y, 1);
+		unityElevationText.text = "Unity El Position: " + System.Math.Round(elevation.transform.eulerAngles.z, 1);
 		azimuthText.text = "Azimuth Degrees: " + System.Math.Round(azimuthDegrees, 1);
 		elevationText.text = "Elevation Degrees: " + System.Math.Round((elevationDegrees - 15.0f), 1);
-		speedText.text = "Speed: " + System.Math.Round(speed, 2);
 		targetElevationText.text = "Target Elevation: " + System.Math.Round(targetElevation, 1);
 		targetAzimuthText.text = "Target Azimuth: " + System.Math.Round(targetAzimuth, 1);
+		speedText.text = "Speed: " + System.Math.Round(speed, 2);
 	}
 }
