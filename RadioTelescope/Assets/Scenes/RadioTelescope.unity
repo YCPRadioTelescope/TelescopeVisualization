@@ -1994,7 +1994,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &119522861
 Transform:
   m_ObjectHideFlags: 0
@@ -2556,8 +2556,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -910, y: 82}
-  m_SizeDelta: {x: 1655.2, y: 764}
+  m_AnchoredPosition: {x: -910, y: 77}
+  m_SizeDelta: {x: 1655.2, y: 814}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &168640023
 MonoBehaviour:
@@ -35166,8 +35166,8 @@ MonoBehaviour:
     right: \t\td\r\n\r\nTurn left:\t\tj\r\nTurn right:\t\tl\r\nLook up:\t\ti\r\nLook
     down:\t\tk\r\n\r\nTurn telescope left: \tleft arrow key\r\nTurn telescope right:
     \tright arrow key\r\nTurn telescope up: \tup arrow key\r\nTurn telescope down:
-    down arrow key\r\n\r\nPause menu:\t\tesc\n\nToggle Exploded View:\tr\n\nToggle
-    Flying:\tq\nFly Up:\tspace\nFly Down:\te"
+    down arrow key\r\n\r\nPause menu:\t\tesc\n\nToggle Exploded View:\tr\nToggle Cinematic
+    View:\tt\n\nToggle Flying:\tq\nFly Up:\tspace\nFly Down:\te"
 --- !u!222 &1959646548
 CanvasRenderer:
   m_ObjectHideFlags: 0
