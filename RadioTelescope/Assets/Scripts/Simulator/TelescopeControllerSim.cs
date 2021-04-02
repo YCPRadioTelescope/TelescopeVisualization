@@ -41,6 +41,9 @@ public class TelescopeControllerSim : MonoBehaviour
 	// new commands from being taken.
 	private bool executingCommand = false;
 	
+	// If the angle and target are within this distance, consider them equal.
+	private float epsilon = 0.001f;
+	
 	// Start is called before the first frame.
 	public void Start()
 	{
@@ -116,6 +119,9 @@ public class TelescopeControllerSim : MonoBehaviour
 			// We are currently executing a command.
 			executingCommand = true;
 			azimuthDegrees = ChangeAzimuth(!moveCCW ? speed : -speed);
+			// If the azimuth and target are close, set the azimuth to the target.
+			if(AngleDistance(azimuthDegrees, targetAzimuth) < epsilon)
+				azimuthDegrees = targetAzimuth;
 		}
 	}
 	
@@ -128,6 +134,9 @@ public class TelescopeControllerSim : MonoBehaviour
 			// We are currently executing a command.
 			executingCommand = true;
 			elevationDegrees = ChangeElevation((targetElevation >= elevationDegrees) ? speed : -speed);
+			// If the elevation and target are close, set the elevation to the target.
+			if(AngleDistance(elevationDegrees, targetElevation) < epsilon)
+				elevationDegrees = targetElevation;
 		}
 	}
 	
@@ -139,8 +148,11 @@ public class TelescopeControllerSim : MonoBehaviour
 		moveBy *= 60.0f * Time.deltaTime;
 		// If we're closer to the target than the movement speed, lower the movement
 		// speed so that we don't overshoot.
-		if(Mathf.Abs(targetAzimuth - azimuthDegrees) < Mathf.Abs(moveBy))
-			moveBy = Mathf.Abs(targetAzimuth - azimuthDegrees) * (moveCCW ? -1 : 1);
+		// Unlike elevation, which doesn't wrap, azimuth needs to account for wrapping.
+		// e.g. 350 and 10 are 20 degrees away, not 340.
+		float distance = AngleDistance(azimuthDegrees, targetAzimuth);
+		if(distance < Mathf.Abs(moveBy))
+			moveBy = distance * (moveCCW ? -1 : 1);
 		azimuth.transform.Rotate(0, moveBy, 0);
 		return BoundAzimuth(azimuthDegrees + moveBy);
 	}
@@ -171,6 +183,13 @@ public class TelescopeControllerSim : MonoBehaviour
 		if(az >= 360.0f)
 			az -= 360.0f;
 		return az;
+	}
+	
+	// Compute the distance between two angles on a circle.
+	private float AngleDistance(float a, float b)
+	{
+		// Mathf.Repeat is functionally similar to the modulus operator, but works with floats.
+		return Mathf.Abs(Mathf.Repeat((a - b + 180.0f), 360.0f) - 180.0f);
 	}
 	
 	// Update the UI according to the current state of the variables when called.
