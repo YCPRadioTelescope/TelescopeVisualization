@@ -12,10 +12,9 @@ public class TelescopeControllerSim : MonoBehaviour
 	// The game objects that get rotated by a movement command.
 	public GameObject azimuth;
 	public GameObject elevation;
+	
 	// The speed that the telescope moves at.
 	public float speed = 1.0f;
-	
-	public Sensors sen;
 	
 	// UI elements that get updated with the state of variables.
 	public TMP_Text unityAzimuthText;
@@ -28,25 +27,27 @@ public class TelescopeControllerSim : MonoBehaviour
 	public TMP_Text inputElevationText;
 	public TMP_Text speedText;
 	
-	// The target and current values of the azimuth and elevation.
+	// The current and target values of the azimuth and elevation.
 	private float azimuthDegrees;
 	private float elevationDegrees;
 	private float targetAzimuth;
 	private float targetElevation;
 	
-	// Keeps track of whether the azimuth is moving clockwise or counter clockwise.
-	private bool moveCCW = false;
-	
-	// Keeps track of if a current command is being executed, preventing
-	// new commands from being taken.
-	private bool executingCommand = false;
-	
 	// If the angle and target are within this distance, consider them equal.
 	private float epsilon = 0.001f;
+	
+	// Keeps track of whether the azimuth is moving clockwise or counter clockwise.
+	private bool moveCCW = false;
+	// Keeps track of if a current command is being executed, preventing
+	// new commands from being taken. This is mainly for testing purposes
+	// and may be removed from the final simulation.
+	private bool executingCommand = false;
 	
 	// Start is called before the first frame.
 	public void Start()
 	{
+		// Set the current azimuth and elevation degrees to the rotation
+		// of the game objects, then target 0,15.
 		azimuthDegrees = azimuth.transform.eulerAngles.y;
 		elevationDegrees = elevation.transform.eulerAngles.z;
 		targetAzimuth = 0.0f;

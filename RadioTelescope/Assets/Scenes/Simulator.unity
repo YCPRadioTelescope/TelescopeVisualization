@@ -4625,7 +4625,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &845783802
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6989,7 +6989,6 @@ MonoBehaviour:
   azimuth: {fileID: 1525520883}
   elevation: {fileID: 879300291}
   speed: 1
-  sen: {fileID: 2120281192}
   unityAzimuthText: {fileID: 186378141}
   unityElevationText: {fileID: 1970712149}
   azimuthText: {fileID: 31453317}
@@ -10732,7 +10731,6 @@ GameObject:
   - component: {fileID: 2120281189}
   - component: {fileID: 2120281188}
   - component: {fileID: 2120281191}
-  - component: {fileID: 2120281192}
   - component: {fileID: 2120281193}
   - component: {fileID: 2120281186}
   m_Layer: 0
@@ -10807,19 +10805,6 @@ MonoBehaviour:
   elevation: {fileID: 702168646}
   speed: {fileID: 433330363}
   testButton: {fileID: 750598061}
---- !u!114 &2120281192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2120281185}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7871f081ce33f64f9168afd023e7c5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  elevation: {fileID: 794489490}
 --- !u!114 &2120281193
 MonoBehaviour:
   m_ObjectHideFlags: 0
