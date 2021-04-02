@@ -37,9 +37,11 @@ public class TestMove : MonoBehaviour
 		// Calculate how far we want to move from the current location.
 		az = az - tc.GetAzimuthDegrees();
 		el = el - tc.GetElevationDegrees() + 15.0f;
-		// Account for if it's quicker to spin counter clockwise.
+		// Account for if it's quicker to spin counter clockwise or across 0.
 		if(az > 180.0f)
 			az -= 360.0f;
+		if(az < -180.0f)
+			az += 360.0f;
 		
 		// Send the command.
 		tc.TargetElevation(el);
