@@ -46,8 +46,8 @@ public class TelescopeControllerSim : MonoBehaviour
 	{
 		azimuthDegrees = azimuth.transform.eulerAngles.y;
 		elevationDegrees = elevation.transform.eulerAngles.z;
-		targetAzimuth = azimuthDegrees;
-		targetElevation = elevationDegrees;
+		targetAzimuth = 0.0f;
+		targetElevation = 15.0f;
 	}
 	
 	// Update is called every frame.
@@ -111,34 +111,24 @@ public class TelescopeControllerSim : MonoBehaviour
 	private void UpdateAzimuth()
 	{
 		// If the current azimuth does not equal the target azimuth, move toward the target.
-		// Round the values to stop when we are close enough, as the slight inaccuracy in floats
-		// would cause the telesocpe to never stop moving if we didn't round.
-		if(Math.Round(azimuthDegrees, 1) != Math.Round(targetAzimuth, 1))
+		if(azimuthDegrees != targetAzimuth)
 		{
 			// We are currently executing a command.
 			executingCommand = true;
 			azimuthDegrees = ChangeAzimuth(!moveCCW ? speed : -speed);
 		}
-		// Account for any inaccuracy caused by the rounding.
-		else
-			targetAzimuth = azimuthDegrees;
 	}
 	
 	// Update the telescope elevation.
 	private void UpdateElevation()
 	{
 		// If the current elevation does not equal the target elevation, move toward the target.
-		// Round the values to stop when we are close enough, as the slight inaccuracy in floats
-		// would cause the telesocpe to never stop moving if we didn't round.
-		if(Math.Round(elevationDegrees, 1) != Math.Round(targetElevation, 1))
+		if(elevationDegrees != targetElevation)
 		{
 			// We are currently executing a command.
 			executingCommand = true;
 			elevationDegrees = ChangeElevation((targetElevation >= elevationDegrees) ? speed : -speed);
 		}
-		// Account for any inaccuracy caused by the rounding.
-		else
-			targetElevation = elevationDegrees;
 	}
 	
 	// Rotate the telescope game object azimuth.
