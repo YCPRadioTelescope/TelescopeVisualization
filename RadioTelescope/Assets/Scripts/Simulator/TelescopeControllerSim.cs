@@ -61,7 +61,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		UpdateElevation();
 		
 		// If the elevation and azimuth have reached their targets, the current command is
-		// done executing.
+		// done executing. If not, then a command is being executed.
 		executingCommand = targetElevation != elevationDegrees || targetAzimuth != azimuthDegrees;
 		
 		// Update the UI at the end of every frame.
@@ -116,8 +116,6 @@ public class TelescopeControllerSim : MonoBehaviour
 		// If the current azimuth does not equal the target azimuth, move toward the target.
 		if(azimuthDegrees != targetAzimuth)
 		{
-			// We are currently executing a command.
-			executingCommand = true;
 			azimuthDegrees = ChangeAzimuth(!moveCCW ? speed : -speed);
 			// If the azimuth and target are close, set the azimuth to the target.
 			if(AngleDistance(azimuthDegrees, targetAzimuth) < epsilon)
@@ -131,9 +129,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		// If the current elevation does not equal the target elevation, move toward the target.
 		if(elevationDegrees != targetElevation)
 		{
-			// We are currently executing a command.
-			executingCommand = true;
-			elevationDegrees = ChangeElevation((targetElevation >= elevationDegrees) ? speed : -speed);
+			elevationDegrees = ChangeElevation((targetElevation > elevationDegrees) ? speed : -speed);
 			// If the elevation and target are close, set the elevation to the target.
 			if(AngleDistance(elevationDegrees, targetElevation) < epsilon)
 				elevationDegrees = targetElevation;
