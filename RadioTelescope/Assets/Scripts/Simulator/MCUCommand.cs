@@ -53,7 +53,7 @@ public class MCUCommand : MonoBehaviour {
             case 0x0100: // JOG Moves
                 
             default:
-                Debug.Log("!!! ERROR !!! MCUCommand Constructor: Cannot determine a move type from control room.");
+                Debug.Log("!!! ERROR !!! MCUCommand Constructor: Cannot determine a move type from control room. Setting everything to 0.0f.");
                 azimuthSpeed = 0.0f;
                 elevationSpeed = 0.0f;
                 acceleration = 0.0f;
