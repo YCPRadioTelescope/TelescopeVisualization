@@ -12,6 +12,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine.UI;
 using Valve.VR.InteractionSystem;
+using static MCUCommand;
 
 public class SimServer : MonoBehaviour {
 	/// <summary> 	
@@ -144,71 +145,6 @@ public class SimServer : MonoBehaviour {
 			Application.Quit();
 	}
 	
-	public void startPLC()
-	{
-		try
-		{
-			PLC_emulator_thread = new Thread(new ThreadStart(Run_PLC_emulator_thread));
-			PLC_emulator_thread.Start();
-		}
-		catch (Exception e)
-		{
-			if((e is ArgumentNullException) || (e is ArgumentOutOfRangeException))
-			{
-				//Debug.Log(e);
-				return;
-			}
-		}
-	}
-	
-	private void Run_PLC_emulator_thread()
-	{
-		while(runsimulator)
-		{
-			try
-			{
-				PLCTCPClient = new TcpClient(plcIP.text, int.Parse(plcPort.text));
-				PLCModbusMaster = ModbusIpMaster.CreateIp(PLCTCPClient);
-			}
-			catch
-			{//no server setup on control room yet 
-				Debug.Log("________________PLC sim awaiting control room");
-
-				//Thread.Sleep(1000);
-			}
-			Debug.Log("________________PLC sim running");
-			//PLCModbusMaster.WriteMultipleRegisters((ushort)PLC_modbus_server_register_mapping.Safty_INTERLOCK - 1, new ushort[] { 1 });
-			while(runsimulator)
-			{
-				if(isTest)
-				{
-				   // PLCModbusMaster.WriteMultipleRegisters((ushort)PLC_modbus_server_register_mapping.Safty_INTERLOCK - 1, new ushort[] { 1 });
-					Thread.Sleep(5);
-					continue;
-				}
-				
-				Debug.Log(tc.GetAzimuthDegrees());
-				Debug.Log(tc.GetElevationDegrees());
-				
-				Thread.Sleep(50);
-			}
-		}
-	}
-	
-	private void Server_Written_to_handler(object sender, DataStoreEventArgs e)
-	{
-		MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
-		MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
-		//Debug.Log("plcdriver data writen 1 reg "+ e.Data.B[0]+" start adr "+ e.StartAddress);
-		ushort[] data = new ushort[e.Data.B.Count];
-		for(int i = 0; i < e.Data.B.Count; i++)
-		{
-			data[i] = e.Data.B[i];
-			Debug.Log(data[i]);
-		}
-		handleTestCMD(data);
-	}
-	
 	private void Run_MCU_server_thread()
 	{
 		byte slaveId = 1;
@@ -219,10 +155,6 @@ public class SimServer : MonoBehaviour {
 		// PLC_Modbusserver.DataStore.SyncRoot.ToString();
 		
 		//MCU_Modbusserver.ModbusSlaveRequestReceived += new EventHandler<ModbusSlaveRequestEventArgs>(Server_Read_handler);
-		if(isTest)
-		{
-			MCU_Modbusserver.DataStore.DataStoreWrittenTo += new EventHandler<DataStoreEventArgs>(Server_Written_to_handler);
-		}
 		
 		MCU_Modbusserver.Listen();
 		
@@ -242,7 +174,7 @@ public class SimServer : MonoBehaviour {
 			current_out = Copy_modbus_registers(1025, 20);
 			if(!current_out.SequenceEqual(previos_out))
 			{
-				handleCMD(current_out);
+				buildMCUCommand(current_out);
 				//Debug.Log("data changed");
 			}
 			if(mooving)
@@ -251,7 +183,7 @@ public class SimServer : MonoBehaviour {
 				{
 					int travAZ = (distAZ < -AZ_speed) ? -AZ_speed : (distAZ > AZ_speed) ? AZ_speed : distAZ;
 					int travEL = (distEL < -EL_speed) ? -EL_speed : (distEL > EL_speed) ? EL_speed : distEL;
-					move(travAZ, travEL);
+					updateMCURegisters(travAZ, travEL);
 				}
 				else
 				{
@@ -262,13 +194,13 @@ public class SimServer : MonoBehaviour {
 			}
 			if(jogging)
 			{
-				move(AZ_speed, EL_speed);
+				updateMCURegisters(AZ_speed, EL_speed);
 			}
 			previos_out = current_out;
 		}
 	}
 	
-	private bool move(int travAZ, int travEL)
+	private bool updateMCURegisters(int travAZ, int travEL)
 	{
 		distAZ -= travAZ;
 		distEL -= travEL;
@@ -282,14 +214,16 @@ public class SimServer : MonoBehaviour {
 		return true;
 	}
 	
-	private bool handleCMD(ushort[] data)
+	private bool buildMCUCommand(ushort[] data)
 	{
 		isconfigured = true;
 		string outstr = "";
 		for(int v = 0; v < data.Length; v++) {
 			outstr += Convert.ToString( data[v] , 16 ).PadLeft( 5 ) + ",";
 		}
-		//Debug.Log(outstr);
+		Debug.Log("Spitting out registers: \n");
+		Debug.Log(outstr);
+		Debug.Log("All done spitting out registers\n");
 		//Debug.Log("Head: " + data[0]);
 		//Debug.Log(data[1]);
 		jogging = false;
@@ -331,7 +265,8 @@ public class SimServer : MonoBehaviour {
 			Debug.Log("The degree elevation is: " + elDeg);
 		}
 		
-		if(data[1] == 0x0403) {//move cmd
+		if(data[1] == 0x0403) 
+		{//move cmd
 			//Debug.Log("MOVE");
 			mooving = true;
 			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
@@ -364,8 +299,10 @@ public class SimServer : MonoBehaviour {
 			elDeg = el * 360.0f / (20000.0f * 50.0f);
 			Debug.Log("The degree elevation is: " + elDeg);
 			return true;
-		} else if(data[0] == 0x0080 || data[0] == 0x0100 || data[10] == 0x0080 || data[10] == 0x0100) {
-			//Debug.Log("JOG");
+		} else if(data[0] == 0x0080 || data[0] == 0x0100 || data[10] == 0x0080 || data[10] == 0x0100) 
+		{
+			Debug.Log("JOG COMMAND INCOMING");
+			MCUCommand mcuCommand = new MCUCommand(data);
 			jogging = true;
 			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
 			MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
@@ -405,8 +342,11 @@ public class SimServer : MonoBehaviour {
 			elDeg = el * 360.0f / (20000.0f * 50.0f);
 			Debug.Log("The degree elevation is: " + elDeg);
 			return true;
-		} else if(data[0] == 0x0002 || data[0] == 0x0002) {//move cmd
-			//Debug.Log("RELATIVE MOVE");
+		} else if(data[0] == 0x0002 || data[0] == 0x0002) 
+		{//move cmd
+			Debug.Log("RELATIVE MOVE INCOMING");
+			MCUCommand mcuCommand = new MCUCommand(data);
+
 			mooving = true;
 			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
 			MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
@@ -442,154 +382,8 @@ public class SimServer : MonoBehaviour {
 			return true;
 		}
 		return false;
-		/*
-		 #region old
-		string outstr = "";
-		for(int v = 0; v < data.Length; v++)
-		{
-			outstr += Convert.ToString(data[v], 16).PadLeft(5) + ",";
-		}
-		// Debug.Log(outstr);
-		string[] packetInfo = outstr.Split(',');
-		Debug.Log("ERROR: " + packetInfo[0]);
-		if(Int32.Parse(packetInfo[0]) == 2)
-		{
-			//convert az to somethin unity can use, 2 parts
-			int frontAz = (Convert.ToInt32(packetInfo[2].Trim(), 16))  << 16;
-			int backAz = (Convert.ToInt32(packetInfo[3].Trim(), 16));
-
-			//convert Elivation into something unity can use, 2 parts
-			int frontEl = Convert.ToInt32(packetInfo[12].Trim(), 16) << 16;
-			int backEl = Convert.ToInt32(packetInfo[13].Trim(), 16);
-			
-			//Add the 2 parts of each into a single int
-			int az = frontAz + backAz;
-			int el = frontEl + backEl;
-			
-			//take the converted ints and put it in unitys prefered values
-			//also let the use know *logging needs to happen
-			azDeg = az * 360.0f / (20000.0f * 500.0f);
-			Debug.Log("The degree azimuth is: " + azDeg); 
-			elDeg = el * 360.0f / (20000.0f * 50.0f);
-			Debug.Log("The degree elevation is: " + elDeg);
-
-
-		}
-		//Debug.Log("===========================================================================================================================");
-		jogging = false;
-		if(data[0] == 0x8400)
-		{//if not configured dont move
-
-			isconfigured = true;
-		}
-		else if(!isconfigured)
-		{
-			return true;
-		}
-
-		if(data[1] == 0x0403)
-		{//move cmd
-			mooving = true;
-			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
-			MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
-			AZ_speed = (data[2] << 16) + data[3];
-			AZ_speed /= 5;
-			EL_speed = AZ_speed;
-			acc = data[4];
-			distAZ = (data[6] << 16) + data[7];
-			distEL = (data[12] << 16) + data[13];
-			return true;
-		}
-		else if(data[0] == 0x0080 || data[0] == 0x0100 || data[10] == 0x0080 || data[10] == 0x0100)
-		{
-			jogging = true;
-			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
-			MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
-			if(data[0] == 0x0080)
-			{
-				AZ_speed = ((data[4] << 16) + data[5]) / 20;
-			}
-			else if(data[0] == 0x0100)
-			{
-				AZ_speed = -((data[4] << 16) + data[5]) / 20;
-			}
-			else
-			{
-				AZ_speed = 0;
-			}
-			if(data[10] == 0x0080)
-			{
-				EL_speed = ((data[14] << 16) + data[15]) / 20;
-			}
-			else if(data[10] == 0x0100)
-			{
-				EL_speed = -((data[14] << 16) + data[15]) / 20;
-			}
-			else
-			{
-				EL_speed = 0;
-			}
-			return true;
-		}
-		else if(data[0] == 0x0002 || data[0] == 0x0002)
-		{//move cmd
-			mooving = true;
-			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
-			MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
-			AZ_speed = ((data[4] << 16) + data[5]) / 5;
-			EL_speed = ((data[14] << 16) + data[15]) / 5;
-			acc = data[6];
-			distAZ = (data[2] << 16) + data[3];
-			distEL = (data[12] << 16) + data[13];
-			return true;
-		}
-		return false;
-		#endregion*/
 	}
 	
-	private bool handleTestCMD(ushort[] data)
-	{
-		string outstr = " inreg";
-		for(int v = 0; v < data.Length; v++)
-		{
-			outstr += Convert.ToString(data[v], 16).PadLeft(5) + ",";
-		}
-		// Debug.Log(outstr);
-		if(data[1] == 0x0403)//move cmd
-		{
-			distAZ = (data[6] << 16) + data[7];
-			distEL = (data[12] << 16) + data[13];
-			Debug.Log("Move command");
-			Console.WriteLine("AZ_22 {0,16} EL_22 {1,16}", (MCU_Modbusserver.DataStore.HoldingRegisters[3] << 16) + MCU_Modbusserver.DataStore.HoldingRegisters[4], (MCU_Modbusserver.DataStore.HoldingRegisters[13] << 16) + MCU_Modbusserver.DataStore.HoldingRegisters[14]);
-			int data1 = MCU_Modbusserver.DataStore.HoldingRegisters[3] + MCU_Modbusserver.DataStore.HoldingRegisters[4];
-			int data2 = MCU_Modbusserver.DataStore.HoldingRegisters[13] + MCU_Modbusserver.DataStore.HoldingRegisters[14];
-			Debug.Log("AZ_22 {" + data1 + "} EL_22 {" + data2 +"}");
-			data1 = MCU_Modbusserver.DataStore.HoldingRegisters[3] + MCU_Modbusserver.DataStore.HoldingRegisters[4];
-			data2 = MCU_Modbusserver.DataStore.HoldingRegisters[13] + MCU_Modbusserver.DataStore.HoldingRegisters[14];
-			move(distAZ, distEL);
-			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] | 0x0080);
-			MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] | 0x0080);
-
-			Debug.Log("AZ_finni1 {"+data1+"} EL_finni1 {"+data2+"}");
-
-			return true;
-		}
-		else if(data[0] == 0x0002 || data[0] == 0x0002)
-		{//move cmd
-			Debug.Log("Move command");
-			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
-			MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
-			distAZ = (data[2] << 16) + data[3];
-			distEL = (data[12] << 16) + data[13];
-
-			move(distAZ, distEL);
-			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] | 0x0080);
-			MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] | 0x0080);
-
-			return true;
-		}
-		return false;
-	}
 	
 	private ushort[] Copy_modbus_registers(int start_index, int length)
 	{
