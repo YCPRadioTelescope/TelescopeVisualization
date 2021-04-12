@@ -23,14 +23,13 @@ public class MCUCommand : MonoBehaviour {
     private float azimuthDegrees { get; set; }
     private float elevationDegrees { get; set; }
 
-
     /// <summary>
     /// Constructor to decode the register data into member fields for readable access on <c>TelescopeControllerSim</c>
     /// </summary>
     public MCUCommand(ushort[] registerData) {
-        // we can determine move type by looking at the first register
+        // we can determine move type by looking at the first register value
         switch(registerData[0])
-        {
+        { 
             case 0x0002: // 2 (in hex) is for RELATIVE moves
                 // calculate speed fields
                 azimuthSpeed = ((registerData[4] << 16) + registerData[5]) / 250.0f;
@@ -49,9 +48,24 @@ public class MCUCommand : MonoBehaviour {
 
                 logValues();
                 break;
-            case 0x0080:
-            case 0x0100: // JOG Moves
+            case 0x0080: // JOG Moves - 0x0080 = POSITIVE ELEVATION, CLOCKWISE AZIMUTH
                 
+                azimuthSpeed = ((registerData[4] << 16) + registerData[5]) / 20;
+                elevationSpeed = ((registerData[14] << 16) + registerData[15]) / 20;
+            
+                // convert raw register values into simulator friendly terms
+                convertToUnitySpeak();
+                logValues();
+                break;
+            case 0x0100: // 0x0100 = NEGATIVE ELEVATION, COUNTER-CLOCKWISE AZIMUTH
+            
+                azimuthSpeed = -((registerData[4] << 16) + registerData[5]) / 20;
+                elevationSpeed = -((registerData[14] << 16) + registerData[15]) / 20;
+                
+                // convert raw register values into simulator friendly terms
+                convertToUnitySpeak();
+                logValues();
+                break;
             default:
                 Debug.Log("!!! ERROR !!! MCUCommand Constructor: Cannot determine a move type from control room. Setting everything to 0.0f.");
                 azimuthSpeed = 0.0f;
@@ -92,10 +106,10 @@ public class MCUCommand : MonoBehaviour {
     /// Helper method just to log the relevant fields as we go throughout the process. Shouldn't need to exist when everything is finalized
     /// </summary>
     private void logValues() {
-        Debug.Log("RELATIVE MOVE acceleration: " + acceleration);
-        Debug.Log("RELATIVE MOVE azimuthSpeed: " + azimuthSpeed);
-        Debug.Log("RELATIVE MOVE elevationSpeed: " + elevationSpeed);
-        Debug.Log("RELATIVE MOVE azimuthDegrees: " + azimuthDegrees);
-        Debug.Log("RELATIVE MOVE elevationDegrees: " + elevationDegrees);
+        Debug.Log("acceleration: " + acceleration);
+        Debug.Log("azimuthSpeed: " + azimuthSpeed);
+        Debug.Log("elevationSpeed: " + elevationSpeed);
+        Debug.Log("azimuthDegrees: " + azimuthDegrees);
+        Debug.Log("elevationDegrees: " + elevationDegrees);
     }
 }

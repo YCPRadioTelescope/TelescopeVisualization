@@ -42,8 +42,7 @@ public class SimServer : MonoBehaviour {
 	private float elDeg = -42069;
 	
 	//UI Related variables
-	public string PLC_ip;
-	public string MCU_ip;
+	public string mcuIP;
 	public TMP_InputField plcIP;
 	public TMP_InputField mcuIP;
 	public TMP_InputField plcPort;
@@ -51,7 +50,7 @@ public class SimServer : MonoBehaviour {
 	public Button startButton;
 	public Button fillButton;
 	
-	private bool runsimulator = true, mooving = false, jogging = false, isconfigured = false, isTest = false;
+	private bool runsimulator = true, moving = false, jogging = false, isconfigured = false, isTest = false;
 	private int acc, distAZ, distEL, currentAZ, currentEL, AZ_speed, EL_speed, PLC_port, MCU_port;
 	
 	//START BUTTON
@@ -161,8 +160,8 @@ public class SimServer : MonoBehaviour {
 		//did something connect?
 		
 		// prevent the main thread from exiting
-		ushort[] previos_out, current_out;
-		previos_out = Copy_modbus_registers(1025, 20);
+		ushort[] last, current;
+		last = Copy_modbus_registers(1025, 20);
 		while (runsimulator)
 		{
 			if(isTest)
@@ -171,13 +170,12 @@ public class SimServer : MonoBehaviour {
 				continue;
 			}
 			Thread.Sleep(50);
-			current_out = Copy_modbus_registers(1025, 20);
-			if(!current_out.SequenceEqual(previos_out))
+			current = Copy_modbus_registers(1025, 20);
+			if(!current.SequenceEqual(last))
 			{
-				buildMCUCommand(current_out);
-				//Debug.Log("data changed");
+				MCUCommand currentCommand = buildMCUCommand(current_out);
 			}
-			if(mooving)
+			if(moving)
 			{
 				if(distAZ != 0 || distEL != 0)
 				{
@@ -187,7 +185,8 @@ public class SimServer : MonoBehaviour {
 				}
 				else
 				{
-					mooving = false;
+					moving = false;
+					// TODO: updating this register store again, what do these values mean?
 					MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] | 0x0080);
 					MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] | 0x0080);
 				}
@@ -196,8 +195,48 @@ public class SimServer : MonoBehaviour {
 			{
 				updateMCURegisters(AZ_speed, EL_speed);
 			}
-			previos_out = current_out;
+			last = current;
 		}
+	}
+	
+	private MCUCommand buildMCUCommand(ushort[] data)
+	{
+		isconfigured = true;
+		string outstr = "";
+		for(int v = 0; v < data.Length; v++) {
+			outstr += Convert.ToString( data[v] , 16 ).PadLeft( 5 ) + ",";
+		}
+		Debug.Log("Spitting out registers: \n");
+		Debug.Log(outstr);
+		Debug.Log("All done spitting out registers\n");
+
+		jogging = false;
+
+		if(data[0] == 4)
+		{
+			Debug.Log("Recieved immediate stop.");
+		}
+
+		} if(data[0] == 0x0080 || data[0] == 0x0100 || data[10] == 0x0080 || data[10] == 0x0100) 
+		{
+			Debug.Log("JOG COMMAND INCOMING");
+			jogging = true;
+
+		} else if(data[0] == 0x0002 || data[0] == 0x0002) // RELATIVE MOVE
+		{
+			Debug.Log("RELATIVE MOVE INCOMING");
+			moving = true;
+		}
+
+		// build mcu command based on register data
+		MCUCommand mcuCommand = new MCUCommand(data);
+
+		// set register store as in motion 
+		// TODO: What do these values mean? Do we need to set them differently based on other cases?
+		MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
+		MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
+
+		return mcuCommand;
 	}
 	
 	private bool updateMCURegisters(int travAZ, int travEL)
@@ -213,177 +252,6 @@ public class SimServer : MonoBehaviour {
 		MCU_Modbusserver.DataStore.HoldingRegisters[14] = (ushort)(currentEL & 0xffff);
 		return true;
 	}
-	
-	private bool buildMCUCommand(ushort[] data)
-	{
-		isconfigured = true;
-		string outstr = "";
-		for(int v = 0; v < data.Length; v++) {
-			outstr += Convert.ToString( data[v] , 16 ).PadLeft( 5 ) + ",";
-		}
-		Debug.Log("Spitting out registers: \n");
-		Debug.Log(outstr);
-		Debug.Log("All done spitting out registers\n");
-		//Debug.Log("Head: " + data[0]);
-		//Debug.Log(data[1]);
-		jogging = false;
-		/*if(data[0] == 0x8400) {//if not configured dont move
-
-			isconfigured = true;
-		} else if(!isconfigured) {
-			return true;
-		}*/
-		
-		if(data[0] == 4)
-		{
-			Debug.Log("Recieved immediate stop.");
-		}
-		
-		//TEST
-		int test = data[0];
-		Debug.Log(test);
-		if(test == 2)
-		{
-			//Debug.Log("THIS IS MOVE");
-			//convert az to somethin unity can use, 2 parts
-			int frontAz = (data[2])  << 16;
-			int backAz = (data[3]);
-
-			//convert Elivation into something unity can use, 2 parts
-			int frontEl = (data[12]) << 16;
-			int backEl = (data[13]);
-			
-			//Add the 2 parts of each into a single int
-			int az = frontAz + backAz;
-			int el = frontEl + backEl;
-			
-			//take the converted ints and put it in unitys prefered values
-			//also let the use know *logging needs to happen
-			azDeg = az * 360.0f / (20000.0f * 500.0f);
-			Debug.Log("The degree azimuth is: " + azDeg); 
-			elDeg = el * 360.0f / (20000.0f * 50.0f);
-			Debug.Log("The degree elevation is: " + elDeg);
-		}
-		
-		if(data[1] == 0x0403) 
-		{//move cmd
-			//Debug.Log("MOVE");
-			mooving = true;
-			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
-			MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
-			AZ_speed = (data[2] << 16) + data[3];
-			AZ_speed /= 5;
-			EL_speed = AZ_speed;
-			acc = data[4];
-			distAZ = (data[6] << 16) + data[7];
-			distEL = (data[12] << 16) + data[13];
-			//Convert to unity speak
-			string[] packetInfo = outstr.Split(',');
-			
-			//convert az to somethin unity can use, 2 parts
-			int frontAz = (Convert.ToInt32(packetInfo[2].Trim(), 16))  << 16;
-			int backAz = (Convert.ToInt32(packetInfo[3].Trim(), 16));
-
-			//convert Elivation into something unity can use, 2 parts
-			int frontEl = Convert.ToInt32(packetInfo[12].Trim(), 16) << 16;
-			int backEl = Convert.ToInt32(packetInfo[13].Trim(), 16);
-			
-			//Add the 2 parts of each into a single int
-			int az = frontAz + backAz;
-			int el = frontEl + backEl;
-			
-			//take the converted ints and put it in unitys prefered values
-			//also let the use know *logging needs to happen
-			azDeg = az * 360.0f / (20000.0f * 500.0f);
-			Debug.Log("The degree azimuth is: " + azDeg); 
-			elDeg = el * 360.0f / (20000.0f * 50.0f);
-			Debug.Log("The degree elevation is: " + elDeg);
-			return true;
-		} else if(data[0] == 0x0080 || data[0] == 0x0100 || data[10] == 0x0080 || data[10] == 0x0100) 
-		{
-			Debug.Log("JOG COMMAND INCOMING");
-			MCUCommand mcuCommand = new MCUCommand(data);
-			jogging = true;
-			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
-			MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
-			if(data[0] == 0x0080) {
-				AZ_speed = ((data[4] << 16) + data[5]) / 20;
-			} else if(data[0] == 0x0100) {
-				AZ_speed = -((data[4] << 16) + data[5]) / 20;
-			} else {
-				AZ_speed = 0;
-			}
-			if(data[10] == 0x0080) {
-				EL_speed = ((data[14] << 16) + data[15]) / 20;
-			} else if(data[10] == 0x0100) {
-				EL_speed = -((data[14] << 16) + data[15]) / 20;
-			} else {
-				EL_speed = 0;
-			}
-			//Convert to unity speak
-			string[] packetInfo = outstr.Split(',');
-			
-			//convert az to somethin unity can use, 2 parts
-			int frontAz = (Convert.ToInt32(packetInfo[2].Trim(), 16))  << 16;
-			int backAz = (Convert.ToInt32(packetInfo[3].Trim(), 16));
-
-			//convert Elivation into something unity can use, 2 parts
-			int frontEl = Convert.ToInt32(packetInfo[12].Trim(), 16) << 16;
-			int backEl = Convert.ToInt32(packetInfo[13].Trim(), 16);
-			
-			//Add the 2 parts of each into a single int
-			int az = frontAz + backAz;
-			int el = frontEl + backEl;
-			
-			//take the converted ints and put it in unitys prefered values
-			//also let the use know *logging needs to happen
-			azDeg = az * 360.0f / (20000.0f * 500.0f);
-			Debug.Log("The degree azimuth is: " + azDeg); 
-			elDeg = el * 360.0f / (20000.0f * 50.0f);
-			Debug.Log("The degree elevation is: " + elDeg);
-			return true;
-		} else if(data[0] == 0x0002 || data[0] == 0x0002) 
-		{//move cmd
-			Debug.Log("RELATIVE MOVE INCOMING");
-			MCUCommand mcuCommand = new MCUCommand(data);
-
-			mooving = true;
-			MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
-			MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
-			AZ_speed = ((data[4] << 16) + data[5]) / 5;
-			EL_speed = ((data[14] << 16) + data[15]) / 5;
-			acc = data[6];
-			distAZ = (data[2] << 16) + data[3];
-			//Debug.Log("DIST A:" + distAZ);
-			distEL = (data[12] << 16) + data[13];
-			//Debug.Log("DIST E:" + distEL);
-			
-			//Convert to unity speak
-			string[] packetInfo = outstr.Split(',');
-			
-			//convert az to somethin unity can use, 2 parts
-			int frontAz = (Convert.ToInt32(packetInfo[2].Trim(), 16))  << 16;
-			int backAz = (Convert.ToInt32(packetInfo[3].Trim(), 16));
-
-			//convert Elivation into something unity can use, 2 parts
-			int frontEl = Convert.ToInt32(packetInfo[12].Trim(), 16) << 16;
-			int backEl = Convert.ToInt32(packetInfo[13].Trim(), 16);
-			
-			//Add the 2 parts of each into a single int
-			int az = frontAz + backAz;
-			int el = frontEl + backEl;
-			
-			//take the converted ints and put it in unitys prefered values
-			//also let the use know *logging needs to happen
-			azDeg = az * 360.0f / (20000.0f * 500.0f);
-			Debug.Log("The degree azimuth is: " + azDeg); 
-			elDeg = (el * 360.0f / (20000.0f * 50.0f)) * -1;
-			Debug.Log("The degree elevation is: " + elDeg);
-			return true;
-		}
-		return false;
-	}
-	
 	
 	private ushort[] Copy_modbus_registers(int start_index, int length)
 	{
