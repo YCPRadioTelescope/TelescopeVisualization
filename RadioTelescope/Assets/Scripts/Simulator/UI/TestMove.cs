@@ -35,8 +35,8 @@ public class TestMove : MonoBehaviour
 		azimuth.text = az.ToString();
 		
 		// Calculate how far we want to move from the current location.
-		az = az - tc.GetAzimuthDegrees();
-		el = el - tc.GetElevationDegrees() + 15.0f;
+		az = az - tc.simTelescopeAzimuthDegrees;
+		el = el - tc.simTelescopeElevationDegrees + 15.0f;
 		// Account for if it's quicker to spin counter clockwise or across 0.
 		if(az > 180.0f)
 			az -= 360.0f;

@@ -17,11 +17,11 @@ public class MCUCommand : MonoBehaviour {
     ///
     /// member fields
     ///
-    private float azimuthSpeed { get; set; }
-    private float elevationSpeed { get; set; }
-    private float acceleration { get; set; }
-    private float azimuthDegrees { get; set; }
-    private float elevationDegrees { get; set; }
+    public float azimuthSpeed { get; set; }
+    public float elevationSpeed { get; set; }
+    public float acceleration { get; set; }
+    public float azimuthDegrees { get; set; }
+    public float elevationDegrees { get; set; }
 
     /// <summary>
     /// Constructor to decode the register data into member fields for readable access on <c>TelescopeControllerSim</c>
@@ -31,6 +31,7 @@ public class MCUCommand : MonoBehaviour {
         switch(registerData[0])
         { 
             case 0x0002: // 2 (in hex) is for RELATIVE moves
+            	Debug.Log("RELATIVE MOVE INCOMING");
                 // calculate speed fields
                 azimuthSpeed = ((registerData[4] << 16) + registerData[5]) / 250.0f;
                 elevationSpeed = ((registerData[14] << 16) + registerData[15]) / 250.0f;
@@ -49,7 +50,7 @@ public class MCUCommand : MonoBehaviour {
                 logValues();
                 break;
             case 0x0080: // JOG Moves - 0x0080 = POSITIVE ELEVATION, CLOCKWISE AZIMUTH
-                
+                Debug.Log("JOG COMMAND INCOMING");
                 azimuthSpeed = ((registerData[4] << 16) + registerData[5]) / 20;
                 elevationSpeed = ((registerData[14] << 16) + registerData[15]) / 20;
             
@@ -58,13 +59,30 @@ public class MCUCommand : MonoBehaviour {
                 logValues();
                 break;
             case 0x0100: // 0x0100 = NEGATIVE ELEVATION, COUNTER-CLOCKWISE AZIMUTH
-            
+                Debug.Log("JOG COMMAND INCOMING");
                 azimuthSpeed = -((registerData[4] << 16) + registerData[5]) / 20;
                 elevationSpeed = -((registerData[14] << 16) + registerData[15]) / 20;
                 
                 // convert raw register values into simulator friendly terms
                 convertToUnitySpeak();
                 logValues();
+                break;
+            case 0x0420:
+                // this is called when we first start the sim'd mcu. we want to set this to default values we can be sure are not from the CR
+                Debug.Log("Building MCUCommand object for the first time in SimServer.cs");
+                azimuthSpeed = 420.69f;
+                elevationSpeed = 420.69f;
+                acceleration = 420.69f;
+                azimuthDegrees = 420.69f;
+                elevationDegrees = 420.69f;
+                break;
+            case 0x0069:
+                Debug.Log("Building MCUCommand for telescope controller to put in start position");
+                azimuthSpeed = 60.0f;
+                elevationSpeed = 60.0f;
+                acceleration = 50.0f;
+                azimuthDegrees = 0.0f;
+                elevationDegrees = 15.0f;
                 break;
             default:
                 Debug.Log("!!! ERROR !!! MCUCommand Constructor: Cannot determine a move type from control room. Setting everything to 0.0f.");
