@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using static MCUCommand;
 
 // This script handles manually inputted movement from the simulation. The behavior of the inputted
 // values matches the behavior of the custom orientation movement script from the control room. That is,
@@ -28,24 +28,25 @@ public class TestMove : MonoBehaviour
 	private void TestMovement()
 	{
 		// Get the azimuth and elevation values from the UI, clamping them to allowable values.
-		float az = Mathf.Clamp(float.Parse(azimuth.text), 0.0f, 360.0f);
-		float el = Mathf.Clamp(float.Parse(elevation.text), -15.0f, 94.0f);
+		int az = Mathf.Clamp(int.Parse(azimuth.text), 0, 360);
+		int el = Mathf.Clamp(int.Parse(elevation.text), -15, 94);
 		// Send the clamped values back to the UI in case the user provided out of bounds input.
 		elevation.text = el.ToString();
 		azimuth.text = az.ToString();
 		
-		// Calculate how far we want to move from the current location.
-		az = az - tc.simTelescopeAzimuthDegrees;
-		el = el - tc.simTelescopeElevationDegrees + 15.0f;
-		// Account for if it's quicker to spin counter clockwise or across 0.
-		if(az > 180.0f)
-			az -= 360.0f;
-		if(az < -180.0f)
-			az += 360.0f;
-		
-		// Send the command.
-		tc.TargetElevation(el);
-		tc.TargetAzimuth(az);
-		tc.speed = float.Parse(speed.text);
+
+		// build register data and send command
+
+		Debug.Log("TEST_MOVE BEFORE CONVERT -- az: " + az);
+		Debug.Log("TEST_MOVE BEFORE CONVERT -- el: " + el);
+
+		// we don't really care about the other fields, they will be set by a special case in MCUCommand
+		// I grabbed these hardcoded bit calculation values from the control room
+		// the challenge with this is to convert a float to a short, which needs to be split over 2 elements in order to recombine them 
+		// into 
+		ushort[] registerData =  { 0x0096, (ushort) az, (ushort) el };
+
+		MCUCommand testMoveCommand = new MCUCommand(registerData);
+		tc.SetNewMCUCommand(testMoveCommand);
 	}
 }

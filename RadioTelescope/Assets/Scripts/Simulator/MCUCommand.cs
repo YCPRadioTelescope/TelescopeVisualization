@@ -17,11 +17,18 @@ public class MCUCommand : MonoBehaviour {
     ///
     /// member fields
     ///
-    public float azimuthSpeed { get; set; }
-    public float elevationSpeed { get; set; }
-    public float acceleration { get; set; }
-    public float azimuthDegrees { get; set; }
-    public float elevationDegrees { get; set; }
+    public float azimuthSpeed = 0.0f;
+    public float elevationSpeed = 0.0f;
+    public float acceleration = 0.0f;
+    public float azimuthDegrees = 0.0f;
+    public float elevationDegrees = 0.0f;
+    public bool jog = false;
+    public bool errorFlag = false;
+
+    ///
+    /// private helper members
+    ///
+    private byte[] tempUshortToByte = new byte[16];
 
     /// <summary>
     /// Constructor to decode the register data into member fields for readable access on <c>TelescopeControllerSim</c>
@@ -49,25 +56,77 @@ public class MCUCommand : MonoBehaviour {
 
                 logValues();
                 break;
-            case 0x0080: // JOG Moves - 0x0080 = POSITIVE ELEVATION, CLOCKWISE AZIMUTH
-                Debug.Log("JOG COMMAND INCOMING");
+
+            case 0x0080: // JOG Moves - 0x0080 = CLOCKWISE AZIMUTH
+                Debug.Log("AZIMTUH JOG RIGHT COMMAND INCOMING");
+                jog = true;
                 azimuthSpeed = ((registerData[4] << 16) + registerData[5]) / 20;
-                elevationSpeed = ((registerData[14] << 16) + registerData[15]) / 20;
             
                 // convert raw register values into simulator friendly terms
                 convertToUnitySpeak();
                 logValues();
                 break;
-            case 0x0100: // 0x0100 = NEGATIVE ELEVATION, COUNTER-CLOCKWISE AZIMUTH
-                Debug.Log("JOG COMMAND INCOMING");
+
+            case 0x0100: // 0x0100 = COUNTER-CLOCKWISE AZIMUTH
+                Debug.Log("AZIMTUH JOG LEFT COMMAND INCOMING");
+                jog = true;
                 azimuthSpeed = -((registerData[4] << 16) + registerData[5]) / 20;
-                elevationSpeed = -((registerData[14] << 16) + registerData[15]) / 20;
                 
                 // convert raw register values into simulator friendly terms
                 convertToUnitySpeak();
                 logValues();
                 break;
-            case 0x0420:
+
+            case 0x000: // COULD BE A BUNCH OF THINGS
+
+                // first check to see if it's an elevation jog command
+                if (registerData[10] == 0x0080) // NEGATIVE ELEVATION JOG
+                {
+                    Debug.Log("NEGATIVE ELEVATION JOG COMMAND INCOMING");
+                    jog = true;
+                    elevationSpeed = -((registerData[14] << 16) + registerData[15]) / 20;
+                    // set to 0 so it inherently fails the azimuth checks (won't register as an azimuth jog)
+                    azimuthSpeed = 0.0f;
+                
+                    // convert raw register values into simulator friendly terms
+                    convertToUnitySpeak();
+                    logValues();
+                    break;
+                } else if (registerData[10] == 0x0100) // POSITIVE ELEVATION JOG
+                {
+                    Debug.Log("POSITIVE ELEVATION JOG COMMAND INCOMING");
+                    jog = true;
+                    elevationSpeed = ((registerData[14] << 16) + registerData[15]) / 20;
+                    // set to 0 so it inherently fails the azimuth checks (won't register as an azimuth jog)
+                    azimuthSpeed = 0.0f;
+                
+                    // convert raw register values into simulator friendly terms
+                    convertToUnitySpeak();
+                    logValues();
+                    break;
+                }
+
+                // Cancel move also starts with a 0x0000, but it is deliminated by the second register (a 3)
+                if (registerData[1] == 0x0003) // CANCEL MOVE
+                {
+                    Debug.Log("CANCEL MOVE INCOMING");
+                    // set error flag so TelescopeController doesn't do anything with the currentCommand's fields
+                    errorFlag = true;
+                    break;
+                }
+
+                Debug.Log("MCUCOMMAND: !!ERROR!! We fell through the 0x000 case and did not match any conditions.");
+                Debug.Log("Setting everything to 0.0f and breaking...");
+                errorFlag = true;
+                azimuthSpeed = 0.0f;
+                elevationSpeed = 0.0f;
+                acceleration = 0.0f;
+                azimuthDegrees = 0.0f;
+                elevationDegrees = 0.0f;
+                break;
+            
+            case 0x0420: // SIM SERVER INITIALIZATION
+
                 // this is called when we first start the sim'd mcu. we want to set this to default values we can be sure are not from the CR
                 Debug.Log("Building MCUCommand object for the first time in SimServer.cs");
                 azimuthSpeed = 420.69f;
@@ -76,7 +135,9 @@ public class MCUCommand : MonoBehaviour {
                 azimuthDegrees = 420.69f;
                 elevationDegrees = 420.69f;
                 break;
-            case 0x0069:
+
+            case 0x0069: // SIM CONTROLLER INITIALIZATION
+
                 Debug.Log("Building MCUCommand for telescope controller to put in start position");
                 azimuthSpeed = 60.0f;
                 elevationSpeed = 60.0f;
@@ -84,8 +145,28 @@ public class MCUCommand : MonoBehaviour {
                 azimuthDegrees = 0.0f;
                 elevationDegrees = 15.0f;
                 break;
-            default:
-                Debug.Log("!!! ERROR !!! MCUCommand Constructor: Cannot determine a move type from control room. Setting everything to 0.0f.");
+
+            case 0x0096: // TEST MOVE
+
+                // this is for the TestMove routine to arbitrarily move the telescope from within unity
+                Debug.Log("Buidling MCUCommand for TestMove.cs");
+
+                // we can't use convertToUnitySpeak() here because the values here are already in degrees
+
+                azimuthDegrees = Convert.ToInt32(registerData[1]);
+                elevationDegrees = Convert.ToInt32(registerData[2]);
+
+                Debug.Log("MCUCOMMAND: Azimuth after converting to int: " + azimuthDegrees);
+                Debug.Log("MCUCOMMAND: Elevation after converting to int: " + elevationDegrees);
+
+                azimuthSpeed = 5.0f;
+                elevationSpeed = 5.0f;
+                break;
+
+            default: // catch "all" and return error command
+
+                Debug.Log("!!! ERROR !!! MCUCommand Constructor: Cannot determine a move type from control room. Setting error flag to true and everything else to 0.0f.");
+                errorFlag = true;
                 azimuthSpeed = 0.0f;
                 elevationSpeed = 0.0f;
                 acceleration = 0.0f;
@@ -111,23 +192,57 @@ public class MCUCommand : MonoBehaviour {
         // something like (# of steps for 1 degree) -- future work
         azimuthDegrees = convertStepsToDegrees(azimuthDegrees, AZIMUTH_GEARING_RATIO);
         elevationDegrees = convertStepsToDegrees(elevationDegrees, ELEVATION_GEARING_RATIO);
+
+        if (elevationDegrees < 0)
+            elevationDegrees *= -1;
+
+        // the speed here is relative to the actual values, but to visualize for unity we need them a little smaller
+        azimuthSpeed = azimuthSpeed / 100;
+        elevationSpeed = elevationSpeed / 10;
     }
 
     /// <summary>
     /// Helper method used to convert steps to degrees - this is taken from <c>ConversionHelper.cs</c> on the control room
     /// </summary>
+    /// <param name="steps"> steps passed from the control room (or wherever)</param>
+    /// <param name="gearingRatio"> the constant ratio associated with the type of movement. For us, this will be azimuth or elevation gearing </param>
+    /// <returns> a float "degree" value from the information passed </returns>
     private float convertStepsToDegrees(float steps, float gearingRatio) {
         return steps * 360.0f / (STEPS_PER_REVOLUTION * gearingRatio);
+    }
+
+    /// <summary>
+    /// This private helper method uses the BitConverter class to conver the ushorts into byte arrays, concat them together, then finally 
+    /// convert them to a single float value. The nature of ushort makes it so when converting it to a byte array it only takes 2 bytes, 
+    /// with 4 bytes being needed for the conversion back to float. I think this is the reason the control room sends over each data bit 
+    /// in 2 registers instead of just 1, but I am not 100% on that (yet)
+    /// </summary>
+    /// <param name="first"> first half of the data </param>
+    /// <param name="second"> second  half of the data </param>
+    /// <returns> a full float value from the 2 halves </returns>
+    private float ushortToFloat(ushort first, ushort second)
+    {
+        // get the byte arrays from our ushort values
+        byte[] firstBytes = BitConverter.GetBytes(first);
+        byte[] secondBytes = BitConverter.GetBytes(second);
+
+        // get both arrays of bytes into a single 4 byte array (this should always be 4 bytes, but I am leaving it general incase something weird happens)
+        byte[] bothBytes = new byte[firstBytes.Length + secondBytes.Length];
+        firstBytes.CopyTo(bothBytes, 0);
+        secondBytes.CopyTo(bothBytes, firstBytes.Length);
+
+        // now use BitConverter to go back to a float, return it
+        return BitConverter.ToSingle(bothBytes, 0);
     }
 
     /// <summary>
     /// Helper method just to log the relevant fields as we go throughout the process. Shouldn't need to exist when everything is finalized
     /// </summary>
     private void logValues() {
-        Debug.Log("acceleration: " + acceleration);
-        Debug.Log("azimuthSpeed: " + azimuthSpeed);
-        Debug.Log("elevationSpeed: " + elevationSpeed);
-        Debug.Log("azimuthDegrees: " + azimuthDegrees);
-        Debug.Log("elevationDegrees: " + elevationDegrees);
+        // Debug.Log("acceleration: " + acceleration);
+        // Debug.Log("azimuthSpeed: " + azimuthSpeed);
+        // Debug.Log("elevationSpeed: " + elevationSpeed);
+        // Debug.Log("azimuthDegrees: " + azimuthDegrees);
+        // Debug.Log("elevationDegrees: " + elevationDegrees);
     }
 }

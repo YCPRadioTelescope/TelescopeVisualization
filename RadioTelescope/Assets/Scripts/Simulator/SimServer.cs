@@ -41,14 +41,12 @@ public class SimServer : MonoBehaviour {
 	private float elDeg = -42069;
 	
 	//UI Related variables
-	public string mcuIP;
-	public TMP_InputField mcu_IP;
-	public TMP_InputField mcu_Port;
+	public TMP_InputField mcuIP;
+	public TMP_InputField mcuPort;
 	public Button startButton;
 	public Button fillButton;
 	
-	private bool runSimulator = true, moving = false, jogging = false, isConfigured = false, isTest = false;
-	private int mcuPort;
+	private bool runSimulator = true, moving = false, jogging = false, isConfigured = false, isTest = false, isJogComand = false;
 	
 	/// <summary>
 	/// Start is called before the first frame
@@ -76,8 +74,8 @@ public class SimServer : MonoBehaviour {
 	/// </summary>
 	public void AutoFillInput()
 	{
-		mcu_IP.text = "127.0.0.1";
-		mcu_Port.text = "8083";
+		mcuIP.text = "127.0.0.1";
+		mcuPort.text = "8083";
 	}
 	
 	/// <summary>
@@ -92,7 +90,7 @@ public class SimServer : MonoBehaviour {
 		
 		try
 		{
-			MCU_TCPListener = new TcpListener(new IPEndPoint(IPAddress.Parse(mcu_IP.text), int.Parse(mcu_Port.text)));
+			MCU_TCPListener = new TcpListener(new IPEndPoint(IPAddress.Parse(mcuIP.text), int.Parse(mcuPort.text)));
 			MCU_emulator_thread = new Thread(new ThreadStart(runMCUThread));
 		}
 		catch (Exception e)
@@ -129,7 +127,8 @@ public class SimServer : MonoBehaviour {
 	/// </summary>
 	void Update () { 		
 		// send current command to controller
-		tc.SetNewMCUCommand(currentCommand);
+		if (!currentCommand.errorFlag)
+			tc.SetNewMCUCommand(currentCommand);
 
 		// press escape to exit the program cleanly
 		if(Input.GetKeyDown((KeyCode.Escape)))
@@ -154,14 +153,20 @@ public class SimServer : MonoBehaviour {
 		last = copyModbusDataStoreRegisters(1025, 20);
 		while (runSimulator)
 		{
-			if(isTest)
-			{
-				Thread.Sleep(5);
-				continue;
-			}
-			Thread.Sleep(50);
+			Thread.Sleep(200);
 			current = copyModbusDataStoreRegisters(1025, 20);
-			if(!current.SequenceEqual(last))
+
+			// jog commands frequently send the same exact register contents (is jog), so we need a special case for them
+			// 0x0080 and 0x0100 tell us the direction of the jog. This is handled in buildMCUCommand.
+			// these checks are basically if (are we trying to jog something)
+			// 								then constantly check for new register data;
+			if (current[0] == 80 || current[0] == 100 || current[10] == 80 || current[10] == 100)
+			{
+				isJogComand = true;
+
+			} else { isJogComand = false; }
+
+			if(!current.SequenceEqual(last) || isJogComand)
 			{
 				Debug.Log("!! New Register Data Incoming !!");
 				currentCommand = buildMCUCommand(current);
@@ -256,8 +261,8 @@ public class SimServer : MonoBehaviour {
 	/// </summary>
 	private void updateMCURegisters(float travAZ, float travEL)
 	{
-		currentCommand.azimuthDegrees += travAZ;
-		currentCommand.elevationDegrees += travEL;
+		// currentCommand.azimuthDegrees += travAZ;
+		// currentCommand.elevationDegrees += travEL;
 
 		MCU_Modbusserver.DataStore.HoldingRegisters[3] = (ushort)(((int)currentCommand.azimuthDegrees & 0xffff0000) >> 16);
 		MCU_Modbusserver.DataStore.HoldingRegisters[4] = (ushort)((int)currentCommand.azimuthDegrees & 0xffff);
