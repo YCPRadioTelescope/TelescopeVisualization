@@ -25,10 +25,7 @@ public class MCUCommand : MonoBehaviour {
     public bool jog = false;
     public bool errorFlag = false;
 
-    ///
-    /// private helper members
-    ///
-    private byte[] tempUshortToByte = new byte[16];
+    private TelescopeControllerSim tc;
 
     /// <summary>
     /// Constructor to decode the register data into member fields for readable access on <c>TelescopeControllerSim</c>
@@ -53,6 +50,10 @@ public class MCUCommand : MonoBehaviour {
                 
                 // convert raw register values into simulator friendly terms
                 convertToUnitySpeak();
+
+                // for relative moves we get the remaining degrees to move from the control room
+                // the simulator targets the *absolute* position, so we need to fix the command'd azimuth position with the absolute position here
+                azimuthDegrees += tc.simTelescopeAzimuthDegrees;
 
                 logValues();
                 break;
@@ -85,9 +86,7 @@ public class MCUCommand : MonoBehaviour {
                     Debug.Log("NEGATIVE ELEVATION JOG COMMAND INCOMING");
                     jog = true;
                     elevationSpeed = -((registerData[14] << 16) + registerData[15]) / 20;
-                    // set to 0 so it inherently fails the azimuth checks (won't register as an azimuth jog)
-                    azimuthSpeed = 0.0f;
-                
+
                     // convert raw register values into simulator friendly terms
                     convertToUnitySpeak();
                     logValues();
@@ -97,8 +96,6 @@ public class MCUCommand : MonoBehaviour {
                     Debug.Log("POSITIVE ELEVATION JOG COMMAND INCOMING");
                     jog = true;
                     elevationSpeed = ((registerData[14] << 16) + registerData[15]) / 20;
-                    // set to 0 so it inherently fails the azimuth checks (won't register as an azimuth jog)
-                    azimuthSpeed = 0.0f;
                 
                     // convert raw register values into simulator friendly terms
                     convertToUnitySpeak();
@@ -209,30 +206,6 @@ public class MCUCommand : MonoBehaviour {
     /// <returns> a float "degree" value from the information passed </returns>
     private float convertStepsToDegrees(float steps, float gearingRatio) {
         return steps * 360.0f / (STEPS_PER_REVOLUTION * gearingRatio);
-    }
-
-    /// <summary>
-    /// This private helper method uses the BitConverter class to conver the ushorts into byte arrays, concat them together, then finally 
-    /// convert them to a single float value. The nature of ushort makes it so when converting it to a byte array it only takes 2 bytes, 
-    /// with 4 bytes being needed for the conversion back to float. I think this is the reason the control room sends over each data bit 
-    /// in 2 registers instead of just 1, but I am not 100% on that (yet)
-    /// </summary>
-    /// <param name="first"> first half of the data </param>
-    /// <param name="second"> second  half of the data </param>
-    /// <returns> a full float value from the 2 halves </returns>
-    private float ushortToFloat(ushort first, ushort second)
-    {
-        // get the byte arrays from our ushort values
-        byte[] firstBytes = BitConverter.GetBytes(first);
-        byte[] secondBytes = BitConverter.GetBytes(second);
-
-        // get both arrays of bytes into a single 4 byte array (this should always be 4 bytes, but I am leaving it general incase something weird happens)
-        byte[] bothBytes = new byte[firstBytes.Length + secondBytes.Length];
-        firstBytes.CopyTo(bothBytes, 0);
-        secondBytes.CopyTo(bothBytes, firstBytes.Length);
-
-        // now use BitConverter to go back to a float, return it
-        return BitConverter.ToSingle(bothBytes, 0);
     }
 
     /// <summary>

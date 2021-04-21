@@ -133,6 +133,8 @@ public class SimServer : MonoBehaviour {
 		// press escape to exit the program cleanly
 		if(Input.GetKeyDown((KeyCode.Escape)))
 			Application.Quit();
+
+		
 	}
 	
 	/// <summary>

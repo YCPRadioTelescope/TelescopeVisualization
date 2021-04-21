@@ -10,7 +10,7 @@ using static MCUCommand;
 // need to move by to reach that target.
 public class TestMove : MonoBehaviour
 {
-	public TelescopeControllerSim tc;
+	private TelescopeControllerSim tc;
 	public TMP_InputField azimuth;
 	public TMP_InputField elevation;
 	public TMP_InputField speed;
