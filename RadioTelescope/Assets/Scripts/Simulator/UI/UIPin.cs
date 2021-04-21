@@ -6,14 +6,14 @@ using UnityEngine;
 // This script runs every frame so that changing the window size updates the UI positions.
 public class UIPin : MonoBehaviour
 {
-	public int position;
+	public int pin;
 	public int bufferX;
 	public int bufferY;
 
 	// Updated is called once every frame.
-	void FixedUpdate()
+	void Update()
 	{
-		switch(position)
+		switch(pin)
 		{
 			// Pin the UI to the upper left.
 			case 1:
