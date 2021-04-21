@@ -10,7 +10,7 @@ using static MCUCommand;
 // need to move by to reach that target.
 public class TestMove : MonoBehaviour
 {
-	private TelescopeControllerSim tc;
+	public TelescopeControllerSim tc;
 	public TMP_InputField azimuth;
 	public TMP_InputField elevation;
 	public TMP_InputField speed;
@@ -34,9 +34,12 @@ public class TestMove : MonoBehaviour
 		elevation.text = el.ToString();
 		azimuth.text = az.ToString();
 		
+		// we need to add 15 
+		el += 15;
+
+		// TODO: make this a move by again instead of an absolute move
 
 		// build register data and send command
-
 		Debug.Log("TEST_MOVE BEFORE CONVERT -- az: " + az);
 		Debug.Log("TEST_MOVE BEFORE CONVERT -- el: " + el);
 

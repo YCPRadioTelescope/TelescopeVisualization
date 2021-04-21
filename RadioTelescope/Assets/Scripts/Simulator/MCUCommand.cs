@@ -6,9 +6,10 @@ using System;
 /// Public class <c>MCUCommand</c> is used to store input register data from the control room
 /// in an easy way for us to decode the commands on the <c>TelescopeControllerSim</c>
 /// </summary>
-public class MCUCommand : MonoBehaviour {
+public class MCUCommand : MonoBehaviour 
+{
     ///
-    /// static constants
+    /// static constants (from the control room, not eyeballed for unity's sake)
     ///
     private const float STEPS_PER_REVOLUTION = 20000.0f;
     private const float AZIMUTH_GEARING_RATIO = 500.0f;
@@ -25,18 +26,19 @@ public class MCUCommand : MonoBehaviour {
     public bool jog = false;
     public bool errorFlag = false;
 
-    private TelescopeControllerSim tc;
-
     /// <summary>
-    /// Constructor to decode the register data into member fields for readable access on <c>TelescopeControllerSim</c>
+    /// constructor for building mcu command objects
     /// </summary>
-    public MCUCommand(ushort[] registerData) {
+    /// <param name="registerData"> raw register data from the control room </param>
+    /// <param name="simAzimtuhDegrees"> helper param to calculate how far we need to go for a relative move </param>
+    public MCUCommand(ushort[] registerData, float simAzimtuhDegrees = 0.0f) {
         // we can determine move type by looking at the first register value
         switch(registerData[0])
         { 
             case 0x0002: // 2 (in hex) is for RELATIVE moves
             	Debug.Log("RELATIVE MOVE INCOMING");
                 // calculate speed fields
+                // the /250.0f is what i added to get the speed values down to unity okay things - it was moving way too fast
                 azimuthSpeed = ((registerData[4] << 16) + registerData[5]) / 250.0f;
                 elevationSpeed = ((registerData[14] << 16) + registerData[15]) / 250.0f;
 
@@ -47,13 +49,12 @@ public class MCUCommand : MonoBehaviour {
                 // note the var is called *azimuthDegrees* and *elevationDegrees* but right now these are in steps. They get converted below
                 azimuthDegrees = (registerData[2] << 16) + registerData[3];
                 elevationDegrees = (registerData[12] << 16) + registerData[13];
-                
+
                 // convert raw register values into simulator friendly terms
                 convertToUnitySpeak();
 
-                // for relative moves we get the remaining degrees to move from the control room
-                // the simulator targets the *absolute* position, so we need to fix the command'd azimuth position with the absolute position here
-                azimuthDegrees += tc.simTelescopeAzimuthDegrees;
+                // the simulator targets the *absolute* position, so we need to fix the command'd azimuth position with the sim's absolute position here
+                azimuthDegrees += simAzimtuhDegrees;
 
                 logValues();
                 break;
@@ -156,7 +157,7 @@ public class MCUCommand : MonoBehaviour {
                 Debug.Log("MCUCOMMAND: Azimuth after converting to int: " + azimuthDegrees);
                 Debug.Log("MCUCOMMAND: Elevation after converting to int: " + elevationDegrees);
 
-                azimuthSpeed = 5.0f;
+                azimuthSpeed = 2.0f;
                 elevationSpeed = 5.0f;
                 break;
 

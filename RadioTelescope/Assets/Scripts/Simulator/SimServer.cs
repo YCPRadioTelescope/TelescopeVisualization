@@ -32,7 +32,7 @@ public class SimServer : MonoBehaviour {
 	private ModbusSlave MCU_Modbusserver;
 	private Thread MCU_emulator_thread;
 	
-	//for controlling the VR telescope
+	// for controlling the VR telescope
 	public TelescopeControllerSim tc;
 
 	public MCUCommand currentCommand;
@@ -54,8 +54,8 @@ public class SimServer : MonoBehaviour {
 	public void Start()
 	{
 		tc.speed = speed;
-		tc.TargetAzimuth(0.0f);
-		tc.TargetElevation(15.0f);
+		tc.UpdateAzimuthUI(0.0f);
+		tc.UpdateElevationUI(15.0f);
 		//startButton = GetComponent<Button>();
 		startButton.onClick.AddListener(StartServer);
 		fillButton.onClick.AddListener(AutoFillInput);
@@ -85,8 +85,8 @@ public class SimServer : MonoBehaviour {
 	{
 		Debug.Log("Start Button clicked");
 		tc.speed = speed;
-		tc.TargetAzimuth(0.0f);
-		tc.TargetElevation(15.0f);
+		tc.UpdateAzimuthUI(0.0f);
+		tc.UpdateElevationUI(15.0f);
 		
 		try
 		{
@@ -125,7 +125,8 @@ public class SimServer : MonoBehaviour {
 	/// <summary>
 	/// Update is called once per frame
 	/// </summary>
-	void Update () { 		
+	void Update () 
+	{ 		
 		// send current command to controller
 		if (!currentCommand.errorFlag)
 			tc.SetNewMCUCommand(currentCommand);
@@ -133,8 +134,6 @@ public class SimServer : MonoBehaviour {
 		// press escape to exit the program cleanly
 		if(Input.GetKeyDown((KeyCode.Escape)))
 			Application.Quit();
-
-		
 	}
 	
 	/// <summary>
@@ -155,7 +154,7 @@ public class SimServer : MonoBehaviour {
 		last = copyModbusDataStoreRegisters(1025, 20);
 		while (runSimulator)
 		{
-			Thread.Sleep(200);
+			Thread.Sleep(100);
 			current = copyModbusDataStoreRegisters(1025, 20);
 
 			// jog commands frequently send the same exact register contents (is jog), so we need a special case for them
@@ -170,7 +169,7 @@ public class SimServer : MonoBehaviour {
 
 			if(!current.SequenceEqual(last) || isJogComand)
 			{
-				Debug.Log("!! New Register Data Incoming !!");
+				Debug.Log("--------------------------------------------- !! New Register Data Incoming !!");
 				currentCommand = buildMCUCommand(current);
 			}
 			if(moving)
@@ -247,7 +246,7 @@ public class SimServer : MonoBehaviour {
 		}
 
 		// build mcu command based on register data
-		currentCommand = new MCUCommand(data);
+		currentCommand = new MCUCommand(data, tc.simTelescopeAzimuthDegrees);
 
 		// set register store as in motion 
 		// TODO: What do these values mean? Do we need to set them differently based on other cases?
