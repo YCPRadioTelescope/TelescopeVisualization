@@ -94,6 +94,14 @@ public class TelescopeControllerSim : MonoBehaviour
 		if (incoming.errorFlag != true && incoming.acceleration != 420.69f) 
 		{
 			currentMCUCommand = incoming;
+
+			if (currentMCUCommand.stopMove)
+			{
+				// if we receive a stop, set the moveTo's to the current position of the simulator
+				currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees;
+				currentMCUCommand.elevationDegrees = simTelescopeElevationDegrees;
+			}
+
 			// if it's a jog, we want to move 1 degree in the jog direction
 			// as of right now, the control room cannot jog on both motors (az & el) at the same time
 			// each jog command will be one or the other
@@ -173,7 +181,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		// No new commands are taken if one is already executing.
 		if(executingCommand)
 		{
-			inputAzimuthText.text = "Input Azimuth: EXECUTING";
+			inputAzimuthText.text = "Input Azimuth: MOVING";
 			return;
 		}
 		inputAzimuthText.text = "Input Azimuth: " + System.Math.Round(az, 1);
@@ -187,7 +195,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		// No new commands are taken if one is already executing.
 		if(executingCommand)
 		{
-			inputElevationText.text = "Input Elevation: EXECUTING";
+			inputElevationText.text = "Input Elevation: MOVING";
 			return;
 		}
 		inputElevationText.text = "Input Elevation: " + System.Math.Round(el, 1);

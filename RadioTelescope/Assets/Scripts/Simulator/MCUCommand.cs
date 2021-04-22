@@ -25,7 +25,7 @@ public class MCUCommand : MonoBehaviour
     public float elevationDegrees = 0.0f;
     public bool jog = false;
     public bool errorFlag = false;
-    public bool cancelMove = false;
+    public bool stopMove = false;
 
     /// <summary>
     /// constructor for building mcu command objects
@@ -135,7 +135,7 @@ public class MCUCommand : MonoBehaviour
                 {
                     Debug.Log("CANCEL MOVE INCOMING");
                     // set error flag so TelescopeController doesn't do anything with the currentCommand's fields
-                    errorFlag = true;
+                    stopMove = true;
                     break;
                 }
 
@@ -149,6 +149,24 @@ public class MCUCommand : MonoBehaviour
                 elevationDegrees = 0.0f;
                 break;
             
+            case (ushort) MoveType.CONTROLLED_STOP:
+            case (ushort) MoveType.IMMEDIATE_STOP:
+                Debug.Log("STOP MOVE INCOMING");
+                stopMove = true;
+                break;
+
+            case (ushort) MoveType.CLEAR_MCU_ERRORS:
+                Debug.Log("CLEAR MCU ERRORS COMMAND INCOMING");
+                // this case will get more love later, for now just set errorFlag (don't do anything with this new MCUCommand object)
+                errorFlag = true;
+                break;
+
+            case (ushort) MoveType.CONFIGURE_MCU:
+                Debug.Log("CONFIGURE MCU COMMAND INCOMING");
+                // we don't need to do anything with this command, so we're just going to set the errorFlag so this command is ignored
+                errorFlag = true;
+                break;
+
             case (ushort) MoveType.SIM_SERVER_INIT:
 
                 // this is called when we first start the sim'd mcu. we want to set this to default values we can be sure are not from the CR

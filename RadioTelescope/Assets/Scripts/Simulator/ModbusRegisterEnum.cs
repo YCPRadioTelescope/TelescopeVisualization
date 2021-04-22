@@ -31,7 +31,19 @@ enum MoveType
     CANCEL_MOVE = 0x0003,
 
     // first register bit (registerData[0])
+    CONTROLLED_STOP = 0x0004,
+
+    // first register bit (registerData[0])
+    IMMEDIATE_STOP = 0x0010,
+
+    // first register bit (registerData[0])
     HOME = 0x0040,
+
+    // first register bit (registerData[0])
+    CLEAR_MCU_ERRORS = 0x0800,
+
+    // first register bit (registerData[0])
+    CONFIGURE_MCU = 0x852c,
 
     // first register bit (registerData[0])
     SIM_SERVER_INIT = 0x0420,
