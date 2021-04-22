@@ -25,6 +25,7 @@ public class MCUCommand : MonoBehaviour
     public float elevationDegrees = 0.0f;
     public bool jog = false;
     public bool errorFlag = false;
+    public bool cancelMove = false;
 
     /// <summary>
     /// constructor for building mcu command objects
@@ -89,6 +90,17 @@ public class MCUCommand : MonoBehaviour
                 // convert raw register values into simulator friendly terms
                 convertToUnitySpeak();
                 logValues();
+                break;
+            
+            case (ushort) MoveType.HOME:
+                Debug.Log("HOME COMMAND INCOMING");
+                // for this move we just want to 0 the telescope, nothing fancy
+                // we do want a value for the speed in case we need to move to the 0 position
+                azimuthSpeed = 5.0f;
+                elevationSpeed = 5.0f;
+                acceleration = 0.0f;
+                azimuthDegrees = 0.0f;
+                elevationDegrees = 0.0f;
                 break;
 
             case 0x0000: // COULD BE A BUNCH OF THINGS -- a lot of register bits start with 0 because they are for elevation only or are some sort of stop move
