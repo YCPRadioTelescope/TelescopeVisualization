@@ -32,23 +32,33 @@ public class MCUCommand : MonoBehaviour
     /// <param name="registerData"> raw register data from the control room </param>
     /// <param name="simAzimtuhDegrees"> helper param to calculate how far we need to go for a relative move </param>
     public MCUCommand(ushort[] registerData, float simAzimtuhDegrees = 0.0f) {
+        
         // we can determine move type by looking at the first register value
-        switch(registerData[0])
+        // i chose to do the first azimuth word because the average move type (relative) starts this way
+        // other edge cases are handled by switching on a 0 value (instruction not for the azimuth motor)
+        switch(registerData[(int) RegPos.firstWordAzimuth])
         { 
-            case 0x0002: // 2 (in hex) is for RELATIVE moves
+            case (ushort) MoveType.RELATIVE_MOVE:
             	Debug.Log("RELATIVE MOVE INCOMING");
+
                 // calculate speed fields
                 // the /250.0f is what i added to get the speed values down to unity okay things - it was moving way too fast
-                azimuthSpeed = ((registerData[4] << 16) + registerData[5]) / 250.0f;
-                elevationSpeed = ((registerData[14] << 16) + registerData[15]) / 250.0f;
+                azimuthSpeed = ((registerData[(int) RegPos.firstSpeedAzimuth] << 16) 
+                                    + registerData[(int) RegPos.secondSpeedAzimuth]) / 250.0f;
+
+                elevationSpeed = ((registerData[(int) RegPos.firstSpeedElevation] << 16) 
+                                    + registerData[(int) RegPos.secondSpeedElevation]) / 250.0f;
 
                 // grab acceleration (we set registers 6 & 7 on the control room side, but the previous team only grabbed 6 so only 6 here)
-                acceleration = registerData[6];
+                // NOTE: the sim does not account for acceleration (I don't think we need to) but if you wanted too, you most likely
+                // would need to combine registers 6 & 7 to get the actual value
+                // NOTE 2: from my digging, the acceleration between the azimuth and elevation instructions is always the same
+                acceleration = registerData[(int) RegPos.firstAccelerationAzimuth];
 
                 // calculate azimuth and elevation steps (this is set on registers 3 & 4 for azimuth and 12 & 13 for elevation)
                 // note the var is called *azimuthDegrees* and *elevationDegrees* but right now these are in steps. They get converted below
-                azimuthDegrees = (registerData[2] << 16) + registerData[3];
-                elevationDegrees = (registerData[12] << 16) + registerData[13];
+                azimuthDegrees = (registerData[(int) RegPos.firstPosAzimuth] << 16) + registerData[(int) RegPos.secondPosAzimuth];
+                elevationDegrees = (registerData[(int) RegPos.firstPosElevation] << 16) + registerData[(int) RegPos.secondPosElevation];
 
                 // convert raw register values into simulator friendly terms
                 convertToUnitySpeak();
@@ -59,44 +69,48 @@ public class MCUCommand : MonoBehaviour
                 logValues();
                 break;
 
-            case 0x0080: // JOG Moves - 0x0080 = CLOCKWISE AZIMUTH
+            case (ushort) MoveType.CLOCKWISE_AZIMTUH_JOG:
                 Debug.Log("AZIMTUH JOG RIGHT COMMAND INCOMING");
                 jog = true;
-                azimuthSpeed = ((registerData[4] << 16) + registerData[5]) / 20;
+                azimuthSpeed = ((registerData[(int) RegPos.firstSpeedAzimuth] << 16) 
+                                    + registerData[(int) RegPos.secondSpeedAzimuth]) / 20;
             
                 // convert raw register values into simulator friendly terms
                 convertToUnitySpeak();
                 logValues();
                 break;
 
-            case 0x0100: // 0x0100 = COUNTER-CLOCKWISE AZIMUTH
+            case (ushort) MoveType.COUNTERCLOCKWISE_AZIMUTH_JOG:
                 Debug.Log("AZIMTUH JOG LEFT COMMAND INCOMING");
                 jog = true;
-                azimuthSpeed = -((registerData[4] << 16) + registerData[5]) / 20;
+                azimuthSpeed = -((registerData[(int) RegPos.firstSpeedAzimuth] << 16) 
+                                    + registerData[(int) RegPos.secondSpeedAzimuth]) / 20;
                 
                 // convert raw register values into simulator friendly terms
                 convertToUnitySpeak();
                 logValues();
                 break;
 
-            case 0x000: // COULD BE A BUNCH OF THINGS
+            case 0x0000: // COULD BE A BUNCH OF THINGS -- a lot of register bits start with 0 because they are for elevation only or are some sort of stop move
 
                 // first check to see if it's an elevation jog command
-                if (registerData[10] == 0x0080) // NEGATIVE ELEVATION JOG
+                if (registerData[(int) RegPos.firstWordElevation] == (ushort) MoveType.NEGATIVE_ELEVATION_JOG)
                 {
                     Debug.Log("NEGATIVE ELEVATION JOG COMMAND INCOMING");
                     jog = true;
-                    elevationSpeed = -((registerData[14] << 16) + registerData[15]) / 20;
+                    elevationSpeed = -((registerData[(int) RegPos.firstSpeedElevation] << 16) 
+                                        + registerData[(int) RegPos.secondSpeedElevation]) / 20;
 
                     // convert raw register values into simulator friendly terms
                     convertToUnitySpeak();
                     logValues();
                     break;
-                } else if (registerData[10] == 0x0100) // POSITIVE ELEVATION JOG
+                } else if (registerData[(int) RegPos.firstWordElevation] == (ushort) MoveType.POSITIVE_ELEVATION_JOG)
                 {
                     Debug.Log("POSITIVE ELEVATION JOG COMMAND INCOMING");
                     jog = true;
-                    elevationSpeed = ((registerData[14] << 16) + registerData[15]) / 20;
+                    elevationSpeed = ((registerData[(int) RegPos.firstSpeedElevation] << 16) 
+                                        + registerData[(int) RegPos.secondSpeedElevation]) / 20;
                 
                     // convert raw register values into simulator friendly terms
                     convertToUnitySpeak();
@@ -105,7 +119,7 @@ public class MCUCommand : MonoBehaviour
                 }
 
                 // Cancel move also starts with a 0x0000, but it is deliminated by the second register (a 3)
-                if (registerData[1] == 0x0003) // CANCEL MOVE
+                if (registerData[(int) RegPos.secondWordAzimuth] == (ushort) MoveType.CANCEL_MOVE) // CANCEL MOVE
                 {
                     Debug.Log("CANCEL MOVE INCOMING");
                     // set error flag so TelescopeController doesn't do anything with the currentCommand's fields
@@ -123,7 +137,7 @@ public class MCUCommand : MonoBehaviour
                 elevationDegrees = 0.0f;
                 break;
             
-            case 0x0420: // SIM SERVER INITIALIZATION
+            case (ushort) MoveType.SIM_SERVER_INIT:
 
                 // this is called when we first start the sim'd mcu. we want to set this to default values we can be sure are not from the CR
                 Debug.Log("Building MCUCommand object for the first time in SimServer.cs");
@@ -134,7 +148,7 @@ public class MCUCommand : MonoBehaviour
                 elevationDegrees = 420.69f;
                 break;
 
-            case 0x0069: // SIM CONTROLLER INITIALIZATION
+            case (ushort) MoveType.SIM_TELESCOPECONTROLLER_INIT:
 
                 Debug.Log("Building MCUCommand for telescope controller to put in start position");
                 azimuthSpeed = 60.0f;
@@ -144,13 +158,13 @@ public class MCUCommand : MonoBehaviour
                 elevationDegrees = 15.0f;
                 break;
 
-            case 0x0096: // TEST MOVE
+            case (ushort) MoveType.TEST_MOVE:
 
                 // this is for the TestMove routine to arbitrarily move the telescope from within unity
                 Debug.Log("Buidling MCUCommand for TestMove.cs");
 
                 // we can't use convertToUnitySpeak() here because the values here are already in degrees
-
+                // NOTE: these indexes do not line up with the enum since we set these ourselves in TestMove.cs
                 azimuthDegrees = Convert.ToInt32(registerData[1]);
                 elevationDegrees = Convert.ToInt32(registerData[2]);
 
