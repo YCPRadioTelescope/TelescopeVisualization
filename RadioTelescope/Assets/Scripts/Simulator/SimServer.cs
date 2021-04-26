@@ -46,7 +46,12 @@ public class SimServer : MonoBehaviour {
 	public Button startButton;
 	public Button fillButton;
 	
-	private bool runSimulator = true, moving = false, jogging = false, isConfigured = false, isTest = false, isJogComand = false;
+	private bool runSimulator = false;
+	private bool moving = false;
+	private bool jogging = false;
+	private bool isConfigured = false;
+	private bool isTest = false;
+	private bool isJogComand = false;
 	
 	/// <summary>
 	/// Start is called before the first frame
@@ -83,7 +88,11 @@ public class SimServer : MonoBehaviour {
 	/// </summary>
 	public void StartServer()
 	{
+		// Don't start the sim twice and maybe somehow screw something up.
+		if(runSimulator)
+			return;
 		Debug.Log("Start Button clicked");
+		
 		tc.speed = speed;
 		tc.UpdateAzimuthUI(0.0f);
 		tc.UpdateElevationUI(15.0f);
@@ -120,6 +129,7 @@ public class SimServer : MonoBehaviour {
 		}
 		runSimulator = true;
 		MCU_emulator_thread.Start();
+		startButton.GetComponent<Image>().color = Color.green;
 	}
 	
 	/// <summary>
