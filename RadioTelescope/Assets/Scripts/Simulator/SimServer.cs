@@ -85,8 +85,6 @@ public class SimServer : MonoBehaviour {
 	{
 		Debug.Log("Start Button clicked");
 		tc.speed = speed;
-		tc.UpdateAzimuthUI(0.0f);
-		tc.UpdateElevationUI(15.0f);
 		
 		try
 		{
@@ -174,46 +172,25 @@ public class SimServer : MonoBehaviour {
 			}
 			if(moving)
 			{
-				// figure out what we are updating the MCU registers with
-				// TODO: no idea how jake got to this, need to figure out how he did (or ask him later)
-				if(currentCommand.azimuthDegrees != 0 || currentCommand.elevationDegrees != 0)
+				// we are still in motion
+				// TODO: here we can write back more checks (like if an error happens)
+				if(currentCommand.azimuthDegrees != tc.simTelescopeAzimuthDegrees || currentCommand.elevationDegrees != tc.simTelescopeElevationDegrees)
 				{
-					// if the currentCommand's azimuth degrees are less than -( azimuth speed ):
-					// 		return -( azimuth speed)
-					// else
-					//      if the currentCommand's azimuth degrees are greater than +( azimuith speed ):
-					// 			  return azimuth speed
-					// 		else
-					// 			  return azimuth degrees
-					float travAZ = (currentCommand.azimuthDegrees < -currentCommand.azimuthSpeed) ? -currentCommand.azimuthSpeed 
-									: (currentCommand.azimuthDegrees > currentCommand.azimuthSpeed) ? currentCommand.azimuthSpeed : currentCommand.azimuthDegrees;
-
-
-					// if the currentCommand's elevation degrees are less than -( elevation speed ): 
-					// 		return -( elevation speed )
-					// else
-					//      if the currentCommand's elevation degrees are greater than +( elevation speed ):
-					// 			  return elevation speed
-					// 		else
-					// 			  return elevation degrees		
-					float travEL = (currentCommand.elevationDegrees < -currentCommand.elevationSpeed) ? -currentCommand.elevationSpeed
-									: (currentCommand.elevationDegrees > currentCommand.elevationSpeed) ? currentCommand.elevationSpeed : currentCommand.elevationDegrees;
-
-					updateMCURegisters((int)travAZ, (int)travEL);
+					Debug.Log("SIMSERVER: Move not yet completed");
+					updateMCURegistersStillMoving();
 				}
 				else
 				{
+					Debug.Log("SIMSERVER: MOVE COMPLETED");
 					moving = false;
-					// TODO: updating this register store again, what do these values mean?
-					//       the value we are OR'ing by is the positive (clockwise) jog, is this significant?
-					MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] | 0x0080);
-					MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] | 0x0080);
+					
+					updateMCURegistersFinishedMove();
 				}
 			}
 			if(jogging)
 			{
 				// TODO: this can't be right. Right?
-				updateMCURegisters((int)currentCommand.azimuthSpeed, (int)currentCommand.elevationSpeed);
+				// updateMCURegisters((int)currentCommand.azimuthSpeed, (int)currentCommand.elevationSpeed);
 			}
 			last = current;
 		}
@@ -236,11 +213,11 @@ public class SimServer : MonoBehaviour {
 		if (data[0] == 4)
 		{
 			Debug.Log("Recieved immediate stop.");
-		} else if ((data[0] == 0x0080 )|| data[0] == 0x0100 || data[10] == 0x0080 || data[10] == 0x0100) 
+		} else if ((data[0] == 0x0080 )|| data[0] == 0x0100 || data[10] == 0x0080 || data[10] == 0x0100) // jog pos and neg, for az and el (az = 0, el = 10)
 		{
 			jogging = true;
 
-		} else if(data[0] == 0x0002 || data[0] == 0x0002) // RELATIVE MOVE
+		} else if(data[0] == 0x0002) // RELATIVE MOVE
 		{
 			moving = true;
 		}
@@ -248,27 +225,42 @@ public class SimServer : MonoBehaviour {
 		// build mcu command based on register data
 		currentCommand = new MCUCommand(data, tc.simTelescopeAzimuthDegrees);
 
-		// set register store as in motion 
-		// TODO: What do these values mean? Do we need to set them differently based on other cases?
-		MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[1] & 0xff7f);
-		MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort)(MCU_Modbusserver.DataStore.HoldingRegisters[11] & 0xff7f);
+		updateMCURegistersStillMoving();
 
 		return currentCommand;
 	}
 	
 	/// <summary>
-	/// Writes information back into the register store based on move variables
-	/// TODO: right now this is definitely not right. What do we update by?
+	/// For now we will finish both axes at the same time - in the future this could be split out into seperate calls
+	/// the control room looks at again the MSW (bit 0 for AZ, bit 10 for EL) and shifts it with the move complete constant (7), then & with 0b1
+	/// If that comes out to 1, the move on that axis is done.
 	/// </summary>
-	private void updateMCURegisters(float travAZ, float travEL)
+	private void updateMCURegistersFinishedMove()
 	{
-		// currentCommand.azimuthDegrees += travAZ;
-		// currentCommand.elevationDegrees += travEL;
+		// Azimuth
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int) RegPos.secondWordAzimuth] =  0xffff;
+		
+		// Elevation
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int) RegPos.secondWordElevation] =  0xffff;
 
-		MCU_Modbusserver.DataStore.HoldingRegisters[3] = (ushort)(((int)currentCommand.azimuthDegrees & 0xffff0000) >> 16);
-		MCU_Modbusserver.DataStore.HoldingRegisters[4] = (ushort)((int)currentCommand.azimuthDegrees & 0xffff);
-		MCU_Modbusserver.DataStore.HoldingRegisters[13] = (ushort)(((int)currentCommand.elevationDegrees & 0xffff000) >> 16);
-		MCU_Modbusserver.DataStore.HoldingRegisters[14] = (ushort)((int)currentCommand.elevationDegrees & 0xffff);
+	}
+
+	/// <summary>
+	/// For now we will update both axes (axis plural, i googled it)
+	/// the control room looks for the most significant bit (AZ or EL) and then shifts it with the CCW_Motion constant (1) 
+	/// or the CW_Motion constant (0). To show that this is still moving 
+	/// </summary>
+	private void updateMCURegistersStillMoving() 
+	{
+		// first zero our our finished moving registers
+		// Azimuth
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int) RegPos.secondWordAzimuth] =  0x0000;
+		
+		// Elevation
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int) RegPos.firstWordElevation] =  0x0000;
+
+		// last update the reg the CR looks for to see if we are in motion
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int) RegPos.firstWordAzimuth] =  0xffff;
 	}
 	
 	/// <summary>
