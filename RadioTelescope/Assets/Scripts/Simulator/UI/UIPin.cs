@@ -10,8 +10,8 @@ public class UIPin : MonoBehaviour
 	public int bufferX;
 	public int bufferY;
 
-	// Updated is called once every frame.
-	void Update()
+	// LateUpdate is called once every frame after all other updates.
+	void LateUpdate()
 	{
 		switch(pin)
 		{
