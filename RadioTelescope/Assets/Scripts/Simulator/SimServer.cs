@@ -77,7 +77,7 @@ public class SimServer : MonoBehaviour {
 		Screen.SetResolution(1024, 768, FullScreenMode.Windowed);
 
 		// create a base current command object
-		ushort[] noCommand = {0x0420};
+		ushort[] noCommand = { MoveType.SIM_SERVER_INIT };
 		currentCommand = new MCUCommand(noCommand);
 	}
 	
@@ -177,8 +177,8 @@ public class SimServer : MonoBehaviour {
 			// 0x0080 and 0x0100 tell us the direction of the jog. This is handled in buildMCUCommand.
 			// these checks are basically if (are we trying to jog something)
 			// 								then constantly check for new register data;
-			if (current[(int) RegPos.firstWordAzimuth] == 80 || current[(int) RegPos.firstWordAzimuth] == 100 
-					|| current[(int) RegPos.firstWordElevation] == 80 || current[(int) RegPos.firstWordElevation] == 100)
+			if (current[(int) RegPos.firstWordAzimuth] == MoveType.CLOCKWISE_AZIMTUH_JOG || current[(int) RegPos.firstWordAzimuth] == MoveType.COUNTERCLOCKWISE_AZIMUTH_JOG
+					|| current[(int) RegPos.firstWordElevation] == MoveType.NEGATIVE_ELEVATION_JOG || current[(int) RegPos.firstWordElevation] == MoveType.POSITIVE_ELEVATION_JOG)
 			{
 				isJogComand = true;
 
@@ -203,7 +203,7 @@ public class SimServer : MonoBehaviour {
 				{
 					Debug.Log("SIMSERVER: MOVE COMPLETED");
 					moving = false;
-					
+					 
 					updateMCURegistersFinishedMove();
 					updateMCUPosition();
 				}
@@ -249,16 +249,17 @@ public class SimServer : MonoBehaviour {
 
 		jogging = false;
 
-		// figure out which move we are doing to decide what we write to the input register store (MCU's RESPONSE to CONTROL ROOM)
 
-		if ((data[0] == 0x0080 )|| data[0] == 0x0100 || data[10] == 0x0080 || data[10] == 0x0100) // jog pos and neg, for az and el (az = 0, el = 10)
+		// we want to set these booleans so we can time the write back's to the MCU higher up
+		if ((data[RegPos.firstWordAzimuth] == MoveType.CLEAR_MCU_ERRORS )|| data[RegPos.firstWordAzimuth] == MoveType.COUNTERCLOCKWISE_AZIMUTH_JOG
+			|| data[RegPos.firstWordElevation] == MoveType.NEGATIVE_ELEVATION_JOG || data[RegPos.firstWordElevation] == MoveType.POSITIVE_ELEVATION_JOG) 
 		{
 			jogging = true;
 
-		} else if(data[0] == 0x0002) // RELATIVE MOVE
+		} else if(data[RegPos.firstWordAzimuth] == MoveType.RELATIVE_MOVE) 
 		{
 			moving = true;
-		} else if (data[0] == 0x0040) // HOMING
+		} else if (data[RegPos.firstWordElevation] == MoveType.HOME) 
 		{
 			homing = true;
 		}
@@ -306,10 +307,10 @@ public class SimServer : MonoBehaviour {
 	private void updateMCURegistersFinishedMove()
 	{
 		// Azimuth
-		MCU_Modbusserver.DataStore.HoldingRegisters[1] = (ushort) MCUWriteBack.finishedMove;
+		MCU_Modbusserver.DataStore.HoldingRegisters[WriteBackRegPos.finishedMovingAzimuth] = (ushort) MCUWriteBack.finishedMove;
 		
 		// Elevation
-		MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort) MCUWriteBack.finishedMove;
+		MCU_Modbusserver.DataStore.HoldingRegisters[WriteBackRegPos.finishedMovingElevation] = (ushort) MCUWriteBack.finishedMove;
 	}
 
 	/// <summary>
@@ -320,10 +321,10 @@ public class SimServer : MonoBehaviour {
 	private void updateMCURegistersStillMoving() 
 	{
 		// Azimuth
-		MCU_Modbusserver.DataStore.HoldingRegisters[1] =  (ushort) MCUWriteBack.stillMoving; 
+		MCU_Modbusserver.DataStore.HoldingRegisters[WriteBackRegPos.stillMovingAzimuth] =  (ushort) MCUWriteBack.stillMoving; 
 
 		// Elevation
-		MCU_Modbusserver.DataStore.HoldingRegisters[11] = (ushort) MCUWriteBack.stillMoving;
+		MCU_Modbusserver.DataStore.HoldingRegisters[WriteBackRegPos.stillMovingElevation] = (ushort) MCUWriteBack.stillMoving;
 	}
 	
 	/// <summary>

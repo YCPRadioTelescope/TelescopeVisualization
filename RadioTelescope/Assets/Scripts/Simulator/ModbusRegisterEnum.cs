@@ -258,7 +258,7 @@ public enum MCUStatusBitsMSW : int
 
 public enum MCUWriteBack : ushort
 {
-    finishedMove = 128,
+    finishedMove = 128, 
     stillMoving = 2
 }
 
