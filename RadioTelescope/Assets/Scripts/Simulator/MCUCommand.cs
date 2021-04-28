@@ -2,6 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
+// master list of known register data
+// https://docs.google.com/spreadsheets/d/1vBKsnV7Xso0u19ZyhtVimiCXpZjc007usVjvAsxHJNU/edit#gid=0
+
 /// <summary> 
 /// Public class <c>MCUCommand</c> is used to store input register data from the control room
 /// in an easy way for us to decode the commands on the <c>TelescopeControllerSim</c>
@@ -101,11 +104,15 @@ public class MCUCommand : MonoBehaviour
                 Debug.Log("HOME COMMAND INCOMING");
                 // for this move we just want to 0 the telescope, nothing fancy
                 // we do want a value for the speed in case we need to move to the 0 position
+                // TODO: grab the actual speed from the CR
+                //       it comes in on registerData[5] (az) and registerData[15] (el)
                 azimuthSpeed = 5.0f;
                 elevationSpeed = 5.0f;
                 acceleration = 0.0f;
                 azimuthDegrees = 0.0f;
-                elevationDegrees = 0.0f;
+                // to match the unity sim up with the CR we need to move to 15 instead of 0
+                // we are always 15 off 
+                elevationDegrees = 15.0f;
                 break;
 
             case 0x0000: // COULD BE A BUNCH OF THINGS -- a lot of register bits start with 0 because they are for elevation only or are some sort of stop move

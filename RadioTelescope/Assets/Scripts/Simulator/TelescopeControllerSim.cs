@@ -44,10 +44,6 @@ public class TelescopeControllerSim : MonoBehaviour
 	
 	// Keeps track of whether the azimuth is moving clockwise or counter clockwise.
 	private bool moveCCW = false;
-	// Keeps track of if a current command is being executed, preventing
-	// new commands from being taken. This is mainly for testing purposes
-	// and may be removed from the final simulation.
-	private bool executingCommand = false;
 	
 	/// <summary>
 	/// Start is called before the first frame
@@ -72,12 +68,6 @@ public class TelescopeControllerSim : MonoBehaviour
 		// Update the azimuth and elevation positions.
 		UpdateAzimuth();
 		UpdateElevation();
-		
-		// If the elevation and azimuth have reached their targets, the current command is
-		// done executing. If not, then a command is being executed.
-		// on the UI,              TargetAzimuth = currentMCUCommand.azimtuthDegrees 
-		//			  simTelescopeAzimuthDegrees = AzimuthDegrees
-		executingCommand = currentMCUCommand.azimuthDegrees != simTelescopeAzimuthDegrees || currentMCUCommand.elevationDegrees != simTelescopeElevationDegrees;
 		
 		// Update the UI at the end of every frame.
 		UpdateUI();
@@ -178,12 +168,6 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <param name="leftJog"></param>
 	public void UpdateAzimuthUI(float az, bool leftJog = false)
 	{
-		// No new commands are taken if one is already executing.
-		if(executingCommand)
-		{
-			inputAzimuthText.text = "Input Azimuth: MOVING";
-			return;
-		}
 		inputAzimuthText.text = "Input Azimuth: " + System.Math.Round(az, 1);
 	}
 	
@@ -192,12 +176,6 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public void UpdateElevationUI(float el)
 	{
-		// No new commands are taken if one is already executing.
-		if(executingCommand)
-		{
-			inputElevationText.text = "Input Elevation: MOVING";
-			return;
-		}
 		inputElevationText.text = "Input Elevation: " + System.Math.Round(el, 1);
 	}
 	
