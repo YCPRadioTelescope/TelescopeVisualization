@@ -31,8 +31,8 @@ public class MCUCommand : MonoBehaviour
     /// constructor for building mcu command objects
     /// </summary>
     /// <param name="registerData"> raw register data from the control room </param>
-    /// <param name="simAzimtuhDegrees"> helper param to calculate how far we need to go for a relative move </param>
-    public MCUCommand(ushort[] registerData, float simAzimtuhDegrees = 0.0f) {
+    /// <param name="simAzimuthDegrees"> helper param to calculate how far we need to go for a relative move </param>
+    public MCUCommand(ushort[] registerData, float simAzimuthDegrees = 0.0f, float simElevationDegrees = 0.0f) {
         
         // we can determine move type by looking at the first register value
         // i chose to do the first azimuth word because the average move type (relative) starts this way
@@ -65,15 +65,30 @@ public class MCUCommand : MonoBehaviour
                 convertToUnitySpeak();
 
                 // the simulator targets the *absolute* position, so we need to fix the command'd azimuth position with the sim's absolute position here
-                azimuthDegrees += simAzimtuhDegrees;
+                azimuthDegrees += simAzimuthDegrees;
+
+      
+                // we have to fix elevation a little, it comes over as the remaining steps (if target = 60 and we are at 20, it sends +40)
+                // we target an absolute position in the sim, so we have to adjust the command to be pointed at the right position
+                if (elevationDegrees + simElevationDegrees < 95 && !(elevationDegrees < simElevationDegrees))
+                {
+                    elevationDegrees += simElevationDegrees;
+                } else
+                {
+                    simElevationDegrees = (int) simElevationDegrees;
+                    simElevationDegrees -= (int) elevationDegrees;
+                    elevationDegrees = simElevationDegrees;
+                    if (elevationDegrees < -15)
+                        elevationDegrees *= -1;
+                }    
 
                 logValues();
                 break;
 
             case (ushort) MoveType.CLOCKWISE_AZIMTUH_JOG:
-                Debug.Log("AZIMTUH JOG RIGHT COMMAND INCOMING");
+                Debug.Log("AZIMTUH JOG LEFT COMMAND INCOMING");
                 jog = true;
-                azimuthSpeed = ((registerData[(int) RegPos.firstSpeedAzimuth] << 16) 
+                azimuthSpeed = -((registerData[(int) RegPos.firstSpeedAzimuth] << 16) 
                                     + registerData[(int) RegPos.secondSpeedAzimuth]) / 20;
             
                 // convert raw register values into simulator friendly terms
@@ -82,9 +97,9 @@ public class MCUCommand : MonoBehaviour
                 break;
 
             case (ushort) MoveType.COUNTERCLOCKWISE_AZIMUTH_JOG:
-                Debug.Log("AZIMTUH JOG LEFT COMMAND INCOMING");
+                Debug.Log("AZIMTUH JOG RIGHT COMMAND INCOMING");
                 jog = true;
-                azimuthSpeed = -((registerData[(int) RegPos.firstSpeedAzimuth] << 16) 
+                azimuthSpeed = +((registerData[(int) RegPos.firstSpeedAzimuth] << 16) 
                                     + registerData[(int) RegPos.secondSpeedAzimuth]) / 20;
                 
                 // convert raw register values into simulator friendly terms
@@ -106,7 +121,7 @@ public class MCUCommand : MonoBehaviour
             case 0x0000: // COULD BE A BUNCH OF THINGS -- a lot of register bits start with 0 because they are for elevation only or are some sort of stop move
 
                 // first check to see if it's an elevation jog command
-                if (registerData[(int) RegPos.firstWordElevation] == (ushort) MoveType.NEGATIVE_ELEVATION_JOG)
+                if (registerData[(int) RegPos.firstWordElevation] == (ushort) MoveType.NEGATIVE_ELEVATION_JOG) 
                 {
                     Debug.Log("NEGATIVE ELEVATION JOG COMMAND INCOMING");
                     jog = true;
@@ -131,7 +146,7 @@ public class MCUCommand : MonoBehaviour
                 }
 
                 // Cancel move also starts with a 0x0000, but it is deliminated by the second register (a 3)
-                if (registerData[(int) RegPos.secondWordAzimuth] == (ushort) MoveType.CANCEL_MOVE) // CANCEL MOVE
+                if (registerData[(int) RegPos.secondWordAzimuth] == (ushort) MoveType.CANCEL_MOVE)
                 {
                     Debug.Log("CANCEL MOVE INCOMING");
                     // set error flag so TelescopeController doesn't do anything with the currentCommand's fields
@@ -155,12 +170,14 @@ public class MCUCommand : MonoBehaviour
                 stopMove = true;
                 break;
 
+            // TODO: clear proper registers
             case (ushort) MoveType.CLEAR_MCU_ERRORS:
                 Debug.Log("CLEAR MCU ERRORS COMMAND INCOMING");
                 // this case will get more love later, for now just set errorFlag (don't do anything with this new MCUCommand object)
                 errorFlag = true;
                 break;
 
+            // TODO: write back proper registers
             case (ushort) MoveType.CONFIGURE_MCU:
                 Debug.Log("CONFIGURE MCU COMMAND INCOMING");
                 // we don't need to do anything with this command, so we're just going to set the errorFlag so this command is ignored
@@ -235,7 +252,7 @@ public class MCUCommand : MonoBehaviour
         azimuthDegrees = convertStepsToDegrees(azimuthDegrees, AZIMUTH_GEARING_RATIO);
         elevationDegrees = convertStepsToDegrees(elevationDegrees, ELEVATION_GEARING_RATIO);
 
-        if (elevationDegrees < 0)
+        if (elevationDegrees < -15)
             elevationDegrees *= -1;
 
         // the speed here is relative to the actual values, but to visualize for unity we need them a little smaller
@@ -252,6 +269,15 @@ public class MCUCommand : MonoBehaviour
     private float convertStepsToDegrees(float steps, float gearingRatio) {
         return steps * 360.0f / (STEPS_PER_REVOLUTION * gearingRatio);
     }
+
+    /// <summary>
+	/// Class helper method to compute the distance between two angles on a circle.
+	/// </summary>
+	private float AngleDistance(float a, float b)
+	{
+		// Mathf.Repeat is functionally similar to the modulus operator, but works with floats.
+		return Mathf.Repeat((a - b + 180.0f), 360.0f) - 180.0f;
+	}
 
     /// <summary>
     /// Helper method just to log the relevant fields as we go throughout the process. Shouldn't need to exist when everything is finalized

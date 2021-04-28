@@ -105,7 +105,7 @@ public class TelescopeControllerSim : MonoBehaviour
 			// if it's a jog, we want to move 1 degree in the jog direction
 			// as of right now, the control room cannot jog on both motors (az & el) at the same time
 			// each jog command will be one or the other
-			if (currentMCUCommand.jog) 
+			else if (currentMCUCommand.jog) 
 			{
 				// figure out azimuth direction
 				if (currentMCUCommand.azimuthSpeed > 0)
@@ -307,13 +307,14 @@ public class TelescopeControllerSim : MonoBehaviour
 	
 	/// <summary>
 	/// Update the UI according to the current state of the variables when called.
+	/// TODO: the elevation needs to be offset somehow to actually be correct, can never show -15 degrees
 	/// </summary>
 	private void UpdateUI()
 	{
 		unityAzimuthText.text = "Unity Az Position: " + System.Math.Round(azimuth.transform.eulerAngles.y, 1);
-		unityElevationText.text = "Unity El Position: " + System.Math.Round(elevation.transform.eulerAngles.z, 1);
+		unityElevationText.text = "Unity El Position: " + (System.Math.Round(elevation.transform.eulerAngles.z, 1));
 		azimuthText.text = "Azimuth Degrees: " + System.Math.Round(simTelescopeAzimuthDegrees, 1);
-		elevationText.text = "Elevation Degrees: " + System.Math.Round((simTelescopeElevationDegrees), 1);
+		elevationText.text = "Elevation Degrees: " + (System.Math.Round((simTelescopeElevationDegrees), 1));
 		targetElevationText.text = "Target Elevation: " + System.Math.Round(currentMCUCommand.elevationDegrees, 1);
 		targetAzimuthText.text = "Target Azimuth: " + System.Math.Round(currentMCUCommand.azimuthDegrees, 1);
 		azimuthSpeedText.text = "Azimtuh Speed: " + System.Math.Round(currentMCUCommand.azimuthSpeed, 2);

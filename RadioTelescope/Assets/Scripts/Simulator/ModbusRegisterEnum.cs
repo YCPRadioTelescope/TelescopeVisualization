@@ -1,14 +1,14 @@
 // all of the information here I gathered during digging into what gets sent by each move type from the control room. The spreadsheet where I pulled these values can be found
 // here: https://docs.google.com/spreadsheets/d/1vBKsnV7Xso0u19ZyhtVimiCXpZjc007usVjvAsxHJNU/edit#gid=0
 // 
-// last updated: LG - 4/22/2021
+// last updated: LG - 4/27/2021
 
 /// <summary>
 /// This enum helps make the process of building MCUCommand objects more readable. There is a seperate enum for the regiser positions,
 /// but for more internal documentation the comments above each enum type refer to where these values should be in the registerData coming over
 /// from the control room
 /// </summary>
-enum MoveType : ushort
+public enum MoveType : ushort
 {
     // first register bit (registerData[0])
     RELATIVE_MOVE = 0x0002,
@@ -60,7 +60,7 @@ enum MoveType : ushort
 /// to send their information over, so the this entire list does not line up for them (the first or second word does this). The homing command or the reset errors command also do 
 /// not line up with this list. The majority of moves (we really only use relative and jog moves) do line up with this list.
 /// </summary>
-enum RegPos : int
+public enum RegPos : int
 {
     ///
     /// AZIMUTH REGISTERS
@@ -253,4 +253,27 @@ public enum MCUStatusBitsMSW : int {
     /// Set to “1” when the axis is in Configuration Mode. Reset to “0” when the axis is in Command Mode
     /// </summary>
     Axis_Configuration_Mode = 15,
+}
+
+public enum MCUWriteBack : ushort
+{
+    finishedMove = 128,
+    stillMoving = 2
+}
+
+public enum WriteBackRegPos : int
+{
+    stillMovingAzimuth = 1,
+    stillMovingElevation = 11,
+    finishedMovingAzimuth = 1,
+    finishedMovingElevation = 11,
+
+    firstWordAzimuthSteps = 3,
+    secondWordAzimuthSteps = 4,
+    firstWordElevationSteps = 13,
+    secondWordElevationSteps = 14,
+    firstWordAzimuthEncoder = 5,
+    secondWordAzimuthEncoder = 6,
+    firstWordElevationEncoder = 15,
+    secondWordElevationEncoder = 16
 }
