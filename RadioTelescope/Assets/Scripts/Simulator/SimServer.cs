@@ -287,15 +287,16 @@ public class SimServer : MonoBehaviour {
 		int elSteps = (-1) * degreesToSteps(tc.simTelescopeElevationDegrees, ELEVATION_GEARING_RATIO);
 
 		// write actual values using some magic bit work
-		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.firstWordAzimuthSteps] = (ushort)((azSteps & 0xffff0000) >> 16);
+		// we need to split it across 2 register because 1 reg doesn't have enough space
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.firstWordAzimuthSteps] = (ushort)(azSteps >> 16);
 		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.secondWordAzimuthSteps] = (ushort)(azSteps & 0xffff);
-		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.firstWordElevationSteps] = (ushort)((elSteps & 0xffff0000) >> 16);
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.firstWordElevationSteps] = (ushort)(elSteps >> 16);
 		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.secondWordElevationSteps] = (ushort)(elSteps & 0xffff);
 
-		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.firstWordAzimuthEncoder] = (ushort)(((int)(azEncoder) & 0xffff0000) >> 16);
-		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.secondWordAzimuthEncoder] = (ushort)((int)(azEncoder) & 0xffff);
-		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.firstWordElevationEncoder] = (ushort)(((int)(elEncoder) & 0xffff0000) >> 16);
-		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.secondWordElevationEncoder] = (ushort)((int)(elEncoder) & 0xffff);
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.firstWordAzimuthEncoder] = (ushort)(azEncoder >> 16);
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.secondWordAzimuthEncoder] = (ushort)(azEncoder & 0xffff);
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.firstWordElevationEncoder] = (ushort)(elEncoder >> 16);
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.secondWordElevationEncoder] = (ushort)(elEncoder & 0xffff);
 	}
 
 	/// <summary>

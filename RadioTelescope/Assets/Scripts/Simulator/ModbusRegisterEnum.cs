@@ -185,7 +185,8 @@ public enum MCUOutputRegs : ushort
 /// taken from the control room, MCUConstants.cs
 /// desciptions taken from anf1-anf2-motion-controller-user-manual.pdf  page 76 - 78
 /// </summary>
-public enum MCUStatusBitsMSW : int {
+public enum MCUStatusBitsMSW : int 
+{
     /// <summary>
     /// Set when the ANF1/2 axis is outputting pulses for clockwise motion
     /// </summary>

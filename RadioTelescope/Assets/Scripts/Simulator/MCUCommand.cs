@@ -67,20 +67,10 @@ public class MCUCommand : MonoBehaviour
                 // the simulator targets the *absolute* position, so we need to fix the command'd azimuth position with the sim's absolute position here
                 azimuthDegrees += simAzimuthDegrees;
 
-      
-                // we have to fix elevation a little, it comes over as the remaining steps (if target = 60 and we are at 20, it sends +40)
-                // we target an absolute position in the sim, so we have to adjust the command to be pointed at the right position
-                if (elevationDegrees + simElevationDegrees < 95 && !(elevationDegrees < simElevationDegrees))
-                {
-                    elevationDegrees += simElevationDegrees;
-                } else
-                {
-                    simElevationDegrees = (int) simElevationDegrees;
-                    simElevationDegrees -= (int) elevationDegrees;
-                    elevationDegrees = simElevationDegrees;
-                    if (elevationDegrees < -15)
-                        elevationDegrees *= -1;
-                }    
+                // the CR flips the elevation for some reason, so we will flip it back
+                elevationDegrees *= -1;
+
+                elevationDegrees += simElevationDegrees;
 
                 logValues();
                 break;
@@ -251,9 +241,6 @@ public class MCUCommand : MonoBehaviour
         // something like (# of steps for 1 degree) -- future work
         azimuthDegrees = convertStepsToDegrees(azimuthDegrees, AZIMUTH_GEARING_RATIO);
         elevationDegrees = convertStepsToDegrees(elevationDegrees, ELEVATION_GEARING_RATIO);
-
-        if (elevationDegrees < -15)
-            elevationDegrees *= -1;
 
         // the speed here is relative to the actual values, but to visualize for unity we need them a little smaller
         azimuthSpeed = azimuthSpeed / 100;
