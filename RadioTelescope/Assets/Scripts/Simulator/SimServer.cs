@@ -282,9 +282,9 @@ public class SimServer : MonoBehaviour {
 	private void updateMCUPosition()
 	{
 		int azEncoder = degreesToSteps_Encoder(tc.simTelescopeAzimuthDegrees, AZIMUTH_GEARING_RATIO);
-		int elEncoder = (-1) * degreesToSteps_Encoder(tc.simTelescopeElevationDegrees, ELEVATION_GEARING_RATIO);
+		int elEncoder = (-1) * degreesToSteps_Encoder(tc.simTelescopeElevationDegrees - 15.0f, ELEVATION_GEARING_RATIO);
 		int azSteps = degreesToSteps(tc.simTelescopeAzimuthDegrees, AZIMUTH_GEARING_RATIO);
-		int elSteps = (-1) * degreesToSteps(tc.simTelescopeElevationDegrees, ELEVATION_GEARING_RATIO);
+		int elSteps = (-1) * degreesToSteps(tc.simTelescopeElevationDegrees - 15.0f, ELEVATION_GEARING_RATIO);
 
 		// write actual values using some magic bit work
 		// we need to split it across 2 register because 1 reg doesn't have enough space

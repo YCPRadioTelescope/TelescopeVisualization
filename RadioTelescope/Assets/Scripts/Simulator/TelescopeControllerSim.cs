@@ -314,8 +314,8 @@ public class TelescopeControllerSim : MonoBehaviour
 		unityAzimuthText.text = "Unity Az Position: " + System.Math.Round(azimuth.transform.eulerAngles.y, 1);
 		unityElevationText.text = "Unity El Position: " + (System.Math.Round(elevation.transform.eulerAngles.z, 1));
 		azimuthText.text = "Azimuth Degrees: " + System.Math.Round(simTelescopeAzimuthDegrees, 1);
-		elevationText.text = "Elevation Degrees: " + (System.Math.Round((simTelescopeElevationDegrees), 1));
-		targetElevationText.text = "Target Elevation: " + System.Math.Round(currentMCUCommand.elevationDegrees, 1);
+		elevationText.text = "Elevation Degrees: " + (System.Math.Round((simTelescopeElevationDegrees - 15.0f), 1));
+		targetElevationText.text = "Target Elevation: " + System.Math.Round(currentMCUCommand.elevationDegrees - 15.0f, 1);
 		targetAzimuthText.text = "Target Azimuth: " + System.Math.Round(currentMCUCommand.azimuthDegrees, 1);
 		azimuthSpeedText.text = "Azimtuh Speed: " + System.Math.Round(currentMCUCommand.azimuthSpeed, 2);
 		elevationSpeedText.text = "Elevation Speed: " + System.Math.Round(currentMCUCommand.elevationSpeed, 2);
