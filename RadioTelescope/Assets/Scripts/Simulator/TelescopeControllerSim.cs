@@ -56,7 +56,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		simTelescopeElevationDegrees = elevation.transform.eulerAngles.z;
 		// we need to create a dummy MCU command to start
 		// this is a custom command to point at 0, 15
-		ushort[] simStart = {0x0069};
+		ushort[] simStart = {(ushort) MoveType.SIM_TELESCOPECONTROLLER_INIT};
 		currentMCUCommand = new MCUCommand(simStart);
 	}
 	
@@ -81,7 +81,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <param name="incoming"> the incoming MCUCommand object from <c>SimServer.cs</c></param>
 	public void SetNewMCUCommand(MCUCommand incoming) 
 	{
-		if (incoming.errorFlag != true && incoming.acceleration != 420.69f) 
+		if (incoming.errorFlag == false && incoming.acceleration != (float) Dummy.THICC) 
 		{
 			currentMCUCommand = incoming;
 

@@ -37,7 +37,10 @@ public enum MoveType : ushort
     IMMEDIATE_STOP = 0x0010,
 
     // first register bit (registerData[0])
-    HOME = 0x0040,
+    COUNTERCLOCKWISE_HOME = 0x0040,
+
+    // first register bit (registerData[0])
+    CLOCKWISE_HOME = 0x0020,
 
     // first register bit (registerData[0])
     CLEAR_MCU_ERRORS = 0x0800,
@@ -52,7 +55,13 @@ public enum MoveType : ushort
     SIM_TELESCOPECONTROLLER_INIT = 0x0069,
 
     // first register bit (registerData[0])
-    TEST_MOVE = 0x0096
+    TEST_MOVE = 0x0096,
+}
+
+public enum Dummy :int
+{
+    // this is a testing value, something the CR would never send
+    THICC = 42069
 }
 
 /// <summary>
@@ -259,6 +268,7 @@ public enum MCUStatusBitsMSW : int
 public enum MCUWriteBack : ushort
 {
     finishedMove = 128, 
+    finishedHome = 16,
     stillMoving = 2
 }
 

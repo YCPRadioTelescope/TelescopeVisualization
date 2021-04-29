@@ -100,7 +100,8 @@ public class MCUCommand : MonoBehaviour
                 logValues();
                 break;
             
-            case (ushort) MoveType.HOME:
+            case (ushort) MoveType.CLOCKWISE_HOME:
+            case (ushort) MoveType.COUNTERCLOCKWISE_HOME:
                 Debug.Log("HOME COMMAND INCOMING");
                 // for this move we just want to 0 the telescope, nothing fancy
                 // we do want a value for the speed in case we need to move to the 0 position
@@ -185,11 +186,11 @@ public class MCUCommand : MonoBehaviour
 
                 // this is called when we first start the sim'd mcu. we want to set this to default values we can be sure are not from the CR
                 Debug.Log("Building MCUCommand object for the first time in SimServer.cs");
-                azimuthSpeed = 420.69f;
-                elevationSpeed = 420.69f;
-                acceleration = 420.69f;
-                azimuthDegrees = 420.69f;
-                elevationDegrees = 420.69f;
+                azimuthSpeed = 42069f;
+                elevationSpeed = 42069f;
+                acceleration = 42069f;
+                azimuthDegrees = 42069f;
+                elevationDegrees = 42069f;
                 break;
 
             case (ushort) MoveType.SIM_TELESCOPECONTROLLER_INIT:

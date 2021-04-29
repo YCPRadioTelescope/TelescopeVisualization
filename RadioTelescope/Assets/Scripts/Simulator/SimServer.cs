@@ -218,7 +218,7 @@ public class SimServer : MonoBehaviour {
 				if (tc.simTelescopeAzimuthDegrees == 0.0f && tc.simTelescopeElevationDegrees == 15.0f)
 				{
 					Debug.Log("SIMSERVER: HOMING COMPLETED");
-					updateMCURegistersFinishedMove();
+					updateMCURegistersFinishedHome();
 					updateMCUPosition();
 					homing = false;
 				} else 
@@ -259,7 +259,7 @@ public class SimServer : MonoBehaviour {
 		} else if(data[(int) RegPos.firstWordAzimuth] == (ushort) MoveType.RELATIVE_MOVE) 
 		{
 			moving = true;
-		} else if (data[(int) RegPos.firstWordElevation] == (ushort) MoveType.HOME) 
+		} else if (data[(int) RegPos.firstWordElevation] == (ushort) MoveType.COUNTERCLOCKWISE_HOME || data[(int) RegPos.firstWordElevation] == (ushort) MoveType.CLOCKWISE_HOME)
 		{
 			homing = true;
 		}
@@ -298,6 +298,20 @@ public class SimServer : MonoBehaviour {
 		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.secondWordAzimuthEncoder] = (ushort)(azEncoder & 0xffff);
 		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.firstWordElevationEncoder] = (ushort)(elEncoder >> 16);
 		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.secondWordElevationEncoder] = (ushort)(elEncoder & 0xffff);
+	}
+
+	/// <summary>
+	/// The CR looks has a special check to see if homing finishes (the mcu writes back a special bit) so we should too
+	/// </summary>
+	private void updateMCURegistersFinishedHome()
+	{
+		// the enum doesn't full line up here, but to check for homing the CR looks for registerData[0] so the value of the enum lines up
+		// a lot of commands are like this, they take the first word (registerData[0]) which lines up for the azimuth side of the command
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.finishedMovingAzimuth] = (ushort) MCUWriteBack.finishedHome;
+
+		// this is not needed for the homing check, but it is still grabbed to see if we are done moving we need to update the elevation first word as well
+		// otherwise homing never ends on the CR side
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int) WriteBackRegPos.finishedMovingElevation] = (ushort) MCUWriteBack.finishedMove;
 	}
 
 	/// <summary>
