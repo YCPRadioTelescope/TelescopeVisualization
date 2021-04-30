@@ -223,7 +223,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	{
 		// FOR PRESENTATION PURPOSES ONLY:
 		// Hard set the speed to 2 while the speed from the MCUCommand still isn't calibrated.
-		azSpeed = 2.0f;
+		azSpeed = (azSpeed > 0.0f ? 2.0f : -2.0f);
 		// Alter the movement speed by the time since the last frame. This ensures
 		// a smooth movement regardless of the framerate.
 		azSpeed *= 60.0f * Time.deltaTime;
@@ -252,7 +252,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	{
 		// FOR PRESENTATION PURPOSES ONLY:
 		// Hard set the speed to 2 while the speed from the MCUCommand still isn't calibrated.
-		elSpeed = 2.0f;
+		elSpeed = (elSpeed > 0.0f ? 2.0f : -2.0f);
 		// Alter the movement speed by the time since the last frame. This ensures
 		// a smooth movement regardless of the framerate.
 		elSpeed *= 60.0f * Time.deltaTime;
