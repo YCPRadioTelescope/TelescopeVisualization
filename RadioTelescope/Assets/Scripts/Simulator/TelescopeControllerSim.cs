@@ -221,6 +221,9 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <returns></returns>
 	private float ChangeAzimuth(float azSpeed)
 	{
+		// FOR PRESENTATION PURPOSES ONLY:
+		// Hard set the speed to 2 while the speed from the MCUCommand still isn't calibrated.
+		azSpeed = 2.0f;
 		// Alter the movement speed by the time since the last frame. This ensures
 		// a smooth movement regardless of the framerate.
 		azSpeed *= 60.0f * Time.deltaTime;
@@ -247,9 +250,12 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <returns></returns>
 	private float ChangeElevation(float elSpeed)
 	{
+		// FOR PRESENTATION PURPOSES ONLY:
+		// Hard set the speed to 2 while the speed from the MCUCommand still isn't calibrated.
+		elSpeed = 2.0f;
 		// Alter the movement speed by the time since the last frame. This ensures
 		// a smooth movement regardless of the framerate.
-		elSpeed *= currentMCUCommand.elevationSpeed * Time.deltaTime;
+		elSpeed *= 60.0f * Time.deltaTime;
 		// If we're closer to the target than the movement speed, lower the movement
 		// speed so that we don't overshoot.
 		if (Mathf.Abs(currentMCUCommand.elevationDegrees - simTelescopeElevationDegrees) < Mathf.Abs(elSpeed))
