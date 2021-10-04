@@ -120,7 +120,7 @@ public class TelescopeControllerSim : MonoBehaviour
 
 					// need to set the elevation to the current elevation so we can identify when we stopped moving
 					// be default we check if the mcuCommand.el == simTelescope.el to see if the movement is "done"
-					currentMCUCommand.elevationDegrees = simTelescopeElevationDegrees;
+					currentMCUCommand.elevationDegrees = BoundElevation(simTelescopeElevationDegrees);
 
 					// we always want to send a negative value here, no matter the degree we always want to move *left*
 					// the *true* passed in is for the leftJog flag, which tells TargetAzimuth to always set the moveCWW flag to true
@@ -134,7 +134,7 @@ public class TelescopeControllerSim : MonoBehaviour
 				// se we have to update that member here
 				else if (currentMCUCommand.elevationSpeed > 0)
 				{
-					currentMCUCommand.elevationDegrees = simTelescopeElevationDegrees + 1.0f;
+					currentMCUCommand.elevationDegrees = BoundElevation(simTelescopeElevationDegrees + 1.0f);
 
 					// same thing here as with the azimuth stuff, need to make sure the azimuth for this incoming command is the same 
 					// as the simTelescope position so we can register the move complete
@@ -143,7 +143,7 @@ public class TelescopeControllerSim : MonoBehaviour
 					UpdateElevationUI(currentMCUCommand.elevationDegrees);
 				} else if (currentMCUCommand.elevationSpeed < 0)
 				{
-					currentMCUCommand.elevationDegrees = simTelescopeElevationDegrees - 1.0f;
+					currentMCUCommand.elevationDegrees = BoundElevation(simTelescopeElevationDegrees - 1.0f);
 
 					currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees;
 					UpdateElevationUI(currentMCUCommand.elevationDegrees);
@@ -155,6 +155,7 @@ public class TelescopeControllerSim : MonoBehaviour
 				moveCCW = distance < 0;
 
 				currentMCUCommand.azimuthDegrees = BoundAzimuth(currentMCUCommand.azimuthDegrees);
+				currentMCUCommand.elevationDegrees = BoundElevation(currentMCUCommand.elevationDegrees);
 				UpdateAzimuthUI(currentMCUCommand.azimuthDegrees);
 				UpdateElevationUI(currentMCUCommand.elevationDegrees);
 			}
@@ -261,7 +262,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		if (Mathf.Abs(currentMCUCommand.elevationDegrees - simTelescopeElevationDegrees) < Mathf.Abs(elSpeed))
 			elSpeed = currentMCUCommand.elevationDegrees - simTelescopeElevationDegrees;
 		elevation.transform.Rotate(0, 0, elSpeed);
-		return simTelescopeElevationDegrees + elSpeed;
+		return BoundElevation(simTelescopeElevationDegrees + elSpeed);
 	}
 	
 	/// <summary>
@@ -278,6 +279,18 @@ public class TelescopeControllerSim : MonoBehaviour
 		if(az >= 360.0f)
 			az -= 360.0f;
 		return az;
+	}
+	
+	/// <summary>
+	/// Class helper method for bounding elevation within the limit switches.
+	/// </summary>
+	private float BoundElevation(float el)
+	{
+		if(el < 8.0f)
+			return 8.0f;
+		if(el > 106.0f)
+			return 106.0f;
+		return el;
 	}
 	
 	/// <summary>
