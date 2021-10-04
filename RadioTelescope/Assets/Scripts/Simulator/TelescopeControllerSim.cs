@@ -7,7 +7,8 @@ using UnityEngine.Experimental;
 using UnityStandardAssets.Vehicles.Car;
 using static MCUCommand;
 
-// This script controls the telescope according to the inputs from the simulator.
+// This script controls the telescope according to the inputs from
+// the control room as received by the MCUCommand created by SimServer.
 public class TelescopeControllerSim : MonoBehaviour
 {
 	// The game objects that get rotated by a movement command.
@@ -26,11 +27,11 @@ public class TelescopeControllerSim : MonoBehaviour
 	public TMP_Text azimuthSpeedText;
 	public TMP_Text elevationSpeedText;
 	
-	// The current and target values of the azimuth and elevation.
+	// The current values of the azimuth and elevation.
 	public float simTelescopeAzimuthDegrees;
 	public float simTelescopeElevationDegrees;
-
-	// Our MCUCommand object
+	
+	// The MCUCommand object that determines the target orientation.
 	private MCUCommand currentMCUCommand;
 	
 	// If the angle and target are within this distance, consider them equal.
@@ -40,17 +41,16 @@ public class TelescopeControllerSim : MonoBehaviour
 	private bool moveCCW = false;
 	
 	/// <summary>
-	/// Start is called before the first frame
+	/// Start is called before the first frame.
 	/// </summary>
 	public void Start()
 	{
 		// Set the current azimuth and elevation degrees to the rotation
-		// of the game objects, then target 0,15.
+		// of the game objects.
 		simTelescopeAzimuthDegrees = azimuth.transform.eulerAngles.y;
 		simTelescopeElevationDegrees = elevation.transform.eulerAngles.z;
-		// we need to create a dummy MCU command to start
-		// this is a custom command to point at 0, 15
-		ushort[] simStart = {(ushort) MoveType.SIM_TELESCOPECONTROLLER_INIT};
+		// Create a dummy MCU command and target 0,0.
+		ushort[] simStart = {(ushort)MoveType.SIM_TELESCOPECONTROLLER_INIT};
 		currentMCUCommand = new MCUCommand(simStart);
 	}
 	
@@ -66,7 +66,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		// Update the UI at the end of every frame.
 		UpdateUI();
 	}
-
+	
 	/// <summary>
 	/// When we first start the sim we will be sending an MCUCommand object over. This will have dummy data until we get a real command from the control room
 	/// We know what fake data we are initially building the command with so we can ignore that until we get real data
@@ -75,86 +75,96 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <param name="incoming"> the incoming MCUCommand object from <c>SimServer.cs</c></param>
 	public void SetNewMCUCommand(MCUCommand incoming) 
 	{
-		if(incoming.errorFlag == false && incoming.acceleration != (float) Dummy.THICC) 
+		if(incoming.errorFlag == true || incoming.acceleration == (float)Dummy.THICC) 
+			return;
+		
+		currentMCUCommand = incoming;
+		
+		if(currentMCUCommand.stopMove)
+			HandleStop();
+		else if(currentMCUCommand.jog) 
+			HandleJog();
+		else
+			HandleRelativeMove();
+	}
+	
+	private void HandleStop()
+	{
+		// if we receive a stop, set the moveTo's to the current position of the simulator
+		currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees;
+		currentMCUCommand.elevationDegrees = simTelescopeElevationDegrees;
+	}
+	
+	private void HandleJog()
+	{
+		// if it's a jog, we want to move 1 degree in the jog direction
+		// as of right now, the control room cannot jog on both motors (az & el) at the same time
+		// each jog command will be one or the other
+		
+		// figure out azimuth direction
+		if(currentMCUCommand.azimuthSpeed > 0)
 		{
-			currentMCUCommand = incoming;
-
-			if(currentMCUCommand.stopMove)
-			{
-				// if we receive a stop, set the moveTo's to the current position of the simulator
-				currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees;
-				currentMCUCommand.elevationDegrees = simTelescopeElevationDegrees;
-			}
-			// if it's a jog, we want to move 1 degree in the jog direction
-			// as of right now, the control room cannot jog on both motors (az & el) at the same time
-			// each jog command will be one or the other
-			else if(currentMCUCommand.jog) 
-			{
-				// figure out azimuth direction
-				if(currentMCUCommand.azimuthSpeed > 0)
-				{
-					Debug.Log("TELESCOPECONTROLLER: Positive Azimuth jog");
-					currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees + 1.0f;
-
-					// need to set the elevation to the current elevation so we can identify when we stopped moving
-					// be default we check if the mcuCommand.el == simTelescope.el to see if the movement is "done"
-					currentMCUCommand.elevationDegrees = BoundElevation(simTelescopeElevationDegrees);
-
-					moveCCW = false;
-					currentMCUCommand.azimuthDegrees = BoundAzimuth(currentMCUCommand.azimuthDegrees);
-				}
-				else if(currentMCUCommand.azimuthSpeed < 0)
-				{
-					Debug.Log("TELESCOPECONTROLLER: Negative Azimuth jog");
-					currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees - 1.0f;
-
-					// we can't target 0 degrees, so incase of 0 just subtract 1 more
-					if(currentMCUCommand.azimuthDegrees == 0)
-						currentMCUCommand.azimuthDegrees = -1.0f;
-
-					// need to set the elevation to the current elevation so we can identify when we stopped moving
-					// be default we check if the mcuCommand.el == simTelescope.el to see if the movement is "done"
-					currentMCUCommand.elevationDegrees = BoundElevation(simTelescopeElevationDegrees);
-
-					// we always want to send a negative value here, no matter the degree we always want to move *left*
-					// the *true* passed in is for the leftJog flag, which tells TargetAzimuth to always set the moveCWW flag to true
-					moveCCW = true;
-					currentMCUCommand.azimuthDegrees = BoundAzimuth(currentMCUCommand.azimuthDegrees);
-				}
-				// figure out elevation direction
-				// have to update the mcuCommand here (not in MCUCommand.cs) because that class doesn't have access to the current telescope
-				// orientation. The TargetElevation method makes a check to change elevation based on the currentMCUCommand's data,
-				// se we have to update that member here
-				else if(currentMCUCommand.elevationSpeed > 0)
-				{
-					currentMCUCommand.elevationDegrees = BoundElevation(simTelescopeElevationDegrees + 1.0f);
-
-					// same thing here as with the azimuth stuff, need to make sure the azimuth for this incoming command is the same 
-					// as the simTelescope position so we can register the move complete
-					currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees;
-
-					UpdateElevationUI(currentMCUCommand.elevationDegrees);
-				}
-				else if(currentMCUCommand.elevationSpeed < 0)
-				{
-					currentMCUCommand.elevationDegrees = BoundElevation(simTelescopeElevationDegrees - 1.0f);
-
-					currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees;
-					UpdateElevationUI(currentMCUCommand.elevationDegrees);
-				}
-			}
-			else // RELATIVE MOVE, just pass in the targeted degrees
-			{
-				// AngleDistance returns a value relative to the current position, if it is negative we know we need to go left
-				float distance = AngleDistance(currentMCUCommand.azimuthDegrees, simTelescopeAzimuthDegrees);
-				moveCCW = distance < 0;
-
-				currentMCUCommand.azimuthDegrees = BoundAzimuth(currentMCUCommand.azimuthDegrees);
-				currentMCUCommand.elevationDegrees = BoundElevation(currentMCUCommand.elevationDegrees);
-				UpdateAzimuthUI(currentMCUCommand.azimuthDegrees);
-				UpdateElevationUI(currentMCUCommand.elevationDegrees);
-			}
-		} 
+			Debug.Log("TELESCOPECONTROLLER: Positive Azimuth jog");
+			currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees + 1.0f;
+			
+			// need to set the elevation to the current elevation so we can identify when we stopped moving
+			// be default we check if the mcuCommand.el == simTelescope.el to see if the movement is "done"
+			currentMCUCommand.elevationDegrees = BoundElevation(simTelescopeElevationDegrees);
+			
+			moveCCW = false;
+			currentMCUCommand.azimuthDegrees = BoundAzimuth(currentMCUCommand.azimuthDegrees);
+		}
+		else if(currentMCUCommand.azimuthSpeed < 0)
+		{
+			Debug.Log("TELESCOPECONTROLLER: Negative Azimuth jog");
+			currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees - 1.0f;
+			
+			// we can't target 0 degrees, so incase of 0 just subtract 1 more
+			if(currentMCUCommand.azimuthDegrees == 0)
+				currentMCUCommand.azimuthDegrees = -1.0f;
+			
+			// need to set the elevation to the current elevation so we can identify when we stopped moving
+			// be default we check if the mcuCommand.el == simTelescope.el to see if the movement is "done"
+			currentMCUCommand.elevationDegrees = BoundElevation(simTelescopeElevationDegrees);
+			
+			// we always want to send a negative value here, no matter the degree we always want to move *left*
+			// the *true* passed in is for the leftJog flag, which tells TargetAzimuth to always set the moveCWW flag to true
+			moveCCW = true;
+			currentMCUCommand.azimuthDegrees = BoundAzimuth(currentMCUCommand.azimuthDegrees);
+		}
+		// figure out elevation direction
+		// have to update the mcuCommand here (not in MCUCommand.cs) because that class doesn't have access to the current telescope
+		// orientation. The TargetElevation method makes a check to change elevation based on the currentMCUCommand's data,
+		// se we have to update that member here
+		else if(currentMCUCommand.elevationSpeed > 0)
+		{
+			currentMCUCommand.elevationDegrees = BoundElevation(simTelescopeElevationDegrees + 1.0f);
+			
+			// same thing here as with the azimuth stuff, need to make sure the azimuth for this incoming command is the same 
+			// as the simTelescope position so we can register the move complete
+			currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees;
+			
+			UpdateElevationUI(currentMCUCommand.elevationDegrees);
+		}
+		else if(currentMCUCommand.elevationSpeed < 0)
+		{
+			currentMCUCommand.elevationDegrees = BoundElevation(simTelescopeElevationDegrees - 1.0f);
+			
+			currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees;
+			UpdateElevationUI(currentMCUCommand.elevationDegrees);
+		}
+	}
+	
+	private void HandleRelativeMove()
+	{
+		// AngleDistance returns a value relative to the current position, if it is negative we know we need to go left
+		float distance = AngleDistance(currentMCUCommand.azimuthDegrees, simTelescopeAzimuthDegrees);
+		moveCCW = distance < 0;
+		
+		currentMCUCommand.azimuthDegrees = BoundAzimuth(currentMCUCommand.azimuthDegrees);
+		currentMCUCommand.elevationDegrees = BoundElevation(currentMCUCommand.elevationDegrees);
+		UpdateAzimuthUI(currentMCUCommand.azimuthDegrees);
+		UpdateElevationUI(currentMCUCommand.elevationDegrees);
 	}
 	
 	/// <summary>
@@ -224,16 +234,15 @@ public class TelescopeControllerSim : MonoBehaviour
 		// Alter the movement speed by the time since the last frame. This ensures
 		// a smooth movement regardless of the framerate.
 		azSpeed *= 60.0f * Time.deltaTime;
-
+		
 		// If we're closer to the target than the movement speed, lower the movement
 		// speed so that we don't overshoot.
 		// Unlike elevation, which doesn't wrap, azimuth needs to account for wrapping.
 		// e.g. 350 and 10 are 20 degrees away, not 340.
 		float distance = Mathf.Abs(AngleDistance(simTelescopeAzimuthDegrees, currentMCUCommand.azimuthDegrees));
 		if(distance < Mathf.Abs(azSpeed)) 
-		{
 		 	azSpeed = distance * (moveCCW ? -1 : 1);
-		}
+		
 		azimuth.transform.Rotate(0, azSpeed, 0);
 		// Add the speed to the simTelescopeAz because the speed is how much we move in a single frame
 		// speed is the relative .
@@ -257,6 +266,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		// speed so that we don't overshoot.
 		if(Mathf.Abs(currentMCUCommand.elevationDegrees - simTelescopeElevationDegrees) < Mathf.Abs(elSpeed))
 			elSpeed = currentMCUCommand.elevationDegrees - simTelescopeElevationDegrees;
+		
 		elevation.transform.Rotate(0, 0, elSpeed);
 		return BoundElevation(simTelescopeElevationDegrees + elSpeed);
 	}
@@ -300,7 +310,6 @@ public class TelescopeControllerSim : MonoBehaviour
 	
 	/// <summary>
 	/// Update the UI according to the current state of the variables when called.
-	/// TODO: the elevation needs to be offset somehow to actually be correct, can never show -15 degrees
 	/// </summary>
 	private void UpdateUI()
 	{

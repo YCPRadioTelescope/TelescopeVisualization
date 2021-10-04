@@ -36,19 +36,19 @@ public class TestMove : MonoBehaviour
 		
 		// we need to add 15 
 		el += 15;
-
+		
 		// TODO: make this a move by again instead of an absolute move
-
+		
 		// build register data and send command
 		Debug.Log("TEST_MOVE BEFORE CONVERT -- az: " + az);
 		Debug.Log("TEST_MOVE BEFORE CONVERT -- el: " + el);
-
+		
 		// we don't really care about the other fields, they will be set by a special case in MCUCommand
 		// I grabbed these hardcoded bit calculation values from the control room
 		// the challenge with this is to convert a float to a short, which needs to be split over 2 elements in order to recombine them 
 		// into 
 		ushort[] registerData =  { 0x0096, (ushort) az, (ushort) el };
-
+		
 		MCUCommand testMoveCommand = new MCUCommand(registerData);
 		tc.SetNewMCUCommand(testMoveCommand);
 	}
