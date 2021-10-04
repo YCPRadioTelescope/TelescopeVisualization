@@ -45,7 +45,6 @@ public class SimServer : MonoBehaviour {
 	public TelescopeControllerSim tc;
 
 	public MCUCommand currentCommand;
-	public float speed = 0.01f;
 	private float azDeg = -42069;
 	private float elDeg = -42069;
 	
@@ -99,8 +98,6 @@ public class SimServer : MonoBehaviour {
 		if(runSimulator)
 			return;
 		Debug.Log("Start Button clicked");
-		
-		tc.speed = speed;
 		
 		try
 		{
