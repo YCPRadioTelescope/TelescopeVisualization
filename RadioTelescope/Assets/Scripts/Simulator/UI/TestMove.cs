@@ -29,7 +29,7 @@ public class TestMove : MonoBehaviour
 	{
 		// Get the azimuth and elevation values from the UI, clamping them to allowable values.
 		int az = Mathf.Clamp(int.Parse(azimuth.text), 0, 360);
-		int el = Mathf.Clamp(int.Parse(elevation.text), -15, 94);
+		int el = Mathf.Clamp(int.Parse(elevation.text), -15, 95);
 		// Send the clamped values back to the UI in case the user provided out of bounds input.
 		elevation.text = el.ToString();
 		azimuth.text = az.ToString();
@@ -47,7 +47,7 @@ public class TestMove : MonoBehaviour
 		// I grabbed these hardcoded bit calculation values from the control room
 		// the challenge with this is to convert a float to a short, which needs to be split over 2 elements in order to recombine them 
 		// into 
-		ushort[] registerData =  { 0x0096, (ushort) az, (ushort) el };
+		ushort[] registerData =  {0x0096, (ushort)az, (ushort)el};
 		
 		MCUCommand testMoveCommand = new MCUCommand(registerData);
 		tc.SetNewMCUCommand(testMoveCommand);
