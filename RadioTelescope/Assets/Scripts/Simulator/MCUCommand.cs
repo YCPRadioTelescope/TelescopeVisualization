@@ -46,12 +46,11 @@ public class MCUCommand : MonoBehaviour
             	Debug.Log("RELATIVE MOVE INCOMING");
 
                 // calculate speed fields
-                // the /250.0f is what i added to get the speed values down to unity okay things - it was moving way too fast
                 azimuthSpeed = ((registerData[(int) RegPos.firstSpeedAzimuth] << 16) 
-                                    + registerData[(int) RegPos.secondSpeedAzimuth]) / 250.0f;
+                                    + registerData[(int) RegPos.secondSpeedAzimuth]);
 
                 elevationSpeed = ((registerData[(int) RegPos.firstSpeedElevation] << 16) 
-                                    + registerData[(int) RegPos.secondSpeedElevation]) / 250.0f;
+                                    + registerData[(int) RegPos.secondSpeedElevation]);
 
                 // grab acceleration (we set registers 6 & 7 on the control room side, but the previous team only grabbed 6 so only 6 here)
                 // NOTE: the sim does not account for acceleration (I don't think we need to) but if you wanted too, you most likely
@@ -82,7 +81,7 @@ public class MCUCommand : MonoBehaviour
                 Debug.Log("AZIMTUH JOG LEFT COMMAND INCOMING");
                 jog = true;
                 azimuthSpeed = -((registerData[(int) RegPos.firstSpeedAzimuth] << 16) 
-                                    + registerData[(int) RegPos.secondSpeedAzimuth]) / 20;
+                                    + registerData[(int) RegPos.secondSpeedAzimuth]);
             
                 // convert raw register values into simulator friendly terms
                 convertToUnitySpeak();
@@ -93,7 +92,7 @@ public class MCUCommand : MonoBehaviour
                 Debug.Log("AZIMTUH JOG RIGHT COMMAND INCOMING");
                 jog = true;
                 azimuthSpeed = +((registerData[(int) RegPos.firstSpeedAzimuth] << 16) 
-                                    + registerData[(int) RegPos.secondSpeedAzimuth]) / 20;
+                                    + registerData[(int) RegPos.secondSpeedAzimuth]);
                 
                 // convert raw register values into simulator friendly terms
                 convertToUnitySpeak();
@@ -124,7 +123,7 @@ public class MCUCommand : MonoBehaviour
                     Debug.Log("NEGATIVE ELEVATION JOG COMMAND INCOMING");
                     jog = true;
                     elevationSpeed = -((registerData[(int) RegPos.firstSpeedElevation] << 16) 
-                                        + registerData[(int) RegPos.secondSpeedElevation]) / 20;
+                                        + registerData[(int) RegPos.secondSpeedElevation]);
 
                     // convert raw register values into simulator friendly terms
                     convertToUnitySpeak();
@@ -135,7 +134,7 @@ public class MCUCommand : MonoBehaviour
                     Debug.Log("POSITIVE ELEVATION JOG COMMAND INCOMING");
                     jog = true;
                     elevationSpeed = ((registerData[(int) RegPos.firstSpeedElevation] << 16) 
-                                        + registerData[(int) RegPos.secondSpeedElevation]) / 20;
+                                        + registerData[(int) RegPos.secondSpeedElevation]);
                 
                     // convert raw register values into simulator friendly terms
                     convertToUnitySpeak();
@@ -249,10 +248,6 @@ public class MCUCommand : MonoBehaviour
         // something like (# of steps for 1 degree) -- future work
         azimuthDegrees = convertStepsToDegrees(azimuthDegrees, AZIMUTH_GEARING_RATIO);
         elevationDegrees = convertStepsToDegrees(elevationDegrees, ELEVATION_GEARING_RATIO);
-
-        // the speed here is relative to the actual values, but to visualize for unity we need them a little smaller
-        azimuthSpeed = azimuthSpeed / 100;
-        elevationSpeed = elevationSpeed / 10;
     }
 
     /// <summary>
