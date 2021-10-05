@@ -5,13 +5,11 @@ using System.Net.Sockets;
 using System.Text; 
 using System.Threading; 
 using UnityEngine;
-using Valve.Newtonsoft.Json;
 using Modbus.Data;
 using Modbus.Device;
 using System.Linq;
 using TMPro;
 using UnityEngine.UI;
-using Valve.VR.InteractionSystem;
 using static MCUCommand;
 
 public class SimServer : MonoBehaviour {
