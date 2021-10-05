@@ -39,6 +39,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	
 	// Keeps track of whether the azimuth is moving clockwise or counter clockwise.
 	private bool moveCCW = false;
+	private bool jogging = false;
 	
 	/// <summary>
 	/// Start is called before the first frame.
@@ -79,6 +80,7 @@ public class TelescopeControllerSim : MonoBehaviour
 			return;
 		
 		currentMCUCommand = incoming;
+		jogging = false;
 		
 		if(currentMCUCommand.stopMove)
 			HandleStop();
@@ -100,6 +102,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		// if it's a jog, we want to move 1 degree in the jog direction
 		// as of right now, the control room cannot jog on both motors (az & el) at the same time
 		// each jog command will be one or the other
+		jogging = true;
 		
 		// figure out azimuth direction
 		if(currentMCUCommand.azimuthSpeed > 0)
@@ -189,7 +192,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		if(current != target)
 		{
 			float speed = currentMCUCommand.azimuthSpeed;
-			current = ChangeAzimuth(current, target, moveCCW ? -speed : speed);
+			current = ChangeAzimuth(current, target, moveCCW && !jogging ? -speed : speed);
 			
 			// If the azimuth and target are close, set the azimuth to the target.
 			if(Mathf.Abs(AngleDistance(current, target)) < epsilon)
@@ -209,7 +212,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		{
 			float speed = currentMCUCommand.elevationSpeed;
 			bool up = (target > current);
-			current = ChangeElevation(current, target, up ? speed : -speed);
+			current = ChangeElevation(current, target, up || jogging ? speed : -speed);
 			
 			// If the elevation and target are close, set the elevation to the target.
 			if(Mathf.Abs(AngleDistance(current, target)) < epsilon)
@@ -224,13 +227,9 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <returns></returns>
 	private float ChangeAzimuth(float current, float target, float speed)
 	{
-		// FOR PRESENTATION PURPOSES ONLY:
-		// Hard set the speed to 2 while the speed from the MCUCommand still isn't calibrated.
-		speed = (speed > 0.0f ? 2.0f : -2.0f);
-		
 		// Alter the movement speed by the time since the last frame. This ensures
 		// a smooth movement regardless of the framerate.
-		speed *= 60.0f * Time.deltaTime;
+		speed *= Time.deltaTime;
 		
 		// If we're closer to the target than the movement speed, lower the movement
 		// speed so that we don't overshoot.
@@ -251,13 +250,9 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <returns></returns>
 	private float ChangeElevation(float current, float target, float speed)
 	{
-		// FOR PRESENTATION PURPOSES ONLY:
-		// Hard set the speed to 2 while the speed from the MCUCommand still isn't calibrated.
-		speed = (speed > 0.0f ? 2.0f : -2.0f);
-		
 		// Alter the movement speed by the time since the last frame. This ensures
 		// a smooth movement regardless of the framerate.
-		speed *= 60.0f * Time.deltaTime;
+		speed *= Time.deltaTime;
 		
 		// If we're closer to the target than the movement speed, lower the movement
 		// speed so that we don't overshoot.

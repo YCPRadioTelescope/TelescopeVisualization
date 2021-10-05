@@ -47,7 +47,7 @@ public class TestMove : MonoBehaviour
 		// I grabbed these hardcoded bit calculation values from the control room
 		// the challenge with this is to convert a float to a short, which needs to be split over 2 elements in order to recombine them 
 		// into 
-		ushort[] registerData =  {0x0096, (ushort)az, (ushort)el};
+		ushort[] registerData =  { 0x0096, (ushort)az, (ushort)el };
 		
 		MCUCommand testMoveCommand = new MCUCommand(registerData);
 		tc.SetNewMCUCommand(testMoveCommand);

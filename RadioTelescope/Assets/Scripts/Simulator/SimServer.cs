@@ -67,7 +67,6 @@ public class SimServer : MonoBehaviour {
 	/// </summary>
 	public void Start()
 	{
-		//startButton = GetComponent<Button>();
 		startButton.onClick.AddListener(StartServer);
 		fillButton.onClick.AddListener(AutoFillInput);
 		
@@ -76,7 +75,7 @@ public class SimServer : MonoBehaviour {
 		Screen.SetResolution(1024, 768, FullScreenMode.Windowed);
 		
 		// create a base current command object
-		ushort[] noCommand = { (ushort) MoveType.SIM_SERVER_INIT };
+		ushort[] noCommand = { (ushort)MoveType.SIM_SERVER_INIT };
 		currentCommand = new MCUCommand(noCommand);
 	}
 	

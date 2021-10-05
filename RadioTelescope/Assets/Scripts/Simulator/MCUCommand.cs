@@ -244,6 +244,8 @@ public class MCUCommand : MonoBehaviour
 		// something like (# of steps for 1 degree) -- future work
 		azimuthDegrees = convertStepsToDegrees(azimuthDegrees, AZIMUTH_GEARING_RATIO);
 		elevationDegrees = convertStepsToDegrees(elevationDegrees, ELEVATION_GEARING_RATIO);
+		azimuthSpeed = convertStepsToDegrees(azimuthSpeed, AZIMUTH_GEARING_RATIO);
+		elevationSpeed = convertStepsToDegrees(elevationSpeed, ELEVATION_GEARING_RATIO);
 	}
 	
 	/// <summary>
