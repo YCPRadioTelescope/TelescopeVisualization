@@ -4714,7 +4714,7 @@ GameObject:
   - component: {fileID: 569823101}
   - component: {fileID: 569823100}
   m_Layer: 5
-  m_Name: UI
+  m_Name: UI Objects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11371,16 +11371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   azimuth: {fileID: 1525520883}
   elevation: {fileID: 879300291}
-  unityAzimuthText: {fileID: 186378141}
-  unityElevationText: {fileID: 1970712149}
-  azimuthText: {fileID: 31453317}
-  elevationText: {fileID: 1224302190}
-  targetAzimuthText: {fileID: 1283250069}
-  targetElevationText: {fileID: 205231889}
-  inputAzimuthText: {fileID: 1172844312}
-  inputElevationText: {fileID: 527249047}
-  azimuthSpeedText: {fileID: 1037877851}
-  elevationSpeedText: {fileID: 1071896789}
+  ui: {fileID: 2120281187}
   simTelescopeAzimuthDegrees: 0
   simTelescopeElevationDegrees: 0
 --- !u!1 &1390523543
@@ -11561,7 +11552,7 @@ GameObject:
   - component: {fileID: 1438597002}
   - component: {fileID: 1438597001}
   m_Layer: 5
-  m_Name: IPMCU Input
+  m_Name: MCUIP Input
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16583,6 +16574,7 @@ GameObject:
   - component: {fileID: 2120281191}
   - component: {fileID: 2120281193}
   - component: {fileID: 2120281186}
+  - component: {fileID: 2120281187}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -16603,11 +16595,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tc: {fileID: 1370658910}
+  ui: {fileID: 2120281187}
   currentCommand: {fileID: 0}
-  mcuIP: {fileID: 1438597001}
-  mcuPort: {fileID: 327385366}
+--- !u!114 &2120281187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120281185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59208b24f581ff94fa9937f66289865c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  server: {fileID: 2120281186}
   startButton: {fileID: 1168945101}
   fillButton: {fileID: 1830587012}
+  mcuIP: {fileID: 1438597001}
+  mcuPort: {fileID: 327385366}
+  tc: {fileID: 1370658910}
+  unityAzimuthText: {fileID: 186378141}
+  unityElevationText: {fileID: 1970712149}
+  azimuthText: {fileID: 31453317}
+  elevationText: {fileID: 1224302190}
+  inputAzimuthText: {fileID: 1172844312}
+  inputElevationText: {fileID: 527249047}
+  targetAzimuthText: {fileID: 1283250069}
+  targetElevationText: {fileID: 205231889}
+  azimuthSpeedText: {fileID: 1037877851}
+  elevationSpeedText: {fileID: 1071896789}
 --- !u!114 &2120281188
 MonoBehaviour:
   m_ObjectHideFlags: 0

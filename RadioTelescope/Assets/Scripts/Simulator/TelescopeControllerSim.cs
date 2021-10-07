@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Experimental;
 using static MCUCommand;
@@ -15,16 +14,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	public GameObject elevation;
 	
 	// UI elements that get updated with the state of variables.
-	public TMP_Text unityAzimuthText;
-	public TMP_Text unityElevationText;
-	public TMP_Text azimuthText;
-	public TMP_Text elevationText;
-	public TMP_Text targetAzimuthText;
-	public TMP_Text targetElevationText;
-	public TMP_Text inputAzimuthText;
-	public TMP_Text inputElevationText;
-	public TMP_Text azimuthSpeedText;
-	public TMP_Text elevationSpeedText;
+	public UIHandler ui;
 	
 	// The current values of the azimuth and elevation.
 	public float simTelescopeAzimuthDegrees;
@@ -35,6 +25,8 @@ public class TelescopeControllerSim : MonoBehaviour
 	
 	// If the angle and target are within this distance, consider them equal.
 	private float epsilon = 0.1f;
+	private float maxEl = 92.0f + 15.0f;
+	private float minEl = -8.0f + 15.0f;
 	
 	// Keeps track of whether the azimuth is moving clockwise or counter clockwise.
 	private bool moveCCW = false;
@@ -49,6 +41,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		// of the game objects.
 		simTelescopeAzimuthDegrees = azimuth.transform.eulerAngles.y;
 		simTelescopeElevationDegrees = elevation.transform.eulerAngles.z;
+		
 		// Create a dummy MCU command and target 0,0.
 		ushort[] simStart = {(ushort)MoveType.SIM_TELESCOPECONTROLLER_INIT};
 		currentMCUCommand = new MCUCommand(simStart);
@@ -62,9 +55,6 @@ public class TelescopeControllerSim : MonoBehaviour
 		// Update the azimuth and elevation positions.
 		UpdateAzimuth();
 		UpdateElevation();
-		
-		// Update the UI at the end of every frame.
-		UpdateUI();
 	}
 	
 	/// <summary>
@@ -87,6 +77,46 @@ public class TelescopeControllerSim : MonoBehaviour
 			HandleJog();
 		else
 			HandleRelativeMove();
+	}
+	
+	public double UnityAzimuth()
+	{
+		return System.Math.Round(azimuth.transform.eulerAngles.y, 1);
+	}
+	
+	public double UnityElevation()
+	{
+		return System.Math.Round(elevation.transform.eulerAngles.z, 1);
+	}
+	
+	public double SimAzimuth()
+	{
+		return System.Math.Round(simTelescopeAzimuthDegrees, 1);
+	}
+	
+	public double SimElevation()
+	{
+		return System.Math.Round((simTelescopeElevationDegrees - 15.0f), 1);
+	}
+	
+	public double TargetAzimuth()
+	{
+		return System.Math.Round(currentMCUCommand.azimuthDegrees, 1);
+	}
+	
+	public double TargetElevation()
+	{
+		return System.Math.Round(currentMCUCommand.elevationDegrees - 15.0f, 1);
+	}
+	
+	public double AzimuthSpeed()
+	{
+		return System.Math.Round(currentMCUCommand.azimuthSpeed, 2);
+	}
+	
+	public double ElevationSpeed()
+	{
+		return System.Math.Round(currentMCUCommand.elevationSpeed, 2);
 	}
 	
 	private void HandleStop()
@@ -142,14 +172,14 @@ public class TelescopeControllerSim : MonoBehaviour
 			// as the simTelescope position so we can register the move complete
 			currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees;
 			
-			UpdateElevationUI(currentMCUCommand.elevationDegrees);
+			ui.InputElevation(currentMCUCommand.elevationDegrees);
 		}
 		else if(currentMCUCommand.elevationSpeed < 0)
 		{
 			currentMCUCommand.elevationDegrees = simTelescopeElevationDegrees - 1.0f;
 			
 			currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees;
-			UpdateElevationUI(currentMCUCommand.elevationDegrees);
+			ui.InputElevation(currentMCUCommand.elevationDegrees);
 		}
 	}
 	
@@ -159,25 +189,8 @@ public class TelescopeControllerSim : MonoBehaviour
 		float distance = AngleDistance(currentMCUCommand.azimuthDegrees, simTelescopeAzimuthDegrees);
 		moveCCW = distance < 0;
 		
-		UpdateAzimuthUI(currentMCUCommand.azimuthDegrees);
-		UpdateElevationUI(currentMCUCommand.elevationDegrees);
-	}
-	
-	/// <summary>
-	/// update the UI
-	/// </summary>
-	/// <param name="az"></param>
-	public void UpdateAzimuthUI(float az)
-	{
-		inputAzimuthText.text = "Input Azimuth: " + System.Math.Round(az, 1);
-	}
-	
-	/// <summary>
-	/// Target a new elevation.
-	/// </summary>
-	public void UpdateElevationUI(float el)
-	{
-		inputElevationText.text = "Input Elevation: " + System.Math.Round(el, 1);
+		ui.InputAzimuth(currentMCUCommand.azimuthDegrees);
+		ui.InputElevation(currentMCUCommand.elevationDegrees);
 	}
 	
 	/// <summary>
@@ -283,10 +296,10 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	private float BoundElevation(float el)
 	{
-		if(el < 8.0f)
-			return 8.0f;
-		if(el > 106.0f)
-			return 106.0f;
+		if(el < minEl)
+			return minEl;
+		if(el > maxEl)
+			return maxEl;
 		return el;
 	}
 	
@@ -297,20 +310,5 @@ public class TelescopeControllerSim : MonoBehaviour
 	{
 		// Mathf.Repeat is functionally similar to the modulus operator, but works with floats.
 		return Mathf.Repeat((a - b + 180.0f), 360.0f) - 180.0f;
-	}
-	
-	/// <summary>
-	/// Update the UI according to the current state of the variables when called.
-	/// </summary>
-	private void UpdateUI()
-	{
-		unityAzimuthText.text = "Unity Az Position: " + System.Math.Round(azimuth.transform.eulerAngles.y, 1);
-		unityElevationText.text = "Unity El Position: " + (System.Math.Round(elevation.transform.eulerAngles.z, 1));
-		azimuthText.text = "Azimuth Degrees: " + System.Math.Round(simTelescopeAzimuthDegrees, 1);
-		elevationText.text = "Elevation Degrees: " + (System.Math.Round((simTelescopeElevationDegrees - 15.0f), 1));
-		targetElevationText.text = "Target Elevation: " + System.Math.Round(currentMCUCommand.elevationDegrees - 15.0f, 1);
-		targetAzimuthText.text = "Target Azimuth: " + System.Math.Round(currentMCUCommand.azimuthDegrees, 1);
-		azimuthSpeedText.text = "Azimtuh Speed: " + System.Math.Round(currentMCUCommand.azimuthSpeed, 2);
-		elevationSpeedText.text = "Elevation Speed: " + System.Math.Round(currentMCUCommand.elevationSpeed, 2);
 	}
 }

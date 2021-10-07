@@ -8,8 +8,6 @@ using UnityEngine;
 using Modbus.Data;
 using Modbus.Device;
 using System.Linq;
-using TMPro;
-using UnityEngine.UI;
 using static MCUCommand;
 
 public class SimServer : MonoBehaviour {
@@ -42,15 +40,13 @@ public class SimServer : MonoBehaviour {
 	// for controlling the VR telescope
 	public TelescopeControllerSim tc;
 	
+	public UIHandler ui;
+	
 	public MCUCommand currentCommand;
 	private float azDeg = -42069;
 	private float elDeg = -42069;
 	
 	//UI Related variables
-	public TMP_InputField mcuIP;
-	public TMP_InputField mcuPort;
-	public Button startButton;
-	public Button fillButton;
 	
 	private bool runSimulator = false;
 	private bool moving = false;
@@ -65,25 +61,9 @@ public class SimServer : MonoBehaviour {
 	/// </summary>
 	public void Start()
 	{
-		startButton.onClick.AddListener(StartServer);
-		fillButton.onClick.AddListener(AutoFillInput);
-		
-		//fix the fullscreen stuff
-		Screen.fullScreen = false;
-		Screen.SetResolution(1024, 768, FullScreenMode.Windowed);
-		
 		// create a base current command object
 		ushort[] noCommand = { (ushort)MoveType.SIM_SERVER_INIT };
 		currentCommand = new MCUCommand(noCommand);
-	}
-	
-	/// <summary>
-	///	method tied to fill button which puts in correct values for the sim MCU
-	/// </summary>
-	public void AutoFillInput()
-	{
-		mcuIP.text = "127.0.0.1";
-		mcuPort.text = "8083";
 	}
 	
 	/// <summary>
@@ -98,7 +78,7 @@ public class SimServer : MonoBehaviour {
 		
 		try
 		{
-			MCU_TCPListener = new TcpListener(new IPEndPoint(IPAddress.Parse(mcuIP.text), int.Parse(mcuPort.text)));
+			MCU_TCPListener = new TcpListener(new IPEndPoint(IPAddress.Parse(ui.MCUIP()), int.Parse(ui.MCUPort())));
 			MCU_emulator_thread = new Thread(new ThreadStart(runMCUThread));
 		}
 		catch(Exception e)
@@ -128,7 +108,7 @@ public class SimServer : MonoBehaviour {
 		}
 		runSimulator = true;
 		MCU_emulator_thread.Start();
-		startButton.GetComponent<Image>().color = Color.green;
+		ui.StartSim();
 	}
 	
 	/// <summary>
