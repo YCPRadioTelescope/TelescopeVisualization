@@ -163,4 +163,5 @@ RadioTelescope/Library/
 RadioTelescope/Assets/assets/
 RadioTelescope/Assets/assets.meta
 
-RadioTelescope/sim-builds
+RadioTelescope/Logs/
+*.log
