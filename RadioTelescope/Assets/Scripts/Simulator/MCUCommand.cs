@@ -193,8 +193,8 @@ public class MCUCommand : MonoBehaviour
 			
 			case (ushort)MoveType.SIM_TELESCOPECONTROLLER_INIT:
 				Debug.Log("Building MCUCommand for telescope controller to put in start position");
-				azimuthSpeed = 60.0f;
-				elevationSpeed = 60.0f;
+				azimuthSpeed = 20.0f;
+				elevationSpeed = 20.0f;
 				acceleration = 50.0f;
 				azimuthDegrees = 0.0f;
 				elevationDegrees = 15.0f;
@@ -212,8 +212,8 @@ public class MCUCommand : MonoBehaviour
 				Debug.Log("MCUCOMMAND: Azimuth after converting to int: " + azimuthDegrees);
 				Debug.Log("MCUCOMMAND: Elevation after converting to int: " + elevationDegrees);
 				
-				azimuthSpeed = 2.0f;
-				elevationSpeed = 5.0f;
+				azimuthSpeed = 20.0f;
+				elevationSpeed = 20.0f;
 				break;
 			
 			default: // catch "all" and return error command
