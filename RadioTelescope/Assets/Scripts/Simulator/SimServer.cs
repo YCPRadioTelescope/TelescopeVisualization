@@ -46,8 +46,6 @@ public class SimServer : MonoBehaviour {
 	private float azDeg = -42069;
 	private float elDeg = -42069;
 	
-	//UI Related variables
-	
 	private bool runSimulator = false;
 	private bool moving = false;
 	private bool jogging = false;
@@ -171,7 +169,7 @@ public class SimServer : MonoBehaviour {
 			{
 				// we are still in motion
 				// TODO: here we can write back more checks (like if an error happens)
-				if(currentCommand.azimuthDegrees != tc.simTelescopeAzimuthDegrees || currentCommand.elevationDegrees != tc.simTelescopeElevationDegrees)
+				if(currentCommand.azimuthDegrees != tc.Azimuth() || currentCommand.elevationDegrees != tc.Elevation())
 				{
 					Debug.Log("SIMSERVER: Move not yet completed");
 					updateMCURegistersStillMoving();
@@ -194,7 +192,7 @@ public class SimServer : MonoBehaviour {
 			else if(homing)
 			{
 				// we need to catch homing so we can write a proper finished move so the CR knows homing was successful
-				if(tc.simTelescopeAzimuthDegrees == 0.0f && tc.simTelescopeElevationDegrees == 15.0f)
+				if(tc.Azimuth() == 0.0f && tc.Elevation() == 15.0f)
 				{
 					Debug.Log("SIMSERVER: HOMING COMPLETED");
 					updateMCURegistersFinishedHome();
@@ -248,7 +246,7 @@ public class SimServer : MonoBehaviour {
 		}
 		
 		// build mcu command based on register data
-		currentCommand = new MCUCommand(data, tc.simTelescopeAzimuthDegrees, tc.simTelescopeElevationDegrees);
+		currentCommand = new MCUCommand(data, tc.Azimuth(), tc.Elevation());
 		
 		updateMCURegistersStillMoving();
 		updateMCUPosition();
@@ -265,10 +263,10 @@ public class SimServer : MonoBehaviour {
 	/// </summary>
 	private void updateMCUPosition()
 	{
-		int azEncoder = degreesToSteps_Encoder(tc.simTelescopeAzimuthDegrees, AZIMUTH_GEARING_RATIO);
-		int elEncoder = (-1) * degreesToSteps_Encoder(tc.simTelescopeElevationDegrees - 15.0f, ELEVATION_GEARING_RATIO);
-		int azSteps = degreesToSteps(tc.simTelescopeAzimuthDegrees, AZIMUTH_GEARING_RATIO);
-		int elSteps = (-1) * degreesToSteps(tc.simTelescopeElevationDegrees - 15.0f, ELEVATION_GEARING_RATIO);
+		int azEncoder = degreesToSteps_Encoder(tc.Azimuth(), AZIMUTH_GEARING_RATIO);
+		int elEncoder = (-1) * degreesToSteps_Encoder(tc.Elevation() - 15.0f, ELEVATION_GEARING_RATIO);
+		int azSteps = degreesToSteps(tc.Azimuth(), AZIMUTH_GEARING_RATIO);
+		int elSteps = (-1) * degreesToSteps(tc.Elevation() - 15.0f, ELEVATION_GEARING_RATIO);
 		
 		// write actual values using some magic bit work
 		// we need to split it across 2 register because 1 reg doesn't have enough space

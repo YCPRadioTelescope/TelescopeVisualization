@@ -17,8 +17,8 @@ public class TelescopeControllerSim : MonoBehaviour
 	public UIHandler ui;
 	
 	// The current values of the azimuth and elevation.
-	public float simTelescopeAzimuthDegrees;
-	public float simTelescopeElevationDegrees;
+	private float simTelescopeAzimuthDegrees;
+	private float simTelescopeElevationDegrees;
 	
 	// The MCUCommand object that determines the target orientation.
 	private MCUCommand currentMCUCommand;
@@ -77,6 +77,16 @@ public class TelescopeControllerSim : MonoBehaviour
 			HandleJog();
 		else
 			HandleRelativeMove();
+	}
+	
+	public float Azimuth()
+	{
+		return simTelescopeAzimuthDegrees;
+	}
+	
+	public float Elevation()
+	{
+		return simTelescopeElevationDegrees;
 	}
 	
 	public double UnityAzimuth()
