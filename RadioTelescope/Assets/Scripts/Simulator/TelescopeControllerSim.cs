@@ -137,31 +137,13 @@ public class TelescopeControllerSim : MonoBehaviour
 		// as of right now, the control room cannot jog on both motors (az & el) at the same time
 		// each jog command will be one or the other
 		
-		// figure out azimuth direction
-		if(currentMCUCommand.azimuthSpeed > 0)
-		{
-			currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees + 1.0f;
-			currentMCUCommand.elevationDegrees = simTelescopeElevationDegrees;
-		}
-		else if(currentMCUCommand.azimuthSpeed < 0)
-		{
-			currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees - 1.0f;
-			currentMCUCommand.elevationDegrees = simTelescopeElevationDegrees;
-		}
-		// figure out elevation direction
-		// have to update the mcuCommand here (not in MCUCommand.cs) because that class doesn't have access to the current telescope
-		// orientation. The TargetElevation method makes a check to change elevation based on the currentMCUCommand's data,
-		// se we have to update that member here
-		else if(currentMCUCommand.elevationSpeed > 0)
-		{
-			currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees;
-			currentMCUCommand.elevationDegrees = simTelescopeElevationDegrees + 1.0f;
-		}
-		else if(currentMCUCommand.elevationSpeed < 0)
-		{
-			currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees;
-			currentMCUCommand.elevationDegrees = simTelescopeElevationDegrees - 1.0f;
-		}
+		float azJog = currentMCUCommand.azJog ? 1.0f : 0.0f;
+		float elJog = currentMCUCommand.azJog ? 0.0f : 1.0f;
+		float target = currentMCUCommand.posJog ? 1.0f : -1.0f;
+		
+		currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees + target * azJog;
+		currentMCUCommand.elevationDegrees = simTelescopeElevationDegrees + target * elJog;
+		
 		ui.InputAzimuth(currentMCUCommand.azimuthDegrees);
 		ui.InputElevation(currentMCUCommand.elevationDegrees);
 	}
@@ -182,7 +164,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		// If the current azimuth does not equal the target azimuth, move toward the target.
 		if(current != target)
 		{
-			float speed = Math.Abs(currentMCUCommand.azimuthSpeed);
+			float speed = currentMCUCommand.azimuthSpeed;
 			float distance = AngleDistance(target, current);
 			current = ChangeAzimuth(current, target, distance < 0 ? -speed : speed);
 			
@@ -202,7 +184,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		// If the current elevation does not equal the target elevation, move toward the target.
 		if(current != target)
 		{
-			float speed = Math.Abs(currentMCUCommand.elevationSpeed);
+			float speed = currentMCUCommand.elevationSpeed;
 			current = ChangeElevation(current, target, target < current ? -speed : speed);
 			
 			// If the elevation and target are close, set the elevation to the target.

@@ -27,6 +27,8 @@ public class MCUCommand : MonoBehaviour
 	public float azimuthDegrees = 0.0f;
 	public float elevationDegrees = 0.0f;
 	public bool jog = false;
+	public bool posJog = false;
+	public bool azJog = false;
 	public bool errorFlag = false;
 	public bool stopMove = false;
 	
@@ -80,7 +82,9 @@ public class MCUCommand : MonoBehaviour
 			case (ushort)MoveType.CLOCKWISE_AZIMTUH_JOG:
 				Debug.Log("AZIMTUH JOG LEFT COMMAND INCOMING");
 				jog = true;
-				azimuthSpeed = -((registerData[(int)RegPos.firstSpeedAzimuth] << 16) 
+				azJog = true;
+				posJog = false;
+				azimuthSpeed = ((registerData[(int)RegPos.firstSpeedAzimuth] << 16) 
 									+ registerData[(int)RegPos.secondSpeedAzimuth]);
 				
 				// convert raw register values into simulator friendly terms
@@ -91,7 +95,9 @@ public class MCUCommand : MonoBehaviour
 			case (ushort)MoveType.COUNTERCLOCKWISE_AZIMUTH_JOG:
 				Debug.Log("AZIMTUH JOG RIGHT COMMAND INCOMING");
 				jog = true;
-				azimuthSpeed = +((registerData[(int)RegPos.firstSpeedAzimuth] << 16) 
+				azJog = true;
+				posJog = true;
+				azimuthSpeed = ((registerData[(int)RegPos.firstSpeedAzimuth] << 16) 
 									+ registerData[(int)RegPos.secondSpeedAzimuth]);
 				
 				// convert raw register values into simulator friendly terms
@@ -121,7 +127,9 @@ public class MCUCommand : MonoBehaviour
 				{
 					Debug.Log("NEGATIVE ELEVATION JOG COMMAND INCOMING");
 					jog = true;
-					elevationSpeed = -((registerData[(int)RegPos.firstSpeedElevation] << 16) 
+					azJog = false;
+					posJog = false;
+					elevationSpeed = ((registerData[(int)RegPos.firstSpeedElevation] << 16) 
 										+ registerData[(int)RegPos.secondSpeedElevation]);
 					
 					// convert raw register values into simulator friendly terms
@@ -133,6 +141,8 @@ public class MCUCommand : MonoBehaviour
 				{
 					Debug.Log("POSITIVE ELEVATION JOG COMMAND INCOMING");
 					jog = true;
+					azJog = false;
+					posJog = true;
 					elevationSpeed = ((registerData[(int) RegPos.firstSpeedElevation] << 16) 
 										+ registerData[(int) RegPos.secondSpeedElevation]);
 					
