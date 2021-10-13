@@ -270,15 +270,6 @@ public class MCUCommand : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Class helper method to compute the distance between two angles on a circle.
-	/// </summary>
-	private float AngleDistance(float a, float b)
-	{
-		// Mathf.Repeat is functionally similar to the modulus operator, but works with floats.
-		return Mathf.Repeat((a - b + 180.0f), 360.0f) - 180.0f;
-	}
-	
-	/// <summary>
 	/// Helper method just to log the relevant fields as we go throughout the process. Shouldn't need to exist when everything is finalized
 	/// </summary>
 	private void logValues()

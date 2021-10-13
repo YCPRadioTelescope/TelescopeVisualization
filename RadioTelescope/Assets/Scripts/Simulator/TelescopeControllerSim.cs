@@ -2,8 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental;
-using static MCUCommand;
+using MCUCommand;
 
 // This script controls the telescope according to the inputs from
 // the control room as received by the MCUCommand created by SimServer.
@@ -25,6 +24,10 @@ public class TelescopeControllerSim : MonoBehaviour
 	
 	// If the angle and target are within this distance, consider them equal.
 	private float epsilon = 0.1f;
+	
+	// The max and min allowed angles for the elevation, expressed as the 
+	// actual angle plus 15 degrees to convert the actual angle to the 
+	// angle range that Unity uses.
 	private float maxEl = 92.0f + 15.0f;
 	private float minEl = -8.0f + 15.0f;
 	
@@ -71,7 +74,12 @@ public class TelescopeControllerSim : MonoBehaviour
 		else if(currentMCUCommand.jog) 
 			HandleJog();
 		else
-			HandleRelativeMove();
+		{
+			// This command was a relative move, which requires no special handling.
+		}
+		
+		ui.InputAzimuth(currentMCUCommand.azimuthDegrees);
+		ui.InputElevation(currentMCUCommand.elevationDegrees);
 	}
 	
 	public float Azimuth()
@@ -143,15 +151,6 @@ public class TelescopeControllerSim : MonoBehaviour
 		
 		currentMCUCommand.azimuthDegrees = simTelescopeAzimuthDegrees + target * azJog;
 		currentMCUCommand.elevationDegrees = simTelescopeElevationDegrees + target * elJog;
-		
-		ui.InputAzimuth(currentMCUCommand.azimuthDegrees);
-		ui.InputElevation(currentMCUCommand.elevationDegrees);
-	}
-	
-	private void HandleRelativeMove()
-	{
-		ui.InputAzimuth(currentMCUCommand.azimuthDegrees);
-		ui.InputElevation(currentMCUCommand.elevationDegrees);
 	}
 	
 	/// <summary>
