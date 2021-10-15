@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MCUCommand;
 
 // This script controls the telescope according to the inputs from
 // the control room as received by the MCUCommand created by SimServer.

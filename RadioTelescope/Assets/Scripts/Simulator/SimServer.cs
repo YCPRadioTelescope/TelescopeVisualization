@@ -144,6 +144,7 @@ public class SimServer : MonoBehaviour {
 			// keep our CPU's alive
 			Thread.Sleep(100);
 			current = copyModbusDataStoreRegisters(1025, 20);
+			ui.UpdateIncoming(current);
 			
 			// jog commands frequently send the same exact register contents (is jog), so we need a special case for them
 			// 0x0080 and 0x0100 tell us the direction of the jog. This is handled in buildMCUCommand.
@@ -153,7 +154,6 @@ public class SimServer : MonoBehaviour {
 					|| current[(int)RegPos.firstWordElevation] == (ushort)MoveType.NEGATIVE_ELEVATION_JOG || current[(int)RegPos.firstWordElevation] == (ushort)MoveType.POSITIVE_ELEVATION_JOG)
 			{
 				isJogComand = true;
-			
 			}
 			else
 			{
@@ -211,6 +211,7 @@ public class SimServer : MonoBehaviour {
 				// update position every possible chance
 				updateMCUPosition();
 			}
+			ui.UpdateOutgoing(GenerateOutgoing());
 			last = current;
 		}
 	}
@@ -333,6 +334,27 @@ public class SimServer : MonoBehaviour {
 			data[i] = MCU_Modbusserver.DataStore.HoldingRegisters[i + start_index];
 		}
 		return data;
+	}
+	
+	private ushort[] GenerateOutgoing()
+	{
+		ushort[] data = new ushort[20];
+		SetData(data, (int)WriteBackRegPos.finishedMovingAzimuth);
+		SetData(data, (int)WriteBackRegPos.stillMovingElevation);
+		SetData(data, (int)WriteBackRegPos.firstWordAzimuthSteps);
+		SetData(data, (int)WriteBackRegPos.secondWordAzimuthSteps);
+		SetData(data, (int)WriteBackRegPos.firstWordElevationSteps);
+		SetData(data, (int)WriteBackRegPos.secondWordElevationSteps);
+		SetData(data, (int)WriteBackRegPos.firstWordAzimuthEncoder);
+		SetData(data, (int)WriteBackRegPos.secondWordAzimuthEncoder);
+		SetData(data, (int)WriteBackRegPos.firstWordElevationEncoder);
+		SetData(data, (int)WriteBackRegPos.secondWordElevationEncoder);
+		return data;
+	}
+	
+	private void SetData(ushort[] data, int position)
+	{
+		data[position] = MCU_Modbusserver.DataStore.HoldingRegisters[position];
 	}
 	
 	/// <summary>
