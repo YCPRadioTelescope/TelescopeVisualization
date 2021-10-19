@@ -338,23 +338,24 @@ public class SimServer : MonoBehaviour {
 	
 	private ushort[] GenerateOutgoing()
 	{
-		ushort[] data = new ushort[20];
-		SetData(data, (int)WriteBackRegPos.finishedMovingAzimuth);
-		SetData(data, (int)WriteBackRegPos.stillMovingElevation);
-		SetData(data, (int)WriteBackRegPos.firstWordAzimuthSteps);
-		SetData(data, (int)WriteBackRegPos.secondWordAzimuthSteps);
-		SetData(data, (int)WriteBackRegPos.firstWordElevationSteps);
-		SetData(data, (int)WriteBackRegPos.secondWordElevationSteps);
-		SetData(data, (int)WriteBackRegPos.firstWordAzimuthEncoder);
-		SetData(data, (int)WriteBackRegPos.secondWordAzimuthEncoder);
-		SetData(data, (int)WriteBackRegPos.firstWordElevationEncoder);
-		SetData(data, (int)WriteBackRegPos.secondWordElevationEncoder);
+		ushort[] data = new ushort[10];
+		int pos = 0;
+		SetData(data, pos++, (int)WriteBackRegPos.finishedMovingAzimuth);
+		SetData(data, pos++, (int)WriteBackRegPos.stillMovingElevation);
+		SetData(data, pos++, (int)WriteBackRegPos.firstWordAzimuthSteps);
+		SetData(data, pos++, (int)WriteBackRegPos.secondWordAzimuthSteps);
+		SetData(data, pos++, (int)WriteBackRegPos.firstWordElevationSteps);
+		SetData(data, pos++, (int)WriteBackRegPos.secondWordElevationSteps);
+		SetData(data, pos++, (int)WriteBackRegPos.firstWordAzimuthEncoder);
+		SetData(data, pos++, (int)WriteBackRegPos.secondWordAzimuthEncoder);
+		SetData(data, pos++, (int)WriteBackRegPos.firstWordElevationEncoder);
+		SetData(data, pos++, (int)WriteBackRegPos.secondWordElevationEncoder);
 		return data;
 	}
 	
-	private void SetData(ushort[] data, int position)
+	private void SetData(ushort[] data, int position, int register)
 	{
-		data[position] = MCU_Modbusserver.DataStore.HoldingRegisters[position];
+		data[position] = MCU_Modbusserver.DataStore.HoldingRegisters[register];
 	}
 	
 	/// <summary>
