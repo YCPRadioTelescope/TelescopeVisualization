@@ -18,6 +18,9 @@ public class TelescopeControllerSim : MonoBehaviour
 	private float simTelescopeAzimuthDegrees;
 	private float simTelescopeElevationDegrees;
 	
+	private bool azimuthMoving = false;
+	private bool elevationMoving = false;
+	
 	// The MCUCommand object that determines the target orientation.
 	private MCUCommand currentMCUCommand;
 	
@@ -86,9 +89,24 @@ public class TelescopeControllerSim : MonoBehaviour
 		return simTelescopeAzimuthDegrees;
 	}
 	
+	public bool AzimuthMoving()
+	{
+		return azimuthMoving;
+	}
+	
 	public float Elevation()
 	{
 		return simTelescopeElevationDegrees;
+	}
+	
+	public bool ElevationMoving()
+	{
+		return elevationMoving;
+	}
+	
+	public bool Homed()
+	{
+		return Azimuth() == 0.0f && Elevation() == 15.0f;
 	}
 	
 	public double UnityAzimuth()
@@ -170,6 +188,7 @@ public class TelescopeControllerSim : MonoBehaviour
 			if(Mathf.Abs(AngleDistance(current, target)) < epsilon)
 				current = target;
 		}
+		azimuthMoving = (current != target);
 	}
 	
 	/// <summary>
@@ -189,6 +208,7 @@ public class TelescopeControllerSim : MonoBehaviour
 			if(Mathf.Abs(AngleDistance(current, target)) < epsilon)
 				current = target;
 		}
+		elevationMoving = (current != target);
 	}
 
 	/// <summary>

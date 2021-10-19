@@ -51,6 +51,13 @@ public class UIHandler : MonoBehaviour
 		oRegisters = new ushort[10];
 	}
 	
+	void Update()
+	{
+		// press escape to exit the program cleanly
+		if(Input.GetKeyDown((KeyCode.Escape)))
+			Application.Quit();
+	}
+	
 	// OnGUI generates GUI elements each frame.
 	void OnGUI()
 	{

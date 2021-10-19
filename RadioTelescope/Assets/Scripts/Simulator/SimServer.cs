@@ -52,7 +52,7 @@ public class SimServer : MonoBehaviour {
 	private bool homing = false;
 	private bool isConfigured = false;
 	private bool isTest = false;
-	private bool isJogComand = false;
+	private bool isJogCommand = false;
 	
 	/// <summary>
 	/// Start is called before the first frame
@@ -72,12 +72,11 @@ public class SimServer : MonoBehaviour {
 		// Don't start the sim twice and maybe somehow screw something up.
 		if(runSimulator)
 			return;
-		Debug.Log("Start Button clicked");
 		
 		try
 		{
 			MCU_TCPListener = new TcpListener(new IPEndPoint(IPAddress.Parse(ui.MCUIP()), int.Parse(ui.MCUPort())));
-			MCU_emulator_thread = new Thread(new ThreadStart(runMCUThread));
+			MCU_emulator_thread = new Thread(new ThreadStart(RunMCUThread));
 		}
 		catch(Exception e)
 		{
@@ -117,17 +116,24 @@ public class SimServer : MonoBehaviour {
 		// send current command to controller
 		if(!currentCommand.errorFlag)
 			tc.SetNewMCUCommand(currentCommand);
-		
-		// press escape to exit the program cleanly
-		if(Input.GetKeyDown((KeyCode.Escape)))
-			Application.Quit();
+	}
+	
+	private bool IsJogging(ushort[] current)
+	{
+		// jog commands frequently send the same exact register contents (is jog), so we need a special case for them
+		// 0x0080 and 0x0100 tell us the direction of the jog. This is handled in BuildCommand.
+		// these checks are basically if (are we trying to jog something) then (constantly check for new register data);
+		return (current[(int)RegPos.firstWordAzimuth] == (ushort)MoveType.CLOCKWISE_AZIMTUH_JOG
+				|| current[(int)RegPos.firstWordAzimuth] == (ushort)MoveType.COUNTERCLOCKWISE_AZIMUTH_JOG
+				|| current[(int)RegPos.firstWordElevation] == (ushort)MoveType.NEGATIVE_ELEVATION_JOG
+				|| current[(int)RegPos.firstWordElevation] == (ushort)MoveType.POSITIVE_ELEVATION_JOG);
 	}
 	
 	/// <summary>
 	/// main "spin" loop for the sim'd MCU server. Handles reading from the datastore and writing back progress of the movement
 	/// TODO: what should we be writing back? Are we doing that now? How often should we be writing back?
 	/// </summary>
-	private void runMCUThread()
+	private void RunMCUThread()
 	{
 		byte slaveId = 1;
 		// create and start the modbus server TCP slave
@@ -137,121 +143,58 @@ public class SimServer : MonoBehaviour {
 		
 		MCU_Modbusserver.Listen();
 		
-		ushort[] last, current;
-		last = copyModbusDataStoreRegisters(1025, 20);
+		ushort[] current;
+		ushort[] last = CopyRegisters(1025, 20);
 		while(runSimulator)
 		{
-			// keep our CPU's alive
+			// Sleep so that we're not running as fast as the CPU allows, which is overkill.
 			Thread.Sleep(100);
-			current = copyModbusDataStoreRegisters(1025, 20);
+			
+			// Get the latest registers and update the UI.
+			current = CopyRegisters(1025, 20);
 			ui.UpdateIncoming(current);
 			
-			// jog commands frequently send the same exact register contents (is jog), so we need a special case for them
-			// 0x0080 and 0x0100 tell us the direction of the jog. This is handled in buildMCUCommand.
-			// these checks are basically if (are we trying to jog something)
-			// 								then constantly check for new register data;
-			if(current[(int)RegPos.firstWordAzimuth] == (ushort)MoveType.CLOCKWISE_AZIMTUH_JOG || current[(int)RegPos.firstWordAzimuth] == (ushort)MoveType.COUNTERCLOCKWISE_AZIMUTH_JOG
-					|| current[(int)RegPos.firstWordElevation] == (ushort)MoveType.NEGATIVE_ELEVATION_JOG || current[(int)RegPos.firstWordElevation] == (ushort)MoveType.POSITIVE_ELEVATION_JOG)
-			{
-				isJogComand = true;
-			}
-			else
-			{
-				isJogComand = false;
-			}
+			// Determine if the registers are sending a jog command.
+			isJogCommand = IsJogging(current);
 			
-			if(!current.SequenceEqual(last) || isJogComand)
-			{
-				Debug.Log("--------------------------------------------- !! New Register Data Incoming !!");
-				currentCommand = buildMCUCommand(current);
-			}
-			if(moving)
-			{
-				// we are still in motion
-				// TODO: here we can write back more checks (like if an error happens)
-				if(currentCommand.azimuthDegrees != tc.Azimuth() || currentCommand.elevationDegrees != tc.Elevation())
-				{
-					Debug.Log("SIMSERVER: Move not yet completed");
-					updateMCURegistersStillMoving();
-					updateMCUPosition();
-				}
-				else
-				{
-					Debug.Log("SIMSERVER: MOVE COMPLETED");
-					moving = false;
-					 
-					updateMCURegistersFinishedMove();
-					updateMCUPosition();
-				}
-			}
-			else if(jogging)
-			{
-				updateMCURegistersStillMoving();
-				updateMCUPosition();
-			}
-			else if(homing)
-			{
-				// we need to catch homing so we can write a proper finished move so the CR knows homing was successful
-				if(tc.Azimuth() == 0.0f && tc.Elevation() == 15.0f)
-				{
-					Debug.Log("SIMSERVER: HOMING COMPLETED");
-					updateMCURegistersFinishedHome();
-					updateMCUPosition();
-					homing = false;
-				}
-				else 
-				{
-					Debug.Log("SIMSERVER: Homing not yet complete");
-					updateMCURegistersStillMoving();
-					updateMCUPosition();
-				}
-			}
-			else 
-			{
-				// update position every possible chance
-				updateMCUPosition();
-			}
+			// If these registers are new or this is a jog command, construct a new MCUCommand
+			// object for the telescope controller. This object gets sent to the telescope controller
+			// every frame in the Update function.
+			if(!current.SequenceEqual(last) || isJogCommand)
+				currentCommand = BuildCommand(current);
+			
+			// we are still in motion
+			// TODO: here we can write back more checks (like if an error happens)
+			if(tc.AzimuthMoving() || tc.ElevationMoving())
+				UpdateRegistersStillMoving();
+			// We need to catch homing so we can write a proper finished move so the CR knows homing was successful
+			else if(homing && tc.Homed())
+				UpdateRegistersFinishedHome();
+			else
+				UpdateRegistersFinishedMoving();
+			
+			// Update the telescope's current position.
+			UpdateRegistersPosition();
+			// Update the UI with the outgoing register values.
 			ui.UpdateOutgoing(GenerateOutgoing());
 			last = current;
 		}
 	}
 	
-	private MCUCommand buildMCUCommand(ushort[] data)
+	private MCUCommand BuildCommand(ushort[] data)
 	{
 		isConfigured = true;
-		string outstr = "";
-		for(int v = 0; v < data.Length; v++)
-		{
-			outstr += Convert.ToString( data[v] , 16 ).PadLeft( 5 ) + ",";
-		}
-		Debug.Log("Spitting out registers: \n");
-		Debug.Log(outstr);
-		Debug.Log("All done spitting out registers\n");
 		
-		jogging = false;
-		
-		// we want to set these booleans so we can time the write back's to the MCU higher up
-		if((data[(int)RegPos.firstWordAzimuth] == (ushort)MoveType.CLEAR_MCU_ERRORS )|| data[(int)RegPos.firstWordAzimuth] == (ushort)MoveType.COUNTERCLOCKWISE_AZIMUTH_JOG
-			|| data[(int)RegPos.firstWordElevation] == (ushort)MoveType.NEGATIVE_ELEVATION_JOG || data[(int)RegPos.firstWordElevation] == (ushort)MoveType.POSITIVE_ELEVATION_JOG) 
-		{
-			jogging = true;
-		
-		}
-		else if(data[(int)RegPos.firstWordAzimuth] == (ushort)MoveType.RELATIVE_MOVE) 
-		{
-			moving = true;
-		}
-		else if (data[(int)RegPos.firstWordElevation] == (ushort)MoveType.COUNTERCLOCKWISE_HOME || data[(int)RegPos.firstWordElevation] == (ushort)MoveType.CLOCKWISE_HOME)
+		if(data[(int)RegPos.firstWordElevation] == (ushort)MoveType.COUNTERCLOCKWISE_HOME
+				|| data[(int)RegPos.firstWordElevation] == (ushort)MoveType.CLOCKWISE_HOME)
 		{
 			homing = true;
 		}
+		else
+			homing = false;
 		
 		// build mcu command based on register data
-		currentCommand = new MCUCommand(data, tc.Azimuth(), tc.Elevation());
-		
-		updateMCURegistersStillMoving();
-		updateMCUPosition();
-		return currentCommand;
+		return new MCUCommand(data, tc.Azimuth(), tc.Elevation());;
 	}
 	
 	/// <summary>
@@ -262,12 +205,12 @@ public class SimServer : MonoBehaviour {
 	/// 							[12 + 13 = elSteps]
 	/// 							[14 + 15 = elEncoder]
 	/// </summary>
-	private void updateMCUPosition()
+	private void UpdateRegistersPosition()
 	{
-		int azEncoder = degreesToSteps_Encoder(tc.Azimuth(), AZIMUTH_GEARING_RATIO);
-		int elEncoder = (-1) * degreesToSteps_Encoder(tc.Elevation() - 15.0f, ELEVATION_GEARING_RATIO);
-		int azSteps = degreesToSteps(tc.Azimuth(), AZIMUTH_GEARING_RATIO);
-		int elSteps = (-1) * degreesToSteps(tc.Elevation() - 15.0f, ELEVATION_GEARING_RATIO);
+		int azEncoder = DegreesToEncoder(tc.Azimuth(), AZIMUTH_GEARING_RATIO);
+		int elEncoder = (-1) * DegreesToEncoder(tc.Elevation() - 15.0f, ELEVATION_GEARING_RATIO);
+		int azSteps = DegreesToSteps(tc.Azimuth(), AZIMUTH_GEARING_RATIO);
+		int elSteps = (-1) * DegreesToSteps(tc.Elevation() - 15.0f, ELEVATION_GEARING_RATIO);
 		
 		// write actual values using some magic bit work
 		// we need to split it across 2 register because 1 reg doesn't have enough space
@@ -285,7 +228,7 @@ public class SimServer : MonoBehaviour {
 	/// <summary>
 	/// The CR looks has a special check to see if homing finishes (the mcu writes back a special bit) so we should too
 	/// </summary>
-	private void updateMCURegistersFinishedHome()
+	private void UpdateRegistersFinishedHome()
 	{
 		// the enum doesn't full line up here, but to check for homing the CR looks for registerData[0] so the value of the enum lines up
 		// a lot of commands are like this, they take the first word (registerData[0]) which lines up for the azimuth side of the command
@@ -300,7 +243,7 @@ public class SimServer : MonoBehaviour {
 	/// For now we will finish both axes at the same time - in the future this could be split out into seperate calls
 	/// the control room looks at again the MSW (bit 0 for AZ, bit 10 for EL) and shifts it with the move complete constant (7 bits to the right), then & with 0b1
 	/// </summary>
-	private void updateMCURegistersFinishedMove()
+	private void UpdateRegistersFinishedMoving()
 	{
 		// Azimuth
 		MCU_Modbusserver.DataStore.HoldingRegisters[(int)WriteBackRegPos.finishedMovingAzimuth] = (ushort)MCUWriteBack.finishedMove;
@@ -314,10 +257,10 @@ public class SimServer : MonoBehaviour {
 	/// the control room looks for the most significant bit (AZ or EL) and then shifts it with the CCW_Motion constant (1) 
 	/// or the CW_Motion constant (0). To show that this is still moving. The 0's are for the shift 1 right 
 	/// </summary>
-	private void updateMCURegistersStillMoving() 
+	private void UpdateRegistersStillMoving() 
 	{
 		// Azimuth
-		MCU_Modbusserver.DataStore.HoldingRegisters[(int)WriteBackRegPos.stillMovingAzimuth] =  (ushort)MCUWriteBack.stillMoving; 
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int)WriteBackRegPos.stillMovingAzimuth] = (ushort)MCUWriteBack.stillMoving; 
 		
 		// Elevation
 		MCU_Modbusserver.DataStore.HoldingRegisters[(int)WriteBackRegPos.stillMovingElevation] = (ushort)MCUWriteBack.stillMoving;
@@ -326,13 +269,12 @@ public class SimServer : MonoBehaviour {
 	/// <summary>
 	/// returns a copy of the current MCU server datastore (REGISTERS)
 	/// </summary>
-	private ushort[] copyModbusDataStoreRegisters(int start_index, int length)
+	private ushort[] CopyRegisters(int start_index, int length)
 	{
 		ushort[] data = new ushort[length];
 		for(int i = 0; i < length; i++)
-		{
-			data[i] = MCU_Modbusserver.DataStore.HoldingRegisters[i + start_index];
-		}
+			data[i] = MCU_Modbusserver.DataStore.HoldingRegisters[start_index + i];
+		
 		return data;
 	}
 	
@@ -340,14 +282,15 @@ public class SimServer : MonoBehaviour {
 	{
 		ushort[] data = new ushort[10];
 		int pos = 0;
-		SetData(data, pos++, (int)WriteBackRegPos.finishedMovingAzimuth);
-		SetData(data, pos++, (int)WriteBackRegPos.stillMovingElevation);
+		SetData(data, pos++, (int)WriteBackRegPos.stillMovingAzimuth);
 		SetData(data, pos++, (int)WriteBackRegPos.firstWordAzimuthSteps);
 		SetData(data, pos++, (int)WriteBackRegPos.secondWordAzimuthSteps);
-		SetData(data, pos++, (int)WriteBackRegPos.firstWordElevationSteps);
-		SetData(data, pos++, (int)WriteBackRegPos.secondWordElevationSteps);
 		SetData(data, pos++, (int)WriteBackRegPos.firstWordAzimuthEncoder);
 		SetData(data, pos++, (int)WriteBackRegPos.secondWordAzimuthEncoder);
+		
+		SetData(data, pos++, (int)WriteBackRegPos.stillMovingElevation);
+		SetData(data, pos++, (int)WriteBackRegPos.firstWordElevationSteps);
+		SetData(data, pos++, (int)WriteBackRegPos.secondWordElevationSteps);
 		SetData(data, pos++, (int)WriteBackRegPos.firstWordElevationEncoder);
 		SetData(data, pos++, (int)WriteBackRegPos.secondWordElevationEncoder);
 		return data;
@@ -364,7 +307,7 @@ public class SimServer : MonoBehaviour {
 	/// <param name="degrees"> the actual degrees of the sim telescope (per axis) </param>
 	/// <param name="gearingRatio"> corresponds to the axis we are converting </param>
 	/// <returns></returns>
-	private int degreesToSteps_Encoder(float degrees, int gearingRatio)
+	private int DegreesToEncoder(float degrees, int gearingRatio)
 	{
 		return (int)(degrees * ENCODER_COUNTS_PER_REVOLUTION_BEFORE_GEARING * gearingRatio / 360.0);
 	}
@@ -375,7 +318,7 @@ public class SimServer : MonoBehaviour {
 	/// <param name="degrees"> actual degrees of the sim telescope (per axis) </param>
 	/// <param name="gearingRatio">  </param>
 	/// <returns></returns>
-	private int degreesToSteps(float degrees, int gearingRatio)
+	private int DegreesToSteps(float degrees, int gearingRatio)
 	{
 		return (int)(degrees * STEPS_PER_REVOLUTION * gearingRatio / 360.0);
 	}
