@@ -96,17 +96,6 @@ public class SimServer : MonoBehaviour {
 		ui.StartSim();
 	}
 	
-	private bool IsJogging(ushort[] current)
-	{
-		// jog commands frequently send the same exact register contents (is jog), so we need a special case for them
-		// 0x0080 and 0x0100 tell us the direction of the jog. This is handled in BuildCommand.
-		// these checks are basically if (are we trying to jog something) then (constantly check for new register data);
-		return (current[(int)RegPos.firstWordAzimuth] == (ushort)MoveType.CLOCKWISE_AZIMTUH_JOG
-				|| current[(int)RegPos.firstWordAzimuth] == (ushort)MoveType.COUNTERCLOCKWISE_AZIMUTH_JOG
-				|| current[(int)RegPos.firstWordElevation] == (ushort)MoveType.NEGATIVE_ELEVATION_JOG
-				|| current[(int)RegPos.firstWordElevation] == (ushort)MoveType.POSITIVE_ELEVATION_JOG);
-	}
-	
 	/// <summary>
 	/// main "spin" loop for the sim'd MCU server. Handles reading from the datastore and writing back progress of the movement
 	/// TODO: what should we be writing back? Are we doing that now? How often should we be writing back?
@@ -135,7 +124,7 @@ public class SimServer : MonoBehaviour {
 			// If these registers are new or this is a jog command, construct a new MCUCommand
 			// object for the telescope controller. This object gets sent to the telescope controller
 			// every frame in the Update function.
-			if(!current.SequenceEqual(last) || IsJogging(current))
+			if(!current.SequenceEqual(last))
 				command.Update(current, tc.Azimuth(), tc.Elevation());
 			
 			// we are still in motion
