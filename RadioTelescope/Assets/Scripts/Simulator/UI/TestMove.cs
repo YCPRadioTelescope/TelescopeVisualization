@@ -11,6 +11,7 @@ using static MCUCommand;
 public class TestMove : MonoBehaviour
 {
 	public TelescopeControllerSim tc;
+	
 	public TMP_InputField azimuth;
 	public TMP_InputField elevation;
 	public TMP_InputField speed;
@@ -32,9 +33,12 @@ public class TestMove : MonoBehaviour
 		// Get the azimuth and elevation values from the UI, clamping them to allowable values.
 		int az = Mathf.Clamp(int.Parse(azimuth.text), 0, 360);
 		int el = Mathf.Clamp(int.Parse(elevation.text), -15, 95);
+		int sp = Mathf.Max(0, int.Parse(speed.text));
+		
 		// Send the clamped values back to the UI in case the user provided out of bounds input.
 		elevation.text = el.ToString();
 		azimuth.text = az.ToString();
+		speed.text = sp.ToString();
 		
 		// we need to add 15 
 		el += 15;
@@ -49,7 +53,7 @@ public class TestMove : MonoBehaviour
 		// I grabbed these hardcoded bit calculation values from the control room
 		// the challenge with this is to convert a float to a short, which needs to be split over 2 elements in order to recombine them 
 		// into 
-		ushort[] registerData =  { 0x0096, (ushort)az, (ushort)el };
+		ushort[] registerData =  { 0x0096, (ushort)az, (ushort)el, (ushort)sp };
 		command.Update(registerData);
 	}
 }

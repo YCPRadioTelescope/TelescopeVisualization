@@ -219,12 +219,12 @@ public class MCUCommand : MonoBehaviour
 				// NOTE: these indexes do not line up with the enum since we set these ourselves in TestMove.cs
 				azimuthDegrees = Convert.ToInt32(registerData[1]);
 				elevationDegrees = Convert.ToInt32(registerData[2]);
+				azimuthSpeed = Convert.ToInt32(registerData[3]);
+				elevationSpeed = Convert.ToInt32(registerData[3]);
 				
 				Debug.Log("MCUCOMMAND: Azimuth after converting to int: " + azimuthDegrees);
 				Debug.Log("MCUCOMMAND: Elevation after converting to int: " + elevationDegrees);
-				
-				azimuthSpeed = 20.0f;
-				elevationSpeed = 20.0f;
+				Debug.Log("MCUCOMMAND: Speed after converting to int: " + azimuthSpeed);
 				break;
 			
 			default: // catch "all" and return error command
