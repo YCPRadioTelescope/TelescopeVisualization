@@ -17,8 +17,11 @@ public class SimServer : MonoBehaviour {
 	/// </summary>
 	private const int AZIMUTH_GEARING_RATIO = 500;
 	private const int ELEVATION_GEARING_RATIO = 50;
-	private static int ENCODER_COUNTS_PER_REVOLUTION_BEFORE_GEARING = 8000;
+	private const int ENCODER_COUNTS_PER_REVOLUTION_BEFORE_GEARING = 8000;
 	private const int STEPS_PER_REVOLUTION = 20000;
+	
+	private const int incomingRegisterSize = 20;
+	private const int outgoingRegisterSize = 10;
 	
 	/// <summary> 	
 	/// TCPListener to listen for incomming TCP connection 	
@@ -47,12 +50,7 @@ public class SimServer : MonoBehaviour {
 	private float elDeg = -42069;
 	
 	private bool runSimulator = false;
-	private bool moving = false;
-	private bool jogging = false;
 	private bool homing = false;
-	private bool isConfigured = false;
-	private bool isTest = false;
-	private bool isJogCommand = false;
 	
 	/// <summary>
 	/// Start is called before the first frame
@@ -144,34 +142,36 @@ public class SimServer : MonoBehaviour {
 		MCU_Modbusserver.Listen();
 		
 		ushort[] current;
-		ushort[] last = CopyRegisters(1025, 20);
+		ushort[] last = new ushort[incomingRegisterSize];
 		while(runSimulator)
 		{
 			// Sleep so that we're not running as fast as the CPU allows, which is overkill.
 			Thread.Sleep(100);
 			
 			// Get the latest registers and update the UI.
-			current = CopyRegisters(1025, 20);
+			current = CopyRegisters(1025, incomingRegisterSize);
 			ui.UpdateIncoming(current);
-			
-			// Determine if the registers are sending a jog command.
-			isJogCommand = IsJogging(current);
 			
 			// If these registers are new or this is a jog command, construct a new MCUCommand
 			// object for the telescope controller. This object gets sent to the telescope controller
 			// every frame in the Update function.
-			if(!current.SequenceEqual(last) || isJogCommand)
-				currentCommand = BuildCommand(current);
+			if(!current.SequenceEqual(last) || IsJogging(current))
+				currentCommand = new MCUCommand(current, tc.Azimuth(), tc.Elevation());
 			
 			// we are still in motion
 			// TODO: here we can write back more checks (like if an error happens)
-			if(tc.AzimuthMoving() || tc.ElevationMoving())
-				UpdateRegistersStillMoving();
-			// We need to catch homing so we can write a proper finished move so the CR knows homing was successful
-			else if(homing && tc.Homed())
-				UpdateRegistersFinishedHome();
+			if(tc.AzimuthMoving())
+				UpdateRegistersAzimuthMoving();
 			else
-				UpdateRegistersFinishedMoving();
+				UpdateRegistersAzimuthStopped();
+			
+			if(tc.ElevationMoving())
+				UpdateRegistersElevationMoving();
+			else
+				UpdateRegistersElevationStopped();
+				
+			if(tc.Homed())
+				UpdateRegistersFinishedHome();
 			
 			// Update the telescope's current position.
 			UpdateRegistersPosition();
@@ -179,22 +179,6 @@ public class SimServer : MonoBehaviour {
 			ui.UpdateOutgoing(GenerateOutgoing());
 			last = current;
 		}
-	}
-	
-	private MCUCommand BuildCommand(ushort[] data)
-	{
-		isConfigured = true;
-		
-		if(data[(int)RegPos.firstWordElevation] == (ushort)MoveType.COUNTERCLOCKWISE_HOME
-				|| data[(int)RegPos.firstWordElevation] == (ushort)MoveType.CLOCKWISE_HOME)
-		{
-			homing = true;
-		}
-		else
-			homing = false;
-		
-		// build mcu command based on register data
-		return new MCUCommand(data, tc.Azimuth(), tc.Elevation());;
 	}
 	
 	/// <summary>
@@ -232,7 +216,7 @@ public class SimServer : MonoBehaviour {
 	{
 		// the enum doesn't full line up here, but to check for homing the CR looks for registerData[0] so the value of the enum lines up
 		// a lot of commands are like this, they take the first word (registerData[0]) which lines up for the azimuth side of the command
-		MCU_Modbusserver.DataStore.HoldingRegisters[(int)WriteBackRegPos.finishedMovingAzimuth] = (ushort)MCUWriteBack.finishedHome;
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int)WriteBackRegPos.finishedMovingAzimuth] = (ushort)MCUWriteBack.finishedHome + (ushort)MCUWriteBack.finishedMove;
 		
 		// this is not needed for the homing check, but it is still grabbed to see if we are done moving we need to update the elevation first word as well
 		// otherwise homing never ends on the CR side
@@ -243,11 +227,14 @@ public class SimServer : MonoBehaviour {
 	/// For now we will finish both axes at the same time - in the future this could be split out into seperate calls
 	/// the control room looks at again the MSW (bit 0 for AZ, bit 10 for EL) and shifts it with the move complete constant (7 bits to the right), then & with 0b1
 	/// </summary>
-	private void UpdateRegistersFinishedMoving()
+	private void UpdateRegistersAzimuthStopped()
 	{
 		// Azimuth
 		MCU_Modbusserver.DataStore.HoldingRegisters[(int)WriteBackRegPos.finishedMovingAzimuth] = (ushort)MCUWriteBack.finishedMove;
-		
+	}
+	
+	private void UpdateRegistersElevationStopped()
+	{
 		// Elevation
 		MCU_Modbusserver.DataStore.HoldingRegisters[(int)WriteBackRegPos.finishedMovingElevation] = (ushort)MCUWriteBack.finishedMove;
 	}
@@ -257,11 +244,14 @@ public class SimServer : MonoBehaviour {
 	/// the control room looks for the most significant bit (AZ or EL) and then shifts it with the CCW_Motion constant (1) 
 	/// or the CW_Motion constant (0). To show that this is still moving. The 0's are for the shift 1 right 
 	/// </summary>
-	private void UpdateRegistersStillMoving() 
+	private void UpdateRegistersAzimuthMoving() 
 	{
 		// Azimuth
 		MCU_Modbusserver.DataStore.HoldingRegisters[(int)WriteBackRegPos.stillMovingAzimuth] = (ushort)MCUWriteBack.stillMoving; 
-		
+	}
+	
+	private void UpdateRegistersElevationMoving() 
+	{
 		// Elevation
 		MCU_Modbusserver.DataStore.HoldingRegisters[(int)WriteBackRegPos.stillMovingElevation] = (ushort)MCUWriteBack.stillMoving;
 	}
@@ -280,7 +270,7 @@ public class SimServer : MonoBehaviour {
 	
 	private ushort[] GenerateOutgoing()
 	{
-		ushort[] data = new ushort[10];
+		ushort[] data = new ushort[outgoingRegisterSize];
 		int pos = 0;
 		SetData(data, pos++, (int)WriteBackRegPos.stillMovingAzimuth);
 		SetData(data, pos++, (int)WriteBackRegPos.firstWordAzimuthSteps);

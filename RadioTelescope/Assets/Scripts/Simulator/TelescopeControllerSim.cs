@@ -106,7 +106,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	
 	public bool Homed()
 	{
-		return Azimuth() == 0.0f && Elevation() == 15.0f;
+		return !AzimuthMoving() && !ElevationMoving() && Azimuth() == 0.0f && Elevation() == 15.0f;
 	}
 	
 	public double UnityAzimuth()
