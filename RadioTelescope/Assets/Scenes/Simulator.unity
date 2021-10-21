@@ -11599,6 +11599,7 @@ MonoBehaviour:
   azimuth: {fileID: 1525520883}
   elevation: {fileID: 879300291}
   ui: {fileID: 2120281187}
+  command: {fileID: 2120281190}
 --- !u!1 &1390523543
 GameObject:
   m_ObjectHideFlags: 0
@@ -16800,6 +16801,7 @@ GameObject:
   - component: {fileID: 2120281193}
   - component: {fileID: 2120281186}
   - component: {fileID: 2120281187}
+  - component: {fileID: 2120281190}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -16821,7 +16823,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tc: {fileID: 1370658910}
   ui: {fileID: 2120281187}
-  currentCommand: {fileID: 0}
+  command: {fileID: 2120281190}
 --- !u!114 &2120281187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16889,6 +16891,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2120281190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120281185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a60cd7e6ef13c44eb91f200b732584e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  azimuthSpeed: 0
+  elevationSpeed: 0
+  acceleration: 0
+  azimuthDegrees: 0
+  elevationDegrees: 0
+  jog: 0
+  posJog: 0
+  azJog: 0
+  errorFlag: 0
+  stopMove: 0
 --- !u!114 &2120281191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16906,6 +16930,7 @@ MonoBehaviour:
   elevation: {fileID: 702168646}
   speed: {fileID: 433330363}
   testButton: {fileID: 750598061}
+  command: {fileID: 2120281190}
 --- !u!114 &2120281193
 MonoBehaviour:
   m_ObjectHideFlags: 0

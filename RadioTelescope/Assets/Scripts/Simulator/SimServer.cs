@@ -45,22 +45,12 @@ public class SimServer : MonoBehaviour {
 	
 	public UIHandler ui;
 	
-	public MCUCommand currentCommand;
+	public MCUCommand command;
 	private float azDeg = -42069;
 	private float elDeg = -42069;
 	
 	private bool runSimulator = false;
 	private bool homing = false;
-	
-	/// <summary>
-	/// Start is called before the first frame
-	/// </summary>
-	public void Start()
-	{
-		// create a base current command object
-		ushort[] noCommand = { (ushort)MoveType.SIM_SERVER_INIT };
-		currentCommand = new MCUCommand(noCommand);
-	}
 	
 	/// <summary>
 	/// Start the MCU server and thread
@@ -106,16 +96,6 @@ public class SimServer : MonoBehaviour {
 		ui.StartSim();
 	}
 	
-	/// <summary>
-	/// Update is called once per frame
-	/// </summary>
-	void Update() 
-	{
-		// send current command to controller
-		if(!currentCommand.errorFlag)
-			tc.SetNewMCUCommand(currentCommand);
-	}
-	
 	private bool IsJogging(ushort[] current)
 	{
 		// jog commands frequently send the same exact register contents (is jog), so we need a special case for them
@@ -156,7 +136,7 @@ public class SimServer : MonoBehaviour {
 			// object for the telescope controller. This object gets sent to the telescope controller
 			// every frame in the Update function.
 			if(!current.SequenceEqual(last) || IsJogging(current))
-				currentCommand = new MCUCommand(current, tc.Azimuth(), tc.Elevation());
+				command.Update(current, tc.Azimuth(), tc.Elevation());
 			
 			// we are still in motion
 			// TODO: here we can write back more checks (like if an error happens)

@@ -37,8 +37,9 @@ public class MCUCommand : MonoBehaviour
 	/// </summary>
 	/// <param name="registerData"> raw register data from the control room </param>
 	/// <param name="simAzimuthDegrees"> helper param to calculate how far we need to go for a relative move </param>
-	public MCUCommand(ushort[] registerData, float simAzimuthDegrees = 0.0f, float simElevationDegrees = 0.0f)
+	public void Update(ushort[] registerData, float simAzimuthDegrees = 0.0f, float simElevationDegrees = 0.0f)
 	{
+		Reset();
 		// we can determine move type by looking at the first register value
 		// i chose to do the first azimuth word because the average move type (relative) starts this way
 		// other edge cases are handled by switching on a 0 value (instruction not for the azimuth motor)
@@ -236,6 +237,20 @@ public class MCUCommand : MonoBehaviour
 				elevationDegrees = 0.0f;
 				break;
 		}
+	}
+	
+	private void Reset()
+	{	
+		azimuthSpeed = 0.0f;
+		elevationSpeed = 0.0f;
+		acceleration = 0.0f;
+		azimuthDegrees = 0.0f;
+		elevationDegrees = 0.0f;
+		jog = false;
+		posJog = false;
+		azJog = false;
+		errorFlag = false;
+		stopMove = false;
 	}
 	
 	/// <summary>

@@ -16,6 +16,8 @@ public class TestMove : MonoBehaviour
 	public TMP_InputField speed;
 	public Button testButton;
 	
+	public MCUCommand command;
+	
 	// Start is called before the first frame update.
 	void Start()
 	{
@@ -48,8 +50,6 @@ public class TestMove : MonoBehaviour
 		// the challenge with this is to convert a float to a short, which needs to be split over 2 elements in order to recombine them 
 		// into 
 		ushort[] registerData =  { 0x0096, (ushort)az, (ushort)el };
-		
-		MCUCommand testMoveCommand = new MCUCommand(registerData);
-		tc.SetNewMCUCommand(testMoveCommand);
+		command.Update(registerData);
 	}
 }
