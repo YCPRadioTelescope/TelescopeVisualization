@@ -125,7 +125,7 @@ public class SimServer : MonoBehaviour {
 			// object for the telescope controller. This object gets sent to the telescope controller
 			// every frame in the Update function.
 			if(!current.SequenceEqual(last))
-				command.Update(current, tc.Azimuth(), tc.Elevation());
+				command.UpdateCommand(current, tc.Azimuth(), tc.Elevation());
 			
 			// we are still in motion
 			// TODO: here we can write back more checks (like if an error happens)

@@ -37,7 +37,7 @@ public class MCUCommand : MonoBehaviour
 	/// </summary>
 	/// <param name="registerData"> raw register data from the control room </param>
 	/// <param name="simAzimuthDegrees"> helper param to calculate how far we need to go for a relative move </param>
-	public void Update(ushort[] registerData, float simAzimuthDegrees = 0.0f, float simElevationDegrees = 0.0f)
+	public void UpdateCommand(ushort[] registerData, float simAzimuthDegrees = 0.0f, float simElevationDegrees = 0.0f)
 	{
 		Reset();
 		// we can determine move type by looking at the first register value

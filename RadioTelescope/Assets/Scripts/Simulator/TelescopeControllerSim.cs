@@ -47,7 +47,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		
 		// Initialize the MCUCommand by targeting 0,0.
 		ushort[] simStart = { (ushort)MoveType.SIM_TELESCOPECONTROLLER_INIT };
-		command.Update(simStart);
+		command.UpdateCommand(simStart);
 	}
 	
 	/// <summary>

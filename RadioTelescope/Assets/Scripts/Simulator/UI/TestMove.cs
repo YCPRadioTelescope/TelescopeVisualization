@@ -54,6 +54,6 @@ public class TestMove : MonoBehaviour
 		// the challenge with this is to convert a float to a short, which needs to be split over 2 elements in order to recombine them 
 		// into 
 		ushort[] registerData =  { 0x0096, (ushort)az, (ushort)el, (ushort)sp };
-		command.Update(registerData);
+		command.UpdateCommand(registerData);
 	}
 }
