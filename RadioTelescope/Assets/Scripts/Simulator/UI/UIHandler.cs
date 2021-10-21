@@ -10,15 +10,19 @@ using TMPro;
 // TelescopeControllerSim scripts.
 public class UIHandler : MonoBehaviour
 {
+	// The object that communicates with the control room and updates the current command.
 	public SimServer server;
 	
+	// The object that controls the telescope's movement according to the current command.
+	public TelescopeControllerSim tc;
+	
+	// The UI objects for user input for the MCU IP and port to listen on.
 	public Button startButton;
 	public Button fillButton;
 	public TMP_InputField mcuIP;
 	public TMP_InputField mcuPort;
 	
-	public TelescopeControllerSim tc;
-	
+	// UI objects that display the current state of various values from the telescope controller.
 	public TMP_Text unityAzimuthText;
 	public TMP_Text unityElevationText;
 	public TMP_Text azimuthText;
@@ -30,30 +34,37 @@ public class UIHandler : MonoBehaviour
 	public TMP_Text azimuthSpeedText;
 	public TMP_Text elevationSpeedText;
 	
+	// UI object that displays the current state of the incoming and outgoing modbus registers.
+	public TMP_Text registersText;
+	
+	// The latest received input azimuth and elevation.
 	private double azimuth;
 	private double elevation;
 	
-	public TMP_Text registersText;
-	
+	// The current incoming and outgoing registers.
 	private ushort[] iRegisters;
 	private ushort[] oRegisters;
 	
 	// Start is called before the first frame update.
 	void Start()
 	{
-		startButton.onClick.AddListener(server.StartServer);
-		fillButton.onClick.AddListener(AutoFillInput);
-		
+		//
 		Screen.fullScreen = false;
 		Screen.SetResolution(1024, 768, FullScreenMode.Windowed);
 		
+		// Create a click listener on the start and fill buttons. If clicked, call StartServer or AutoFillInput
+		startButton.onClick.AddListener(server.StartServer);
+		fillButton.onClick.AddListener(AutoFillInput);
+		
+		// Initialize the incoming and outgoing register values to all 0s.
 		iRegisters = new ushort[20];
 		oRegisters = new ushort[10];
 	}
 	
+	// Update is called once per frame.
 	void Update()
 	{
-		// press escape to exit the program cleanly
+		// Press escape to exit the program cleanly.
 		if(Input.GetKeyDown((KeyCode.Escape)))
 			Application.Quit();
 	}
@@ -61,6 +72,7 @@ public class UIHandler : MonoBehaviour
 	// OnGUI generates GUI elements each frame.
 	void OnGUI()
 	{
+		// Update the values shown on the telescope info panel.
 		unityAzimuthText.text = "Unity Azimuth: " + tc.UnityAzimuth();
 		unityElevationText.text = "Unity Elevation: " + tc.UnityElevation();
 		
@@ -76,6 +88,8 @@ public class UIHandler : MonoBehaviour
 		azimuthSpeedText.text = "Azimuth Speed: " + tc.AzimuthSpeed();
 		elevationSpeedText.text = "Elevation Speed: " + tc.ElevationSpeed();
 		
+		// Update the values shown on the modbus registers panel.
+		// First print the incoming azimuth and elevation registers.
 		registersText.text = "1st word".PadLeft(54) + " ";
 		registersText.text += "2nd word".PadLeft(25) + " ";
 		registersText.text += "1st position".PadLeft(25) + " ";
@@ -102,6 +116,7 @@ public class UIHandler : MonoBehaviour
 		}
 		registersText.text += "</mspace>\n\n";
 		
+		// Print the outgoing azimuth and elevation registers.
 		registersText.text += "motors moving".PadLeft(50) + " ";
 		registersText.text += "1st steps".PadLeft(25) + " ";
 		registersText.text += "2nd steps".PadLeft(25) + " ";
@@ -124,44 +139,51 @@ public class UIHandler : MonoBehaviour
 		registersText.text += "</mspace>";
 	}
 	
+	// Get the current MCU IP input.
 	public string MCUIP()
 	{
 		return mcuIP.text;
 	}
 	
+	// Get the current MCU port input.
 	public string MCUPort()
 	{
 		return mcuPort.text;
 	}
 	
+	// Turn the start sim button green to shows that the simulation
+	// has started.
 	public void StartSim()
 	{
 		startButton.GetComponent<Image>().color = Color.green;
 	}
 	
+	// Updating the input azimuth target.
 	public void InputAzimuth(float input)
 	{
 		azimuth = System.Math.Round(input, 1);
 	}
 	
+	// Updating the input elevation target.
 	public void InputElevation(float input)
 	{
 		elevation = System.Math.Round(input, 1);
 	}
 	
+	// Updating the incoming register values.
 	public void UpdateIncoming(ushort[] newRegisters)
 	{
 		iRegisters = newRegisters;
 	}
 	
+	// Updating the outgoing register values.
 	public void UpdateOutgoing(ushort[] newRegisters)
 	{
 		oRegisters = newRegisters;
 	}
 	
-	/// <summary>
-	///	method tied to fill button which puts in correct values for the sim MCU
-	/// </summary>
+	// Autofill the MCU IP and port to listen on to the default used by
+	// the control room for the simulation.
 	private void AutoFillInput()
 	{
 		mcuIP.text = "127.0.0.1";

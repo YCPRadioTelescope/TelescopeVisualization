@@ -14,7 +14,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	// The command that determines the telescope's movement.
 	public MCUCommand command;
 	
-	// UI elements that get updated with the state of variables.
+	// The object that updates the UI with the state of variables.
 	public UIHandler ui;
 	
 	// The current values of the azimuth and elevation.
@@ -51,7 +51,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Update is called once per frame
+	/// Update is called once per frame.
 	/// </summary>
 	public void Update()
 	{
