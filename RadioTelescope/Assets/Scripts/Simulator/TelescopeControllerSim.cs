@@ -4,23 +4,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // This script controls the telescope according to the inputs from
-// the control room as received by the MCUCommand created by SimServer.
+// the control room as received by the MCUCommand updated by SimServer.
 public class TelescopeControllerSim : MonoBehaviour
 {
 	// The game objects that get rotated by a movement command.
 	public GameObject azimuth;
 	public GameObject elevation;
 	
+	// The command that determines the telescope's movement.
+	public MCUCommand command;
+	
 	// UI elements that get updated with the state of variables.
 	public UIHandler ui;
-	
-	// The MCUCommand object that determines the target orientation.
-	public MCUCommand command;
 	
 	// The current values of the azimuth and elevation.
 	private float simTelescopeAzimuthDegrees;
 	private float simTelescopeElevationDegrees;
 	
+	// Whether the azimuth or elevation have reached their target
+	// as defined by the MCUCommand.
 	private bool azimuthMoving = false;
 	private bool elevationMoving = false;
 	
@@ -43,7 +45,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		simTelescopeAzimuthDegrees = azimuth.transform.eulerAngles.y;
 		simTelescopeElevationDegrees = elevation.transform.eulerAngles.z;
 		
-		// Create a dummy MCU command and target 0,0.
+		// Initialize the MCUCommand by targeting 0,0.
 		ushort[] simStart = { (ushort)MoveType.SIM_TELESCOPECONTROLLER_INIT };
 		command.Update(simStart);
 	}
@@ -53,21 +55,21 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public void Update()
 	{
+		// Determine what the current command is and update the target orientation.
 		HandleCommand();
-		// Update the azimuth and elevation positions.
+		
+		// Update the azimuth and elevation positions, if necessary.
 		UpdateAzimuth();
 		UpdateElevation();
 	}
 	
 	/// <summary>
-	/// When we first start the sim we will be sending an MCUCommand object over. This will have dummy data until we get a real command from the control room
-	/// We know what fake data we are initially building the command with so we can ignore that until we get real data
-	/// --- This gets updated every frame
+	/// Determine what the current command is and update the target orientation, if necessary.
 	/// </summary>
-	/// <param name="incoming"> the incoming MCUCommand object from <c>SimServer.cs</c></param>
 	public void HandleCommand() 
 	{
-		if(command.errorFlag == true || command.acceleration == (float)Dummy.THICC) 
+		// If an error has occurred, do nothing.
+		if(command.errorFlag == true) 
 			return;
 		
 		if(command.stopMove)
@@ -83,84 +85,135 @@ public class TelescopeControllerSim : MonoBehaviour
 		ui.InputElevation(command.elevationDegrees);
 	}
 	
+	/// <summary>
+	/// Return the current azimuth angle.
+	/// </summary>
 	public float Azimuth()
 	{
 		return simTelescopeAzimuthDegrees;
 	}
 	
+	/// <summary>
+	/// Return true if the azimuth motor is moving.
+	/// </summary>
 	public bool AzimuthMoving()
 	{
 		return azimuthMoving;
 	}
 	
+	/// <summary>
+	/// Return the current elevation angle where negative values are below the horizon.
+	/// </summary>
 	public float Elevation()
 	{
 		return simTelescopeElevationDegrees;
 	}
 	
+	/// <summary>
+	/// Return true if the elevation motor is moving.
+	/// </summary>
 	public bool ElevationMoving()
 	{
 		return elevationMoving;
 	}
 	
+	/// <summary>
+	/// Return true if the telescope orientation is at the homed position.
+	/// For use in the UI.
+	/// </summary>
 	public bool Homed()
 	{
 		return !AzimuthMoving() && !ElevationMoving() && Azimuth() == 0.0f && Elevation() == 15.0f;
 	}
 	
+	/// <summary>
+	/// Return the angle of the azimuth object truncated to a single decimal place.
+	/// For use in the UI.
+	/// </summary>
 	public double UnityAzimuth()
 	{
 		return System.Math.Round(azimuth.transform.eulerAngles.y, 1);
 	}
 	
+	/// <summary>
+	/// Return the angle of the elevation object truncated to a single decimal place.
+	/// For use in the UI.
+	/// </summary>
 	public double UnityElevation()
 	{
 		return System.Math.Round(elevation.transform.eulerAngles.z, 1);
 	}
 	
+	/// <summary>
+	/// Return the current azimuth angle truncated to a single decimal place.
+	/// For use in the UI.
+	/// </summary>
 	public double SimAzimuth()
 	{
 		return System.Math.Round(simTelescopeAzimuthDegrees, 1);
 	}
 	
+	/// <summary>
+	/// Return the current elevation angle truncated to a single decimal place.
+	/// For use in the UI.
+	/// </summary>
 	public double SimElevation()
 	{
 		return System.Math.Round((simTelescopeElevationDegrees - 15.0f), 1);
 	}
 	
+	/// <summary>
+	/// Return the current azimuth target angle truncated to a single decimal place.
+	/// For use in the UI.
+	/// </summary>
 	public double TargetAzimuth()
 	{
 		return System.Math.Round(command.azimuthDegrees, 1);
 	}
 	
+	/// <summary>
+	/// Return the current elevation target angle truncated to a single decimal place.
+	/// For use in the UI.
+	/// </summary>
 	public double TargetElevation()
 	{
 		return System.Math.Round(command.elevationDegrees - 15.0f, 1);
 	}
 	
+	/// <summary>
+	/// Return the current azimuth speed truncated to a single decimal place.
+	/// For use in the UI.
+	/// </summary>
 	public double AzimuthSpeed()
 	{
 		return System.Math.Round(command.azimuthSpeed, 2);
 	}
 	
+	/// <summary>
+	/// Return the current elevation speed truncated to a single decimal place.
+	/// For use in the UI.
+	/// </summary>
 	public double ElevationSpeed()
 	{
 		return System.Math.Round(command.elevationSpeed, 2);
 	}
 	
+	/// <summary>
+	/// Handle a stop command by setting the target orientation to the current orientation.
+	/// </summary>
 	private void HandleStop()
 	{
-		// if we receive a stop, set the moveTo's to the current position of the simulator
 		command.azimuthDegrees = simTelescopeAzimuthDegrees;
 		command.elevationDegrees = simTelescopeElevationDegrees;
 	}
 	
+	/// <summary>
+	/// Handle a jog command by setting the target orientation 1 degree ahead of the current orientation,
+	/// relative to the direction of the jog. This causes the telescope to continually move in the direction
+	/// of the jog, since HandleJog is called every frame during a jog.
+	/// </summary>
 	private void HandleJog()
 	{
-		// if it's a jog, we want to move 1 degree in the jog direction
-		// as of right now, the control room cannot jog on both motors (az & el) at the same time
-		// each jog command will be one or the other
-		
 		float azJog = command.azJog ? 1.0f : 0.0f;
 		float elJog = command.azJog ? 0.0f : 1.0f;
 		float target = command.posJog ? 1.0f : -1.0f;
@@ -211,10 +264,12 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 
 	/// <summary>
-	/// rotates the game object 
+	/// Rotate the azimuth object.
 	/// </summary>
-	/// <param name="azSpeed"> the speed at which we rotate </param>
-	/// <returns></returns>
+	/// <param name="current">The current azimuth angle.</param>
+	/// <param name="target">The target azimuth angle.</param>
+	/// <param name="speed">The speed at which to rotate in degrees per second.</param>
+	/// <returns>The new azimuth angle.</returns>
 	private float ChangeAzimuth(float current, float target, float speed)
 	{
 		// Alter the movement speed by the time since the last frame. This ensures
@@ -234,10 +289,12 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// updates the elevation of the sim telescope 
+	/// Rotate the elevation object.
 	/// </summary>
-	/// <param name="elSpeed"> speed which we are moving by </param>
-	/// <returns></returns>
+	/// <param name="current">The current elevation angle.</param>
+	/// <param name="target">The target elevation angle.</param>
+	/// <param name="speed">The speed at which to rotate in degrees per second.</param>
+	/// <returns>The new elevation angle.</returns>
 	private float ChangeElevation(float current, float target, float speed)
 	{
 		// Alter the movement speed by the time since the last frame. This ensures
@@ -254,7 +311,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Class helper method to help with calculating rotations over 0,0.
+	/// Class helper method to handle rotating across 0 azimuth.
 	/// </summary>
 	private float BoundAzimuth(float az)
 	{
