@@ -154,7 +154,7 @@ public class MCUCommand : MonoBehaviour
 				}
 				
 				// Cancel move also starts with a 0x0000, but it is deliminated by the second register (a 3)
-				if (registerData[(int)RegPos.secondWordAzimuth] == (ushort)MoveType.CANCEL_MOVE)
+				if(registerData[(int)RegPos.secondWordAzimuth] == (ushort)MoveType.CANCEL_MOVE)
 				{
 					Debug.Log("CANCEL MOVE INCOMING");
 					// set error flag so TelescopeController doesn't do anything with the currentCommand's fields
@@ -190,16 +190,6 @@ public class MCUCommand : MonoBehaviour
 				Debug.Log("CONFIGURE MCU COMMAND INCOMING");
 				// we don't need to do anything with this command, so we're just going to set the errorFlag so this command is ignored
 				errorFlag = true;
-				break;
-			
-			case (ushort)MoveType.SIM_SERVER_INIT:
-				// this is called when we first start the sim'd mcu. we want to set this to default values we can be sure are not from the CR
-				Debug.Log("Building MCUCommand object for the first time in SimServer.cs");
-				azimuthSpeed = 42069f;
-				elevationSpeed = 42069f;
-				acceleration = 42069f;
-				azimuthDegrees = 42069f;
-				elevationDegrees = 42069f;
 				break;
 			
 			case (ushort)MoveType.SIM_TELESCOPECONTROLLER_INIT:

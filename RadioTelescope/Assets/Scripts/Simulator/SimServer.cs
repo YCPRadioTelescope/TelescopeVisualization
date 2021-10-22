@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net; 
 using System.Net.Sockets; 
 using System.Text; 
@@ -7,7 +8,6 @@ using System.Threading;
 using UnityEngine;
 using Modbus.Data;
 using Modbus.Device;
-using System.Linq;
 
 // This script is what communicates with the control room, receiving commands through the
 // modbus registers and updating the the MCUCommand object that the TelescopeController uses
