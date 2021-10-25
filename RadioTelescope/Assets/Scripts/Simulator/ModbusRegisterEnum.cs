@@ -49,16 +49,10 @@ public enum MoveType : ushort
 	CONFIGURE_MCU = 0x852c,
 	
 	// first register bit (registerData[0])
-	SIM_TELESCOPECONTROLLER_INIT = 0x0069,
+	SIM_TELESCOPECONTROLLER_INIT = 0x0045,
 	
 	// first register bit (registerData[0])
-	TEST_MOVE = 0x0096,
-}
-
-public enum Dummy : int
-{
-	// this is a testing value, something the CR would never send
-	THICC = 42069
+	TEST_MOVE = 0x01a4,
 }
 
 /// <summary>
