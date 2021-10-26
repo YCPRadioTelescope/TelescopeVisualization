@@ -45,10 +45,13 @@ public class UIHandler : MonoBehaviour
 	private ushort[] iRegisters;
 	private ushort[] oRegisters;
 	
+	private int[] numberBase;
+	private int baseIndex = 0;
+	
 	// Start is called before the first frame update.
 	void Start()
 	{
-		//
+		// Open the program in windowed mode.
 		Screen.fullScreen = false;
 		Screen.SetResolution(1024, 768, FullScreenMode.Windowed);
 		
@@ -59,6 +62,11 @@ public class UIHandler : MonoBehaviour
 		// Initialize the incoming and outgoing register values to all 0s.
 		iRegisters = new ushort[20];
 		oRegisters = new ushort[10];
+		
+		numberBase = new int[3];
+		numberBase[0] = 2;
+		numberBase[1] = 10;
+		numberBase[2] = 16;
 	}
 	
 	// Update is called once per frame.
@@ -67,6 +75,8 @@ public class UIHandler : MonoBehaviour
 		// Press escape to exit the program cleanly.
 		if(Input.GetKeyDown((KeyCode.Escape)))
 			Application.Quit();
+		if(Input.GetKeyDown((KeyCode.B)))
+			baseIndex = (baseIndex + 1) % 3;
 	}
 	
 	// OnGUI generates GUI elements each frame.
@@ -104,14 +114,14 @@ public class UIHandler : MonoBehaviour
 		registersText.text += "Incoming Azimuth:  <mspace=0.5em>";
 		for(int i = 0; i < iRegisters.Length / 2; i++)
 		{
-			string text = Convert.ToString(iRegisters[i], 2);
+			string text = Convert.ToString(iRegisters[i], numberBase[baseIndex]);
 			registersText.text += text.PadLeft(17) + "|";
 		}
 		registersText.text += "</mspace>\n";
 		registersText.text += "Incoming Elevation:<mspace=0.5em>";
 		for(int i = iRegisters.Length / 2; i < iRegisters.Length; i++)
 		{
-			string text = Convert.ToString(iRegisters[i], 2);
+			string text = Convert.ToString(iRegisters[i], numberBase[baseIndex]);
 			registersText.text += text.PadLeft(17) + "|";
 		}
 		registersText.text += "</mspace>\n\n";
@@ -126,14 +136,14 @@ public class UIHandler : MonoBehaviour
 		registersText.text += "Outgoing Azimuth:   <mspace=0.5em>";
 		for(int i = 0; i < oRegisters.Length / 2; i++)
 		{
-			string text = Convert.ToString(oRegisters[i], 2);
+			string text = Convert.ToString(oRegisters[i], numberBase[baseIndex]);
 			registersText.text += text.PadLeft(17) + "|";
 		}
 		registersText.text += "</mspace>\n";
 		registersText.text += "Outgoing Elevation: <mspace=0.5em>";
 		for(int i = oRegisters.Length / 2; i < oRegisters.Length; i++)
 		{
-			string text = Convert.ToString(oRegisters[i], 2);
+			string text = Convert.ToString(oRegisters[i], numberBase[baseIndex]);
 			registersText.text += text.PadLeft(17) + "|";
 		}
 		registersText.text += "</mspace>";
