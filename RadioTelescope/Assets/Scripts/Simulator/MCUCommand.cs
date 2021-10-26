@@ -21,11 +21,11 @@ public class MCUCommand : MonoBehaviour
 	///
 	/// member fields
 	///
+	public float azimuthDegrees = 0.0f;
+	public float elevationDegrees = 0.0f;
 	public float azimuthSpeed = 0.0f;
 	public float elevationSpeed = 0.0f;
 	public float acceleration = 0.0f;
-	public float azimuthDegrees = 0.0f;
-	public float elevationDegrees = 0.0f;
 	public bool jog = false;
 	public bool posJog = false;
 	public bool azJog = false;
@@ -67,17 +67,14 @@ public class MCUCommand : MonoBehaviour
 				elevationDegrees = (registerData[(int)RegPos.firstPosElevation] << 16) + registerData[(int)RegPos.secondPosElevation];
 				
 				// convert raw register values into simulator friendly terms
-				convertToUnitySpeak();
 				
 				// the simulator targets the *absolute* position, so we need to fix the command'd azimuth position with the sim's absolute position here
 				azimuthDegrees += simAzimuthDegrees;
+				ConvertToDegrees();
 				
 				// the CR flips the elevation for some reason, so we will flip it back
 				elevationDegrees *= -1;
-				
 				elevationDegrees += simElevationDegrees;
-				
-				logValues();
 				break;
 			
 			case (ushort)MoveType.CLOCKWISE_AZIMTUH_JOG:
@@ -89,8 +86,7 @@ public class MCUCommand : MonoBehaviour
 									+ registerData[(int)RegPos.secondSpeedAzimuth]);
 				
 				// convert raw register values into simulator friendly terms
-				convertToUnitySpeak();
-				logValues();
+				ConvertToDegrees();
 				break;
 			
 			case (ushort)MoveType.COUNTERCLOCKWISE_AZIMUTH_JOG:
@@ -102,8 +98,7 @@ public class MCUCommand : MonoBehaviour
 									+ registerData[(int)RegPos.secondSpeedAzimuth]);
 				
 				// convert raw register values into simulator friendly terms
-				convertToUnitySpeak();
-				logValues();
+				ConvertToDegrees();
 				break;
 			
 			case (ushort)MoveType.CLOCKWISE_HOME:
@@ -134,8 +129,7 @@ public class MCUCommand : MonoBehaviour
 										+ registerData[(int)RegPos.secondSpeedElevation]);
 					
 					// convert raw register values into simulator friendly terms
-					convertToUnitySpeak();
-					logValues();
+					ConvertToDegrees();
 					break;
 				}
 				else if(registerData[(int)RegPos.firstWordElevation] == (ushort)MoveType.POSITIVE_ELEVATION_JOG)
@@ -148,8 +142,7 @@ public class MCUCommand : MonoBehaviour
 										+ registerData[(int) RegPos.secondSpeedElevation]);
 					
 					// convert raw register values into simulator friendly terms
-					convertToUnitySpeak();
-					logValues();
+					ConvertToDegrees();
 					break;
 				}
 				
@@ -163,13 +156,7 @@ public class MCUCommand : MonoBehaviour
 				}
 				
 				Debug.Log("MCUCOMMAND: !!ERROR!! We fell through the 0x000 case and did not match any conditions.");
-				Debug.Log("Setting everything to 0.0f and breaking...");
 				errorFlag = true;
-				azimuthSpeed = 0.0f;
-				elevationSpeed = 0.0f;
-				acceleration = 0.0f;
-				azimuthDegrees = 0.0f;
-				elevationDegrees = 0.0f;
 				break;
 			
 			case (ushort)MoveType.CONTROLLED_STOP:
@@ -181,7 +168,7 @@ public class MCUCommand : MonoBehaviour
 			// TODO: clear proper registers
 			case (ushort)MoveType.CLEAR_MCU_ERRORS:
 				Debug.Log("CLEAR MCU ERRORS COMMAND INCOMING");
-				// this case will get more love later, for now just set errorFlag (don't do anything with this new MCUCommand object)
+				// this case will get more love later, for now just set errorFlag (don't do anything with this MCUCommand object)
 				errorFlag = true;
 				break;
 			
@@ -205,7 +192,7 @@ public class MCUCommand : MonoBehaviour
 				// this is for the TestMove routine to arbitrarily move the telescope from within unity
 				Debug.Log("Buidling MCUCommand for TestMove.cs");
 				
-				// we can't use convertToUnitySpeak() here because the values here are already in degrees
+				// we can't use ConvertToDegrees() here because the values here are already in degrees
 				// NOTE: these indexes do not line up with the enum since we set these ourselves in TestMove.cs
 				azimuthDegrees = Convert.ToInt32(registerData[1]);
 				elevationDegrees = Convert.ToInt32(registerData[2]);
@@ -230,12 +217,12 @@ public class MCUCommand : MonoBehaviour
 	}
 	
 	private void Reset()
-	{	
+	{
+		azimuthDegrees = 0.0f;
+		elevationDegrees = 0.0f;
 		azimuthSpeed = 0.0f;
 		elevationSpeed = 0.0f;
 		acceleration = 0.0f;
-		azimuthDegrees = 0.0f;
-		elevationDegrees = 0.0f;
 		jog = false;
 		posJog = false;
 		azJog = false;
@@ -246,7 +233,7 @@ public class MCUCommand : MonoBehaviour
 	/// <summary>
 	/// Helper method used to convert raw hex register values to workable values we can use on the controller side 
 	/// </summary>
-	private void convertToUnitySpeak() 
+	private void ConvertToDegrees() 
 	{
 		// get everything to floats
 		Convert.ToSingle(azimuthSpeed);
@@ -257,10 +244,10 @@ public class MCUCommand : MonoBehaviour
 		// next convert azimuth and elevation steps to degrees
 		// this process will most likely change when we want to make the process interruptable, so instead of an absolute conversion
 		// something like (# of steps for 1 degree) -- future work
-		azimuthDegrees = convertStepsToDegrees(azimuthDegrees, AZIMUTH_GEARING_RATIO);
-		elevationDegrees = convertStepsToDegrees(elevationDegrees, ELEVATION_GEARING_RATIO);
-		azimuthSpeed = convertStepsToDegrees(azimuthSpeed, AZIMUTH_GEARING_RATIO);
-		elevationSpeed = convertStepsToDegrees(elevationSpeed, ELEVATION_GEARING_RATIO);
+		azimuthDegrees = ConvertStepsToDegrees(azimuthDegrees, AZIMUTH_GEARING_RATIO);
+		elevationDegrees = ConvertStepsToDegrees(elevationDegrees, ELEVATION_GEARING_RATIO);
+		azimuthSpeed = ConvertStepsToDegrees(azimuthSpeed, AZIMUTH_GEARING_RATIO);
+		elevationSpeed = ConvertStepsToDegrees(elevationSpeed, ELEVATION_GEARING_RATIO);
 	}
 	
 	/// <summary>
@@ -269,20 +256,17 @@ public class MCUCommand : MonoBehaviour
 	/// <param name="steps"> steps passed from the control room (or wherever)</param>
 	/// <param name="gearingRatio"> the constant ratio associated with the type of movement. For us, this will be azimuth or elevation gearing </param>
 	/// <returns> a float "degree" value from the information passed </returns>
-	private float convertStepsToDegrees(float steps, float gearingRatio)
+	private float ConvertStepsToDegrees(float steps, float gearingRatio)
 	{
 		return steps * 360.0f / (STEPS_PER_REVOLUTION * gearingRatio);
 	}
 	
 	/// <summary>
-	/// Helper method just to log the relevant fields as we go throughout the process. Shouldn't need to exist when everything is finalized
+	/// Class helper method to compute the distance between two angles on a circle.
 	/// </summary>
-	private void logValues()
+	private float AngleDistance(float a, float b)
 	{
-		// Debug.Log("acceleration: " + acceleration);
-		// Debug.Log("azimuthSpeed: " + azimuthSpeed);
-		// Debug.Log("elevationSpeed: " + elevationSpeed);
-		// Debug.Log("azimuthDegrees: " + azimuthDegrees);
-		// Debug.Log("elevationDegrees: " + elevationDegrees);
+		// Mathf.Repeat is functionally similar to the modulus operator, but works with floats.
+		return Mathf.Repeat((a - b + 180.0f), 360.0f) - 180.0f;
 	}
 }
