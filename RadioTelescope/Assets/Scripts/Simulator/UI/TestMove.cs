@@ -49,7 +49,7 @@ public class TestMove : MonoBehaviour
 		// TODO FROM LUCAS: make this a move by again instead of an absolute move
 		
 		// Generate a dummy data object that the MCUCommand recognizes as coming from the test UI.
-		ushort[] registerData =  { (ushort)MoveType.TEST_MOVE, (ushort)az, (ushort)el, (ushort)sp };
-		command.UpdateCommand(registerData);
+		ushort[] registerData = { (ushort)MoveType.TEST_MOVE, (ushort)az, (ushort)el, (ushort)sp };
+		command.UpdateCommand(registerData, tc.Azimuth(), tc.Elevation());
 	}
 }
