@@ -71,16 +71,16 @@ public enum RegPos : int
 	secondPosAzimuth,
 	firstSpeedAzimuth,
 	secondSpeedAzimuth,
-	firstAccelerationAzimuth,
-	secondAccelerationAzimuth,
+	accelerationAzimuth,
+	decelerationAzimuth,
 	
 	///
 	/// NOTE: these registers are never used from the control room, so they very well might not line up with the names I've used below. From the data sheet,
 	/// based on the pattern of the previous registers my best guess is that these correspond to spots registerData[8] & registerData[9]
 	/// ( I think this is better than leaving them blank spots in the enum )
 	///
-	firstDecelerationAzimuth,
-	secondDecelerationAzimuth,
+	motorCurrentAzimuth,
+	jerkAzimuth,
 	
 	///
 	/// ELEVATION REGISTERS
@@ -91,14 +91,14 @@ public enum RegPos : int
 	secondPosElevation,
 	firstSpeedElevation,
 	secondSpeedElevation,
-	firstAccelerationElevation,
-	secondAccelerationElevation,
+	accelerationElevation,
+	decelerationElevation,
 	
 	///
 	/// same note as above, these are never used by the control room, but for completeness sake I have them listed here
 	///
-	firstDecelerationElevation,
-	secondDecelerationElevation,
+	motorCurrentElevation,
+	jerkElevation,
 }
 
 /// <summary>

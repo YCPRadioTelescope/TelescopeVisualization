@@ -26,6 +26,7 @@ public class MCUCommand : MonoBehaviour
 	public float azimuthSpeed = 0.0f;
 	public float elevationSpeed = 0.0f;
 	public float acceleration = 0.0f;
+	public float deceleration = 0.0f;
 	public bool jog = false;
 	public bool posJog = false;
 	public bool azJog = false;
@@ -59,7 +60,8 @@ public class MCUCommand : MonoBehaviour
 				// NOTE: the sim does not account for acceleration (I don't think we need to) but if you wanted too, you most likely
 				// would need to combine registers 6 & 7 to get the actual value
 				// NOTE 2: from my digging, the acceleration between the azimuth and elevation instructions is always the same
-				acceleration = registerData[(int)RegPos.firstAccelerationAzimuth];
+				acceleration = registerData[(int)RegPos.accelerationAzimuth];
+				deceleration = registerData[(int)RegPos.decelerationAzimuth];
 				
 				// calculate azimuth and elevation steps (this is set on registers 3 & 4 for azimuth and 12 & 13 for elevation)
 				// note the var is called *azimuthDegrees* and *elevationDegrees* but right now these are in steps. They get converted below
@@ -223,6 +225,7 @@ public class MCUCommand : MonoBehaviour
 		azimuthSpeed = 0.0f;
 		elevationSpeed = 0.0f;
 		acceleration = 0.0f;
+		deceleration = 0.0f;
 		jog = false;
 		posJog = false;
 		azJog = false;

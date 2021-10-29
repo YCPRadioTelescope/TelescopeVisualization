@@ -109,10 +109,8 @@ public class UIHandler : MonoBehaviour
 		registersText.text += "2nd position".PadLeft(24) + " ";
 		registersText.text += "1st speed".PadLeft(24) + " ";
 		registersText.text += "2nd speed".PadLeft(24) + " ";
-		registersText.text += "1st accel".PadLeft(25) + " ";
-		registersText.text += "2nd accel".PadLeft(25) + " ";
-		//registersText.text += "1st decel".PadLeft(25) + " ";
-		//registersText.text += "2nd decel".PadLeft(25) + " ";
+		registersText.text += "acceleration".PadLeft(24) + " ";
+		registersText.text += "deceleration".PadLeft(24) + " ";
 		registersText.text += "\n";
 		registersText.text += "Incoming Azimuth:  <mspace=0.5em>";
 		for(int i = 0; i < iRegisters.Length / 2 - unused; i++)
