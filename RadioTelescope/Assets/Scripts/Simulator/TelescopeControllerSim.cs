@@ -27,7 +27,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	private bool elevationMoving = false;
 	
 	// If the angle and target are within this distance, consider them equal.
-	private float epsilon = 0.1f;
+	private float epsilon = 0.1f / 2.0f;
 	
 	// The max and min allowed angles for the elevation, expressed as the 
 	// actual angle plus 15 degrees to convert the actual angle to the 
@@ -45,9 +45,9 @@ public class TelescopeControllerSim : MonoBehaviour
 		simTelescopeAzimuthDegrees = azimuth.transform.eulerAngles.y;
 		simTelescopeElevationDegrees = elevation.transform.eulerAngles.z;
 		
-		// Initialize the MCUCommand by targeting 0,0.
+		// Initialize the MCUCommand.
 		ushort[] simStart = { (ushort)MoveType.SIM_TELESCOPECONTROLLER_INIT };
-		command.UpdateCommand(simStart);
+		command.UpdateCommand(simStart, simTelescopeAzimuthDegrees, simTelescopeElevationDegrees);
 	}
 	
 	/// <summary>
@@ -55,10 +55,10 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public void Update()
 	{
-		// Determine what the current command is and update the target orientation.
+		// Determine what the current command is.
 		HandleCommand();
 		
-		// Update the azimuth and elevation positions, if necessary.
+		// Update the azimuth and elevation positions.
 		UpdateAzimuth();
 		UpdateElevation();
 	}
@@ -72,15 +72,15 @@ public class TelescopeControllerSim : MonoBehaviour
 		if(command.errorFlag == true) 
 			return;
 		
-		if(command.stopMove)
-			HandleStop();
-		else if(command.jog) 
+		// Some commands require special handling.
+		if(command.jog) 
 			HandleJog();
 		else
 		{
-			// This command was a relative move, which requires no special handling.
+			// This command was a relative move or a stop move, which requires no special handling.
 		}
 		
+		// Update the UI with the input azimuth and elevation.
 		ui.InputAzimuth(command.azimuthDegrees);
 		ui.InputElevation(command.elevationDegrees);
 	}
@@ -119,11 +119,13 @@ public class TelescopeControllerSim : MonoBehaviour
 	
 	/// <summary>
 	/// Return true if the telescope orientation is at the homed position.
-	/// For use in the UI.
 	/// </summary>
 	public bool Homed()
 	{
-		return !AzimuthMoving() && !ElevationMoving() && Azimuth() == 0.0f && Elevation() == 15.0f;
+		return !AzimuthMoving()
+			&& !ElevationMoving()
+			&& WithinEpsilon(AngleDistance(Azimuth(), 0.0f))
+			&& WithinEpsilon(AngleDistance(Elevation(), 15.0f));
 	}
 	
 	/// <summary>
@@ -168,7 +170,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public double TargetAzimuth()
 	{
-		return System.Math.Round(command.azimuthDegrees, 1);
+		return System.Math.Round(simTelescopeAzimuthDegrees + command.azimuthDegrees, 1);
 	}
 	
 	/// <summary>
@@ -177,7 +179,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public double TargetElevation()
 	{
-		return System.Math.Round(command.elevationDegrees - 15.0f, 1);
+		return System.Math.Round(simTelescopeElevationDegrees + command.elevationDegrees - 15.0f, 1);
 	}
 	
 	/// <summary>
@@ -199,15 +201,6 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Handle a stop command by setting the target orientation to the current orientation.
-	/// </summary>
-	private void HandleStop()
-	{
-		command.azimuthDegrees = simTelescopeAzimuthDegrees;
-		command.elevationDegrees = simTelescopeElevationDegrees;
-	}
-	
-	/// <summary>
 	/// Handle a jog command by setting the target orientation 1 degree ahead of the current orientation,
 	/// relative to the direction of the jog. This causes the telescope to continually move in the direction
 	/// of the jog, since HandleJog is called every frame during a jog.
@@ -218,8 +211,8 @@ public class TelescopeControllerSim : MonoBehaviour
 		float elJog = command.azJog ? 0.0f : 1.0f;
 		float target = command.posJog ? 1.0f : -1.0f;
 		
-		command.azimuthDegrees = simTelescopeAzimuthDegrees + target * azJog;
-		command.elevationDegrees = simTelescopeElevationDegrees + target * elJog;
+		command.azimuthDegrees = target * azJog;
+		command.elevationDegrees = target * elJog;
 	}
 	
 	/// <summary>
@@ -227,20 +220,26 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <summary>
 	private void UpdateAzimuth()
 	{
-		float target = BoundAzimuth(command.azimuthDegrees);
-		ref float current = ref simTelescopeAzimuthDegrees;
-		// If the current azimuth does not equal the target azimuth, move toward the target.
-		if(current != target)
+		// If the amount of azimuth degrees to move by is non-zero, the azimuth must move.
+		ref float moveBy = ref command.azimuthDegrees;
+		if(moveBy != 0.0f)
 		{
+			// Get the current orientation and movement speed
+			ref float current = ref simTelescopeAzimuthDegrees;
+			float old = current;
 			float speed = command.azimuthSpeed;
-			float distance = AngleDistance(target, current);
-			current = ChangeAzimuth(current, target, distance < 0 ? -speed : speed);
 			
-			// If the azimuth and target are close, set the azimuth to the target.
-			if(Mathf.Abs(AngleDistance(current, target)) < epsilon)
-				current = target;
+			// Move the azimuth.
+			current = ChangeAzimuth(current, moveBy, moveBy < 0.0f ? -speed : speed);
+			
+			// Update the MCUCommand by subtracting the angle moved from the remaining degrees to move by.
+			moveBy -= AngleDistance(current, old);
+			
+			// If the total degrees remaining to move by is less than the epsilon, consider it zero.
+			if(WithinEpsilon(moveBy))
+				moveBy = 0.0f;
 		}
-		azimuthMoving = (current != target);
+		azimuthMoving = (moveBy != 0.0f);
 	}
 	
 	/// <summary>
@@ -248,43 +247,51 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <summary>
 	private void UpdateElevation()
 	{
-		float target = BoundElevation(command.elevationDegrees);
-		ref float current = ref simTelescopeElevationDegrees;
+		ref float moveBy = ref command.elevationDegrees;
 		// If the current elevation does not equal the target elevation, move toward the target.
-		if(current != target)
+		if(moveBy != 0.0f)
 		{
+			// Get the current orientation and movement speed
+			ref float current = ref simTelescopeElevationDegrees;
+			float old = current;
 			float speed = command.elevationSpeed;
-			current = ChangeElevation(current, target, target < current ? -speed : speed);
 			
-			// If the elevation and target are close, set the elevation to the target.
-			if(Mathf.Abs(AngleDistance(current, target)) < epsilon)
-				current = target;
+			// Move the elevation.
+			current = ChangeElevation(current, moveBy, moveBy < 0.0f ? -speed : speed);
+			
+			// Update the MCUCommand by subtracting the angle moved from the remaining degrees to move by.
+			moveBy -= AngleDistance(current, old);
+			
+			// If the total degrees remaining to move by is less than the epsilon, consider it zero.
+			if(WithinEpsilon(moveBy))
+				moveBy = 0.0f;
 		}
-		elevationMoving = (current != target);
+		elevationMoving = (moveBy != 0.0f);
 	}
 
 	/// <summary>
 	/// Rotate the azimuth object.
 	/// </summary>
 	/// <param name="current">The current azimuth angle.</param>
-	/// <param name="target">The target azimuth angle.</param>
-	/// <param name="speed">The speed at which to rotate in degrees per second.</param>
+	/// <param name="moveBy">The total degrees to move by before reaching the target azimuth.</param>
+	/// <param name="speed">The max speed speed at which to rotate in degrees per second.</param>
 	/// <returns>The new azimuth angle.</returns>
-	private float ChangeAzimuth(float current, float target, float speed)
+	private float ChangeAzimuth(float current, float moveBy, float speed)
 	{
 		// Alter the movement speed by the time since the last frame. This ensures
 		// a smooth movement regardless of the framerate.
 		speed *= Time.deltaTime;
 		
 		// If we're closer to the target than the movement speed, lower the movement
-		// speed so that we don't overshoot.
-		// Unlike elevation, which doesn't wrap, azimuth needs to account for wrapping,
-		// e.g. 350 and 10 are 20 degrees away, not 340, so use the AngleDistance.
-		float distance = Mathf.Abs(AngleDistance(current, target));
-		if(distance < Mathf.Abs(speed)) 
-		 	speed = distance * (speed < 0 ? -1 : 1);
+		// speed so that we don't overshoot it.
+		int sign = speed < 0 ? -1 : 1;
+		if(Mathf.Abs(moveBy) < Mathf.Abs(speed)) 
+		 	speed = Mathf.Abs(moveBy) * sign;
 		
+		// Rotate the azimuth game object by the final speed.
 		azimuth.transform.Rotate(0, speed, 0);
+		
+		// Return the new azimuth orientation, bounded within the range [0, 360).
 		return BoundAzimuth(current + speed);
 	}
 	
@@ -292,21 +299,31 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// Rotate the elevation object.
 	/// </summary>
 	/// <param name="current">The current elevation angle.</param>
-	/// <param name="target">The target elevation angle.</param>
-	/// <param name="speed">The speed at which to rotate in degrees per second.</param>
+	/// <param name="moveBy">The total degrees to move by before reaching the target elevation.</param>
+	/// <param name="speed">The max speed speed at which to rotate in degrees per second.</param>
 	/// <returns>The new elevation angle.</returns>
-	private float ChangeElevation(float current, float target, float speed)
+	private float ChangeElevation(float current, float moveBy, float speed)
 	{
 		// Alter the movement speed by the time since the last frame. This ensures
 		// a smooth movement regardless of the framerate.
 		speed *= Time.deltaTime;
 		
 		// If we're closer to the target than the movement speed, lower the movement
-		// speed so that we don't overshoot.
-		if(Mathf.Abs(target - current) < Mathf.Abs(speed))
-			speed = target - current;
+		// speed so that we don't overshoot it.
+		int sign = speed < 0 ? -1 : 1;
+		if(Mathf.Abs(moveBy) < Mathf.Abs(speed))
+			speed = Mathf.Abs(moveBy) * sign;
 		
+		// If we're closer to the target than the allowed bounds, lower the movement
+		// speed so that we don't go out of bounds.
+		float bounded = BoundElevation(elevation.transform.eulerAngles.z + speed);
+		if(bounded == minEl || bounded == maxEl)
+			speed = Mathf.Abs(bounded - current) * sign;
+		
+		// Rotate the elevation game object by the final speed.
 		elevation.transform.Rotate(0, 0, speed);
+		
+		// Return the new elevation orientation, bounded within the range [minEl, maxEl].
 		return BoundElevation(current + speed);
 	}
 	
@@ -336,6 +353,16 @@ public class TelescopeControllerSim : MonoBehaviour
 		if(el > maxEl)
 			return maxEl;
 		return el;
+	}
+	
+	
+	/// <summary>
+	/// Class helper method to determine if the magnitidue of the given angle is within
+	/// the epsilon distance.
+	/// </summary>
+	private bool WithinEpsilon(float angle)
+	{
+		return Mathf.Abs(angle) < epsilon;
 	}
 	
 	/// <summary>

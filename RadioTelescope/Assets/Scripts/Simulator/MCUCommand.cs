@@ -69,14 +69,10 @@ public class MCUCommand : MonoBehaviour
 				elevationDegrees = (registerData[(int)RegPos.firstPosElevation] << 16) + registerData[(int)RegPos.secondPosElevation];
 				
 				// convert raw register values into simulator friendly terms
-				
-				// the simulator targets the *absolute* position, so we need to fix the command'd azimuth position with the sim's absolute position here
-				azimuthDegrees += simAzimuthDegrees;
 				ConvertToDegrees();
 				
 				// the CR flips the elevation for some reason, so we will flip it back
 				elevationDegrees *= -1;
-				elevationDegrees += simElevationDegrees;
 				break;
 			
 			case (ushort)MoveType.CLOCKWISE_AZIMTUH_JOG:
@@ -113,10 +109,13 @@ public class MCUCommand : MonoBehaviour
 				azimuthSpeed = 5.0f;
 				elevationSpeed = 5.0f;
 				acceleration = 0.0f;
-				azimuthDegrees = 0.0f;
+				if(simAzimuthDegrees < 180.0f)
+					azimuthDegrees = -simAzimuthDegrees;
+				else
+					azimuthDegrees = 360.0f - simAzimuthDegrees;
 				// to match the unity sim up with the CR we need to move to 15 instead of 0
 				// we are always 15 off 
-				elevationDegrees = 15.0f;
+				elevationDegrees = -simElevationDegrees + 15.0f;
 				break;
 			
 			case 0x0000: // COULD BE A BUNCH OF THINGS -- a lot of register bits start with 0 because they are for elevation only or are some sort of stop move
@@ -164,7 +163,7 @@ public class MCUCommand : MonoBehaviour
 			case (ushort)MoveType.CONTROLLED_STOP:
 			case (ushort)MoveType.IMMEDIATE_STOP:
 				Debug.Log("STOP MOVE INCOMING");
-				stopMove = true;
+				// Nothing else must be done.
 				break;
 			
 			// TODO: clear proper registers
@@ -186,8 +185,11 @@ public class MCUCommand : MonoBehaviour
 				azimuthSpeed = 20.0f;
 				elevationSpeed = 20.0f;
 				acceleration = 50.0f;
-				azimuthDegrees = 0.0f;
-				elevationDegrees = 15.0f;
+				if(simAzimuthDegrees < 180.0f)
+					azimuthDegrees = -simAzimuthDegrees;
+				else
+					azimuthDegrees = 360.0f - simAzimuthDegrees;
+				elevationDegrees = -simElevationDegrees + 15.0f;
 				break;
 			
 			case (ushort)MoveType.TEST_MOVE:
@@ -196,24 +198,15 @@ public class MCUCommand : MonoBehaviour
 				
 				// we can't use ConvertToDegrees() here because the values here are already in degrees
 				// NOTE: these indexes do not line up with the enum since we set these ourselves in TestMove.cs
-				azimuthDegrees = Convert.ToInt32(registerData[1]);
-				elevationDegrees = Convert.ToInt32(registerData[2]);
+				azimuthDegrees = AngleDistance(Convert.ToInt32(registerData[1]), simAzimuthDegrees);
+				elevationDegrees = AngleDistance(Convert.ToInt32(registerData[2]), simElevationDegrees);
 				azimuthSpeed = Convert.ToInt32(registerData[3]);
 				elevationSpeed = Convert.ToInt32(registerData[3]);
-				
-				Debug.Log("MCUCOMMAND: Azimuth after converting to int: " + azimuthDegrees);
-				Debug.Log("MCUCOMMAND: Elevation after converting to int: " + elevationDegrees);
-				Debug.Log("MCUCOMMAND: Speed after converting to int: " + azimuthSpeed);
 				break;
 			
 			default: // catch "all" and return error command
 				Debug.Log("!!! ERROR !!! MCUCommand Constructor: Cannot determine a move type from control room. Setting error flag to true and everything else to 0.0f.");
 				errorFlag = true;
-				azimuthSpeed = 0.0f;
-				elevationSpeed = 0.0f;
-				acceleration = 0.0f;
-				azimuthDegrees = 0.0f;
-				elevationDegrees = 0.0f;
 				break;
 		}
 	}
