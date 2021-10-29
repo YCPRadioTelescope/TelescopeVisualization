@@ -21,6 +21,7 @@ public class MCUCommand : MonoBehaviour
 	///
 	/// member fields
 	///
+	public string currentCommand = "";
 	public float azimuthDegrees = 0.0f;
 	public float elevationDegrees = 0.0f;
 	public float azimuthSpeed = 0.0f;
@@ -48,6 +49,7 @@ public class MCUCommand : MonoBehaviour
 		{ 
 			case (ushort)MoveType.RELATIVE_MOVE:
 				Debug.Log("RELATIVE MOVE INCOMING");
+				currentCommand = "relative move";
 				
 				// calculate speed fields
 				azimuthSpeed = ((registerData[(int)RegPos.firstSpeedAzimuth] << 16) 
@@ -77,6 +79,7 @@ public class MCUCommand : MonoBehaviour
 			
 			case (ushort)MoveType.CLOCKWISE_AZIMTUH_JOG:
 				Debug.Log("AZIMTUH JOG LEFT COMMAND INCOMING");
+				currentCommand = "negative azimuth jog";
 				jog = true;
 				azJog = true;
 				posJog = false;
@@ -89,6 +92,7 @@ public class MCUCommand : MonoBehaviour
 			
 			case (ushort)MoveType.COUNTERCLOCKWISE_AZIMUTH_JOG:
 				Debug.Log("AZIMTUH JOG RIGHT COMMAND INCOMING");
+				currentCommand = "positive azimuth jog";
 				jog = true;
 				azJog = true;
 				posJog = true;
@@ -102,6 +106,7 @@ public class MCUCommand : MonoBehaviour
 			case (ushort)MoveType.CLOCKWISE_HOME:
 			case (ushort)MoveType.COUNTERCLOCKWISE_HOME:
 				Debug.Log("HOME COMMAND INCOMING");
+				currentCommand = "home";
 				// for this move we just want to 0 the telescope, nothing fancy
 				// we do want a value for the speed in case we need to move to the 0 position
 				// TODO: grab the actual speed from the CR
@@ -123,6 +128,7 @@ public class MCUCommand : MonoBehaviour
 				if(registerData[(int)RegPos.firstWordElevation] == (ushort)MoveType.NEGATIVE_ELEVATION_JOG) 
 				{
 					Debug.Log("NEGATIVE ELEVATION JOG COMMAND INCOMING");
+					currentCommand = "negative elevation jog";
 					jog = true;
 					azJog = false;
 					posJog = false;
@@ -136,6 +142,7 @@ public class MCUCommand : MonoBehaviour
 				else if(registerData[(int)RegPos.firstWordElevation] == (ushort)MoveType.POSITIVE_ELEVATION_JOG)
 				{
 					Debug.Log("POSITIVE ELEVATION JOG COMMAND INCOMING");
+					currentCommand = "positive azimuth jog";
 					jog = true;
 					azJog = false;
 					posJog = true;
@@ -151,24 +158,33 @@ public class MCUCommand : MonoBehaviour
 				if(registerData[(int)RegPos.secondWordAzimuth] == (ushort)MoveType.CANCEL_MOVE)
 				{
 					Debug.Log("CANCEL MOVE INCOMING");
+					currentCommand = "cancel move";
 					// set error flag so TelescopeController doesn't do anything with the currentCommand's fields
 					stopMove = true;
 					break;
 				}
 				
 				Debug.Log("MCUCOMMAND: !!ERROR!! We fell through the 0x000 case and did not match any conditions.");
+				currentCommand = "unknown command";
 				errorFlag = true;
 				break;
 			
 			case (ushort)MoveType.CONTROLLED_STOP:
+				Debug.Log("STOP MOVE INCOMING");
+				currentCommand = "controlled stop";
+				// Nothing else must be done.
+				break;
+			
 			case (ushort)MoveType.IMMEDIATE_STOP:
 				Debug.Log("STOP MOVE INCOMING");
+				currentCommand = "immediate stop";
 				// Nothing else must be done.
 				break;
 			
 			// TODO: clear proper registers
 			case (ushort)MoveType.CLEAR_MCU_ERRORS:
 				Debug.Log("CLEAR MCU ERRORS COMMAND INCOMING");
+				currentCommand = "clear MCU errors";
 				// this case will get more love later, for now just set errorFlag (don't do anything with this MCUCommand object)
 				errorFlag = true;
 				break;
@@ -176,12 +192,14 @@ public class MCUCommand : MonoBehaviour
 			// TODO: write back proper registers
 			case (ushort)MoveType.CONFIGURE_MCU:
 				Debug.Log("CONFIGURE MCU COMMAND INCOMING");
+				currentCommand = "congifure MCU";
 				// we don't need to do anything with this command, so we're just going to set the errorFlag so this command is ignored
 				errorFlag = true;
 				break;
 			
 			case (ushort)MoveType.SIM_TELESCOPECONTROLLER_INIT:
 				Debug.Log("Building MCUCommand for telescope controller to put in start position");
+				currentCommand = "simulation initialization";
 				azimuthSpeed = 20.0f;
 				elevationSpeed = 20.0f;
 				acceleration = 50.0f;
@@ -195,6 +213,7 @@ public class MCUCommand : MonoBehaviour
 			case (ushort)MoveType.TEST_MOVE:
 				// this is for the TestMove routine to arbitrarily move the telescope from within unity
 				Debug.Log("Buidling MCUCommand for TestMove.cs");
+				currentCommand = "simulation test movement";
 				
 				// we can't use ConvertToDegrees() here because the values here are already in degrees
 				// NOTE: these indexes do not line up with the enum since we set these ourselves in TestMove.cs
@@ -206,6 +225,7 @@ public class MCUCommand : MonoBehaviour
 			
 			default: // catch "all" and return error command
 				Debug.Log("!!! ERROR !!! MCUCommand Constructor: Cannot determine a move type from control room. Setting error flag to true and everything else to 0.0f.");
+				currentCommand = "unknown command";
 				errorFlag = true;
 				break;
 		}
@@ -213,6 +233,7 @@ public class MCUCommand : MonoBehaviour
 	
 	private void Reset()
 	{
+		currentCommand = "";
 		azimuthDegrees = 0.0f;
 		elevationDegrees = 0.0f;
 		azimuthSpeed = 0.0f;

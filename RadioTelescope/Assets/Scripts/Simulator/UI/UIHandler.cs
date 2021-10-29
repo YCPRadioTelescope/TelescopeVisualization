@@ -16,6 +16,9 @@ public class UIHandler : MonoBehaviour
 	// The object that controls the telescope's movement according to the current command.
 	public TelescopeControllerSim tc;
 	
+	// The command that determines the telescope's movement.
+	public MCUCommand command;
+	
 	// The UI objects for user input for the MCU IP and port to listen on.
 	public Button startButton;
 	public Button fillButton;
@@ -36,6 +39,7 @@ public class UIHandler : MonoBehaviour
 	
 	// UI object that displays the current state of the incoming and outgoing modbus registers.
 	public TMP_Text registersText;
+	public TMP_Text currentCommand;
 	
 	// The latest received input azimuth and elevation.
 	private double azimuth;
@@ -100,6 +104,9 @@ public class UIHandler : MonoBehaviour
 		
 		azimuthSpeedText.text = "Azimuth Speed: " + tc.AzimuthSpeed();
 		elevationSpeedText.text = "Elevation Speed: " + tc.ElevationSpeed();
+		
+		// Update the string for the current command.
+		currentCommand.text = "Current command: " + command.currentCommand;
 		
 		// Update the values shown on the modbus registers panel.
 		// First print the incoming azimuth and elevation registers.
