@@ -56,7 +56,7 @@ public class UIHandler : MonoBehaviour
 	{
 		// Open the program in windowed mode.
 		Screen.fullScreen = false;
-		Screen.SetResolution(1024, 768, FullScreenMode.Windowed);
+		Screen.SetResolution(1340, 720, FullScreenMode.Windowed);
 		
 		// Create a click listener on the start and fill buttons. If clicked, call StartServer or AutoFillInput
 		startButton.onClick.AddListener(server.StartServer);
