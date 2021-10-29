@@ -41,6 +41,9 @@ public class UIHandler : MonoBehaviour
 	private double azimuth;
 	private double elevation;
 	
+	// The number of unused register columns from the incoming registers.
+	private int unused = 2;
+	
 	// The current incoming and outgoing registers.
 	private ushort[] iRegisters;
 	private ushort[] oRegisters;
@@ -108,18 +111,18 @@ public class UIHandler : MonoBehaviour
 		registersText.text += "2nd speed".PadLeft(24) + " ";
 		registersText.text += "1st accel".PadLeft(25) + " ";
 		registersText.text += "2nd accel".PadLeft(25) + " ";
-		registersText.text += "1st decel".PadLeft(25) + " ";
-		registersText.text += "2nd decel".PadLeft(25) + " ";
+		//registersText.text += "1st decel".PadLeft(25) + " ";
+		//registersText.text += "2nd decel".PadLeft(25) + " ";
 		registersText.text += "\n";
 		registersText.text += "Incoming Azimuth:  <mspace=0.5em>";
-		for(int i = 0; i < iRegisters.Length / 2; i++)
+		for(int i = 0; i < iRegisters.Length / 2 - unused; i++)
 		{
 			string text = Convert.ToString(iRegisters[i], numberBase[baseIndex]);
 			registersText.text += text.PadLeft(17) + "|";
 		}
 		registersText.text += "</mspace>\n";
 		registersText.text += "Incoming Elevation:<mspace=0.5em>";
-		for(int i = iRegisters.Length / 2; i < iRegisters.Length; i++)
+		for(int i = iRegisters.Length / 2; i < iRegisters.Length - unused; i++)
 		{
 			string text = Convert.ToString(iRegisters[i], numberBase[baseIndex]);
 			registersText.text += text.PadLeft(17) + "|";

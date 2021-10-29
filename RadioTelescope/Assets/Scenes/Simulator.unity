@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.20491564, g: 0.31548065, b: 0.56648743, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7464,7 +7464,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1600, y: 150}
+  m_SizeDelta: {x: 1320, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &938483196
 MonoBehaviour:
@@ -7479,7 +7479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pin: 2
-  bufferX: 805
+  bufferX: 665
   bufferY: 85
 --- !u!114 &938483197
 MonoBehaviour:
@@ -8230,7 +8230,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 10, y: 15}
-  m_SizeDelta: {x: 1600, y: 100}
+  m_SizeDelta: {x: 1320, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1032883739
 MonoBehaviour:
@@ -11598,8 +11598,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   azimuth: {fileID: 1525520883}
   elevation: {fileID: 879300291}
-  ui: {fileID: 2120281187}
   command: {fileID: 2120281190}
+  ui: {fileID: 2120281187}
 --- !u!1 &1390523543
 GameObject:
   m_ObjectHideFlags: 0
@@ -16822,8 +16822,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tc: {fileID: 1370658910}
-  ui: {fileID: 2120281187}
   command: {fileID: 2120281190}
+  ui: {fileID: 2120281187}
 --- !u!114 &2120281187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16837,11 +16837,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   server: {fileID: 2120281186}
+  tc: {fileID: 1370658910}
   startButton: {fileID: 1168945101}
   fillButton: {fileID: 1830587012}
   mcuIP: {fileID: 1438597001}
   mcuPort: {fileID: 327385366}
-  tc: {fileID: 1370658910}
   unityAzimuthText: {fileID: 186378141}
   unityElevationText: {fileID: 1970712149}
   azimuthText: {fileID: 31453317}
@@ -16903,11 +16903,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a60cd7e6ef13c44eb91f200b732584e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  azimuthDegrees: 0
+  elevationDegrees: 0
   azimuthSpeed: 0
   elevationSpeed: 0
   acceleration: 0
-  azimuthDegrees: 0
-  elevationDegrees: 0
   jog: 0
   posJog: 0
   azJog: 0
@@ -16926,11 +16926,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tc: {fileID: 1370658910}
+  command: {fileID: 2120281190}
   azimuth: {fileID: 504780674}
   elevation: {fileID: 702168646}
   speed: {fileID: 433330363}
   testButton: {fileID: 750598061}
-  command: {fileID: 2120281190}
 --- !u!114 &2120281193
 MonoBehaviour:
   m_ObjectHideFlags: 0
