@@ -11,12 +11,8 @@ using System;
 /// </summary>
 public class MCUCommand : MonoBehaviour 
 {
-	///
-	/// static constants (from the control room, not eyeballed for unity's sake)
-	///
-	private const float STEPS_PER_REVOLUTION = 20000.0f;
-	private const float AZIMUTH_GEARING_RATIO = 500.0f;
-	private const float ELEVATION_GEARING_RATIO = 50.0f;
+	// The object that controls the telescope's movement according to the current command.
+	public TelescopeControllerSim tc;
 	
 	///
 	/// member fields
@@ -26,211 +22,169 @@ public class MCUCommand : MonoBehaviour
 	public float elevationDegrees = 0.0f;
 	public float azimuthSpeed = 0.0f;
 	public float elevationSpeed = 0.0f;
-	public float acceleration = 0.0f;
-	public float deceleration = 0.0f;
+	public float azimuthAcceleration = 0.0f;
+	public float elevationAcceleration = 0.0f;
+	public float azimuthDeceleration = 0.0f;
+	public float elevationDeceleration = 0.0f;
 	public bool jog = false;
 	public bool posJog = false;
 	public bool azJog = false;
-	public bool errorFlag = false;
-	public bool stopMove = false;
+	public bool ignoreCommand = false;
 	
-	/// <summary>
-	/// constructor for building mcu command objects
-	/// </summary>
-	/// <param name="registerData"> raw register data from the control room </param>
-	/// <param name="simAzimuthDegrees"> helper param to calculate how far we need to go for a relative move </param>
-	public void UpdateCommand(ushort[] registerData, float simAzimuthDegrees = 0.0f, float simElevationDegrees = 0.0f)
+	///
+	/// static constants (from the control room, not eyeballed for unity's sake)
+	///
+	private const float STEPS_PER_REVOLUTION = 20000.0f;
+	private const float AZIMUTH_GEARING_RATIO = 500.0f;
+	private const float ELEVATION_GEARING_RATIO = 50.0f;
+	
+	// Initialize the simulation telescope to point to the home position.
+	public void InitSim()
 	{
 		Reset();
-		// we can determine move type by looking at the first register value
-		// i chose to do the first azimuth word because the average move type (relative) starts this way
-		// other edge cases are handled by switching on a 0 value (instruction not for the azimuth motor)
-		switch(registerData[(int) RegPos.firstWordAzimuth])
-		{ 
-			case (ushort)MoveType.RELATIVE_MOVE:
-				Debug.Log("RELATIVE MOVE INCOMING");
-				currentCommand = "relative move";
-				
-				// calculate speed fields
-				azimuthSpeed = ((registerData[(int)RegPos.firstSpeedAzimuth] << 16) 
-									+ registerData[(int)RegPos.secondSpeedAzimuth]);
-				
-				elevationSpeed = ((registerData[(int)RegPos.firstSpeedElevation] << 16) 
-									+ registerData[(int)RegPos.secondSpeedElevation]);
-				
-				// grab acceleration (we set registers 6 & 7 on the control room side, but the previous team only grabbed 6 so only 6 here)
-				// NOTE: the sim does not account for acceleration (I don't think we need to) but if you wanted too, you most likely
-				// would need to combine registers 6 & 7 to get the actual value
-				// NOTE 2: from my digging, the acceleration between the azimuth and elevation instructions is always the same
-				acceleration = registerData[(int)RegPos.accelerationAzimuth];
-				deceleration = registerData[(int)RegPos.decelerationAzimuth];
-				
-				// calculate azimuth and elevation steps (this is set on registers 3 & 4 for azimuth and 12 & 13 for elevation)
-				// note the var is called *azimuthDegrees* and *elevationDegrees* but right now these are in steps. They get converted below
-				azimuthDegrees = (registerData[(int)RegPos.firstPosAzimuth] << 16) + registerData[(int)RegPos.secondPosAzimuth];
-				elevationDegrees = (registerData[(int)RegPos.firstPosElevation] << 16) + registerData[(int)RegPos.secondPosElevation];
-				
-				// convert raw register values into simulator friendly terms
-				ConvertToDegrees();
-				
-				// the CR flips the elevation for some reason, so we will flip it back
-				elevationDegrees *= -1;
-				break;
-			
-			case (ushort)MoveType.CLOCKWISE_AZIMTUH_JOG:
-				Debug.Log("AZIMTUH JOG LEFT COMMAND INCOMING");
-				currentCommand = "negative azimuth jog";
-				jog = true;
-				azJog = true;
-				posJog = false;
-				azimuthSpeed = ((registerData[(int)RegPos.firstSpeedAzimuth] << 16) 
-									+ registerData[(int)RegPos.secondSpeedAzimuth]);
-				
-				// convert raw register values into simulator friendly terms
-				ConvertToDegrees();
-				break;
-			
-			case (ushort)MoveType.COUNTERCLOCKWISE_AZIMUTH_JOG:
-				Debug.Log("AZIMTUH JOG RIGHT COMMAND INCOMING");
-				currentCommand = "positive azimuth jog";
-				jog = true;
-				azJog = true;
-				posJog = true;
-				azimuthSpeed = ((registerData[(int)RegPos.firstSpeedAzimuth] << 16) 
-									+ registerData[(int)RegPos.secondSpeedAzimuth]);
-				
-				// convert raw register values into simulator friendly terms
-				ConvertToDegrees();
-				break;
-			
-			case (ushort)MoveType.CLOCKWISE_HOME:
-			case (ushort)MoveType.COUNTERCLOCKWISE_HOME:
-				Debug.Log("HOME COMMAND INCOMING");
-				currentCommand = "home";
-				// for this move we just want to 0 the telescope, nothing fancy
-				// we do want a value for the speed in case we need to move to the 0 position
-				// TODO: grab the actual speed from the CR
-				// it comes in on registerData[5] (az) and registerData[15] (el)
-				azimuthSpeed = 5.0f;
-				elevationSpeed = 5.0f;
-				acceleration = 0.0f;
-				if(simAzimuthDegrees < 180.0f)
-					azimuthDegrees = -simAzimuthDegrees;
-				else
-					azimuthDegrees = 360.0f - simAzimuthDegrees;
-				// to match the unity sim up with the CR we need to move to 15 instead of 0
-				// we are always 15 off 
-				elevationDegrees = -simElevationDegrees + 15.0f;
-				break;
-			
-			case 0x0000: // COULD BE A BUNCH OF THINGS -- a lot of register bits start with 0 because they are for elevation only or are some sort of stop move
-				// first check to see if it's an elevation jog command
-				if(registerData[(int)RegPos.firstWordElevation] == (ushort)MoveType.NEGATIVE_ELEVATION_JOG) 
-				{
-					Debug.Log("NEGATIVE ELEVATION JOG COMMAND INCOMING");
-					currentCommand = "negative elevation jog";
-					jog = true;
-					azJog = false;
-					posJog = false;
-					elevationSpeed = ((registerData[(int)RegPos.firstSpeedElevation] << 16) 
-										+ registerData[(int)RegPos.secondSpeedElevation]);
-					
-					// convert raw register values into simulator friendly terms
-					ConvertToDegrees();
-					break;
-				}
-				else if(registerData[(int)RegPos.firstWordElevation] == (ushort)MoveType.POSITIVE_ELEVATION_JOG)
-				{
-					Debug.Log("POSITIVE ELEVATION JOG COMMAND INCOMING");
-					currentCommand = "positive azimuth jog";
-					jog = true;
-					azJog = false;
-					posJog = true;
-					elevationSpeed = ((registerData[(int) RegPos.firstSpeedElevation] << 16) 
-										+ registerData[(int) RegPos.secondSpeedElevation]);
-					
-					// convert raw register values into simulator friendly terms
-					ConvertToDegrees();
-					break;
-				}
-				
-				// Cancel move also starts with a 0x0000, but it is deliminated by the second register (a 3)
-				if(registerData[(int)RegPos.secondWordAzimuth] == (ushort)MoveType.CANCEL_MOVE)
-				{
-					Debug.Log("CANCEL MOVE INCOMING");
-					currentCommand = "cancel move";
-					// set error flag so TelescopeController doesn't do anything with the currentCommand's fields
-					stopMove = true;
-					break;
-				}
-				
-				Debug.Log("MCUCOMMAND: !!ERROR!! We fell through the 0x000 case and did not match any conditions.");
-				currentCommand = "unknown command";
-				errorFlag = true;
-				break;
-			
-			case (ushort)MoveType.CONTROLLED_STOP:
-				Debug.Log("STOP MOVE INCOMING");
-				currentCommand = "controlled stop";
-				// Nothing else must be done.
-				break;
-			
-			case (ushort)MoveType.IMMEDIATE_STOP:
-				Debug.Log("STOP MOVE INCOMING");
-				currentCommand = "immediate stop";
-				// Nothing else must be done.
-				break;
-			
-			// TODO: clear proper registers
-			case (ushort)MoveType.CLEAR_MCU_ERRORS:
-				Debug.Log("CLEAR MCU ERRORS COMMAND INCOMING");
-				currentCommand = "clear MCU errors";
-				// this case will get more love later, for now just set errorFlag (don't do anything with this MCUCommand object)
-				errorFlag = true;
-				break;
-			
-			// TODO: write back proper registers
-			case (ushort)MoveType.CONFIGURE_MCU:
-				Debug.Log("CONFIGURE MCU COMMAND INCOMING");
-				currentCommand = "congifure MCU";
-				// we don't need to do anything with this command, so we're just going to set the errorFlag so this command is ignored
-				errorFlag = true;
-				break;
-			
-			case (ushort)MoveType.SIM_TELESCOPECONTROLLER_INIT:
-				Debug.Log("Building MCUCommand for telescope controller to put in start position");
-				currentCommand = "simulation initialization";
-				azimuthSpeed = 20.0f;
-				elevationSpeed = 20.0f;
-				acceleration = 50.0f;
-				if(simAzimuthDegrees < 180.0f)
-					azimuthDegrees = -simAzimuthDegrees;
-				else
-					azimuthDegrees = 360.0f - simAzimuthDegrees;
-				elevationDegrees = -simElevationDegrees + 15.0f;
-				break;
-			
-			case (ushort)MoveType.TEST_MOVE:
-				// this is for the TestMove routine to arbitrarily move the telescope from within unity
-				Debug.Log("Buidling MCUCommand for TestMove.cs");
-				currentCommand = "simulation test movement";
-				
-				// we can't use ConvertToDegrees() here because the values here are already in degrees
-				// NOTE: these indexes do not line up with the enum since we set these ourselves in TestMove.cs
-				azimuthDegrees = AngleDistance(Convert.ToInt32(registerData[1]), simAzimuthDegrees);
-				elevationDegrees = AngleDistance(Convert.ToInt32(registerData[2]), simElevationDegrees);
-				azimuthSpeed = Convert.ToInt32(registerData[3]);
-				elevationSpeed = Convert.ToInt32(registerData[3]);
-				break;
-			
-			default: // catch "all" and return error command
-				Debug.Log("!!! ERROR !!! MCUCommand Constructor: Cannot determine a move type from control room. Setting error flag to true and everything else to 0.0f.");
-				currentCommand = "unknown command";
-				errorFlag = true;
-				break;
+		currentCommand = "simulation initialization";
+		azimuthSpeed = 20.0f;
+		elevationSpeed = 20.0f;
+		if(tc.Azimuth() < 180.0f)
+			azimuthDegrees = -tc.Azimuth();
+		else
+			azimuthDegrees = 360.0f - tc.Azimuth();
+		elevationDegrees = -tc.Elevation() + 15.0f;
+	}
+	
+	// Receive a test movement from the UI.
+	public void TestMove(float azimuth, float elevation, float speed)
+	{
+		Reset();
+		currentCommand = "simulation test movement";
+		azimuthDegrees = AngleDistance(azimuth, tc.Azimuth());
+		elevationDegrees = AngleDistance(elevation, tc.Elevation());
+		azimuthSpeed = speed;
+		elevationSpeed = speed;
+	}
+	
+	/// <summary>
+	/// Update the command with the register data received from the control room.
+	/// </summary>
+	/// <param name="registerData"> Raw register data from the modbus registers. </param>
+	public void UpdateCommand(ushort[] registerData)
+	{
+		// Reset the state of the MCUCommand so that information doesn't carry over from the previous command.
+		Reset();
+		
+		// Grab the words that determine the incoming command.
+		ushort firstWordAzimuth = registerData[(int)RegPos.firstWordAzimuth];
+		ushort secondWordAzimuth = registerData[(int)RegPos.secondWordAzimuth];
+		ushort firstWordElevation = registerData[(int)RegPos.firstWordElevation];
+		ushort secondWordElevation = registerData[(int)RegPos.secondWordElevation];
+		
+		// Grab the information from the other registers. All values received from the control room are in steps and will
+		// later be converted to degrees as necessary.
+		azimuthDegrees = (registerData[(int)RegPos.firstPosAzimuth] << 16) + registerData[(int)RegPos.secondPosAzimuth];
+		elevationDegrees = (registerData[(int)RegPos.firstPosElevation] << 16) + registerData[(int)RegPos.secondPosElevation];
+		
+		azimuthSpeed = (registerData[(int)RegPos.firstSpeedAzimuth] << 16) + registerData[(int)RegPos.secondSpeedAzimuth];
+		elevationSpeed = (registerData[(int)RegPos.firstSpeedElevation] << 16) + registerData[(int)RegPos.secondSpeedElevation];
+		
+		// NOTE FROM LUCAS: from my digging, the acceleration between the azimuth and elevation instructions is always the same
+		azimuthAcceleration = registerData[(int)RegPos.accelerationAzimuth];
+		elevationAcceleration = registerData[(int)RegPos.accelerationElevation];
+		
+		azimuthDeceleration = registerData[(int)RegPos.decelerationAzimuth];
+		elevationDeceleration = registerData[(int)RegPos.decelerationElevation];
+		
+		// Determine the incoming command and make any changes to the received information if necessary.
+		// Relative move:
+		if(firstWordAzimuth == (ushort)MoveType.RELATIVE_MOVE)
+		{
+			currentCommand = "relative move";
+			// The positive and negative directions on the hardware elevation motor are flipped
+			// compared to what the simulation uses, so flip the recevied value.
+			elevationDegrees *= -1;
+			ConvertToDegrees();
+		}
+		// Jogs:
+		else if(firstWordAzimuth == (ushort)MoveType.COUNTERCLOCKWISE_AZIMUTH_JOG)
+		{
+			currentCommand = "positive azimuth jog";
+			jog = true;
+			azJog = true;
+			posJog = true;
+			ConvertToDegrees();
+		}
+		else if(firstWordAzimuth == (ushort)MoveType.CLOCKWISE_AZIMTUH_JOG)
+		{
+			currentCommand = "negative azimuth jog";
+			jog = true;
+			azJog = true;
+			posJog = false;
+			ConvertToDegrees();
+		}
+		else if(firstWordElevation == (ushort)MoveType.POSITIVE_ELEVATION_JOG)
+		{
+			currentCommand = "positive elevation jog";
+			jog = true;
+			azJog = false;
+			posJog = true;
+			ConvertToDegrees();
+		}
+		else if(firstWordElevation == (ushort)MoveType.NEGATIVE_ELEVATION_JOG)
+		{
+			currentCommand = "negative elevation jog";
+			jog = true;
+			azJog = false;
+			posJog = false;
+			ConvertToDegrees();
+		}
+		// Homing:
+		// Clockwise and counterclockwise homes are currently not handled differently from one another.
+		else if(firstWordAzimuth == (ushort)MoveType.CLOCKWISE_HOME
+				|| firstWordAzimuth == (ushort)MoveType.COUNTERCLOCKWISE_HOME)
+		{
+			currentCommand = "home";
+			ConvertToDegrees();
+			if(tc.Azimuth() < 180.0f)
+				azimuthDegrees = -tc.Azimuth();
+			else
+				azimuthDegrees = 360.0f - tc.Azimuth();
+			elevationDegrees = -tc.Elevation() + 15.0f;
+		}
+		// Stops:
+		else if(secondWordAzimuth == (ushort)MoveType.CANCEL_MOVE)
+		{
+			currentCommand = "cancel move";
+		}
+		else if(firstWordAzimuth == (ushort)MoveType.CONTROLLED_STOP)
+		{
+			currentCommand = "controlled stop";
+		}
+		else if(firstWordAzimuth == (ushort)MoveType.IMMEDIATE_STOP)
+		{
+			currentCommand = "immediate stop";
+		}
+		// MCU related:
+		// TODO FROM LUCAS: write back proper registers
+		else if(firstWordAzimuth == (ushort)MoveType.CONFIGURE_MCU)
+		{
+			currentCommand = "congifure MCU";
+			ignoreCommand = true;
+		}
+		// TODO FROM LUCAS: clear proper registers
+		else if(firstWordAzimuth == (ushort)MoveType.CLEAR_MCU_ERRORS)
+		{
+			// NOTE FROM LUCAS: this case will get more love later, for now just set
+			// errorFlag (don't do anything with this MCUCommand object)
+			currentCommand = "clear MCU errors";
+			ignoreCommand = true;
+		}
+		else
+		{
+			currentCommand = "unknown command";
+			ignoreCommand = true;
 		}
 	}
 	
+	// Reset the state of the MCUCommand.
 	private void Reset()
 	{
 		currentCommand = "";
@@ -238,13 +192,14 @@ public class MCUCommand : MonoBehaviour
 		elevationDegrees = 0.0f;
 		azimuthSpeed = 0.0f;
 		elevationSpeed = 0.0f;
-		acceleration = 0.0f;
-		deceleration = 0.0f;
+		azimuthAcceleration = 0.0f;
+		elevationAcceleration = 0.0f;
+		azimuthDeceleration = 0.0f;
+		elevationDeceleration = 0.0f;
 		jog = false;
 		posJog = false;
 		azJog = false;
-		errorFlag = false;
-		stopMove = false;
+		ignoreCommand = false;
 	}
 	
 	/// <summary>

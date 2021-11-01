@@ -9,9 +9,6 @@ using System;
 // need to move by to reach that target.
 public class TestMove : MonoBehaviour
 {
-	// The object that controls the telescope's movement according to the current command.
-	public TelescopeControllerSim tc;
-	
 	// The command that determines the telescope's movement.
 	public MCUCommand command;
 	
@@ -46,10 +43,6 @@ public class TestMove : MonoBehaviour
 		// but we consider elevation orientations below the horizon as negative.
 		el += 15;
 		
-		// TODO FROM LUCAS: make this a move by again instead of an absolute move
-		
-		// Generate a dummy data object that the MCUCommand recognizes as coming from the test UI.
-		ushort[] registerData = { (ushort)MoveType.TEST_MOVE, (ushort)az, (ushort)el, (ushort)sp };
-		command.UpdateCommand(registerData, tc.Azimuth(), tc.Elevation());
+		command.TestMove(az, el, sp);
 	}
 }

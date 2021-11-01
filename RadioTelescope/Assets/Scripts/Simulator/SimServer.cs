@@ -131,7 +131,7 @@ public class SimServer : MonoBehaviour
 			
 			// If these registers are new, update the MCUCommand object for the telescope controller.
 			if(!current.SequenceEqual(last))
-				command.UpdateCommand(current, tc.Azimuth(), tc.Elevation());
+				command.UpdateCommand(current);
 			
 			// TODO FROM LUCAS: here we can write back more checks (like if an error happens)
 			

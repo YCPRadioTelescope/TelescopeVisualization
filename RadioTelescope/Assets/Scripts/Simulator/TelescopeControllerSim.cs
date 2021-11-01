@@ -46,8 +46,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		simTelescopeElevationDegrees = elevation.transform.eulerAngles.z;
 		
 		// Initialize the MCUCommand.
-		ushort[] simStart = { (ushort)MoveType.SIM_TELESCOPECONTROLLER_INIT };
-		command.UpdateCommand(simStart, simTelescopeAzimuthDegrees, simTelescopeElevationDegrees);
+		command.InitSim();
 	}
 	
 	/// <summary>
@@ -68,8 +67,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public void HandleCommand() 
 	{
-		// If an error has occurred, do nothing.
-		if(command.errorFlag == true) 
+		if(command.ignoreCommand == true) 
 			return;
 		
 		// Some commands require special handling.

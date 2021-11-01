@@ -47,12 +47,6 @@ public enum MoveType : ushort
 	
 	// first register bit (registerData[0])
 	CONFIGURE_MCU = 0x852c,
-	
-	// first register bit (registerData[0])
-	SIM_TELESCOPECONTROLLER_INIT = 0x0045,
-	
-	// first register bit (registerData[0])
-	TEST_MOVE = 0x01a4,
 }
 
 /// <summary>
