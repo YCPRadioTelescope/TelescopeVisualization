@@ -17040,18 +17040,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a60cd7e6ef13c44eb91f200b732584e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tc: {fileID: 1370658910}
   currentCommand: 
   azimuthDegrees: 0
   elevationDegrees: 0
   azimuthSpeed: 0
   elevationSpeed: 0
-  acceleration: 0
-  deceleration: 0
+  azimuthAcceleration: 0
+  elevationAcceleration: 0
+  azimuthDeceleration: 0
+  elevationDeceleration: 0
   jog: 0
   posJog: 0
   azJog: 0
-  errorFlag: 0
-  stopMove: 0
+  ignoreCommand: 0
 --- !u!114 &2120281191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17064,7 +17066,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dda8c192a7826e4d912b71f3ddd235c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tc: {fileID: 1370658910}
   command: {fileID: 2120281190}
   azimuth: {fileID: 504780674}
   elevation: {fileID: 702168646}
