@@ -30,13 +30,13 @@ public class TestMove : MonoBehaviour
 	private void TestMovement()
 	{
 		// Get the azimuth, elevation, and speed values from the UI, clamping them to allowable values.
-		int az = Mathf.Clamp(int.Parse(azimuth.text), 0, 360);
-		int el = Mathf.Clamp(int.Parse(elevation.text), -15, 95);
-		int sp = Mathf.Max(0, int.Parse(speed.text));
+		float az = Mathf.Clamp(float.Parse(azimuth.text), 0, 360);
+		float el = Mathf.Clamp(float.Parse(elevation.text), -15, 95);
+		float sp = Mathf.Max(0, float.Parse(speed.text));
 		
 		// Send the clamped values back to the UI in case the user provided out of bounds input.
-		elevation.text = el.ToString();
 		azimuth.text = az.ToString();
+		elevation.text = el.ToString();
 		speed.text = sp.ToString();
 		
 		// Add 15 degrees to the elevation angle. This is because Unity does not use negative angles,
