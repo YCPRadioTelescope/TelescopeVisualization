@@ -136,20 +136,8 @@ public class SimServer : MonoBehaviour
 			// TODO FROM LUCAS: here we can write back more checks (like if an error happens)
 			
 			// Update the outgoing registers.
-			if(tc.AzimuthMoving())
-				UpdateRegistersAzimuthMoving();
-			else
-				UpdateRegistersAzimuthStopped();
-			
-			if(tc.ElevationMoving())
-				UpdateRegistersElevationMoving();
-			else
-				UpdateRegistersElevationStopped();
-				
-			if(tc.Homed())
-				UpdateRegistersFinishedHome();
-			
-			UpdateRegistersPosition();
+			UpdateStatus();
+			UpdatePosition();
 			
 			// Update the UI with the outgoing register values.
 			ui.UpdateOutgoing(GenerateOutgoing());
@@ -157,75 +145,6 @@ public class SimServer : MonoBehaviour
 			// Set the current registers to the last registers.
 			last = current;
 		}
-	}
-	
-	/// <summary>
-	/// Writes to shared register store with the current position of the sim telescope.
-	/// This needs to convert the degrees of our azimuth and elevation to steps and encoder steps.
-	/// The CR looks for registers  [2 + 3 = azSteps]
-	/// 							[3 + 4 = azEncoder]
-	/// 							[12 + 13 = elSteps]
-	/// 							[14 + 15 = elEncoder]
-	/// </summary>
-	private void UpdateRegistersPosition()
-	{
-		// Convert the telescope controller's current orietnation from degrees to steps and encoder values.
-		int azSteps = DegreesToSteps(tc.Azimuth(), AZIMUTH_GEARING_RATIO);
-		int elSteps = (-1) * DegreesToSteps(tc.Elevation() - 15.0f, ELEVATION_GEARING_RATIO);
-		int azEncoder = DegreesToEncoder(tc.Azimuth(), AZIMUTH_GEARING_RATIO);
-		int elEncoder = (-1) * DegreesToEncoder(tc.Elevation() - 15.0f, ELEVATION_GEARING_RATIO);
-		
-		// The integers representing the step and encoder values are spread across two ushort registers.
-		SetRegister((int)WriteBackRegPos.firstWordAzimuthSteps, (ushort)(azSteps >> 16));
-		SetRegister((int)WriteBackRegPos.secondWordAzimuthSteps, (ushort)(azSteps & 0xffff));
-		SetRegister((int)WriteBackRegPos.firstWordElevationSteps, (ushort)(elSteps >> 16));
-		SetRegister((int)WriteBackRegPos.secondWordElevationSteps, (ushort)(elSteps & 0xffff));
-		
-		SetRegister((int)WriteBackRegPos.firstWordAzimuthEncoder, (ushort)(azEncoder >> 16));
-		SetRegister((int)WriteBackRegPos.secondWordAzimuthEncoder, (ushort)(azEncoder & 0xffff));
-		SetRegister((int)WriteBackRegPos.firstWordElevationEncoder, (ushort)(elEncoder >> 16));
-		SetRegister((int)WriteBackRegPos.secondWordElevationEncoder, (ushort)(elEncoder & 0xffff));
-	}
-
-	/// <summary>
-	/// Mark the azimuth and elevation motors as having stopped, and mark the telescope as being homed.
-	/// </summary>
-	private void UpdateRegistersFinishedHome()
-	{
-		SetRegister((int)WriteBackRegPos.statusAzimuth, (ushort)(MCUWriteBack.finishedHome) + (ushort)(MCUWriteBack.finishedMove));
-		SetRegister((int)WriteBackRegPos.statusElevation, (ushort)MCUWriteBack.finishedMove);
-	}
-	
-	/// <summary>
-	/// Mark the azimuth motors as having stopped.
-	/// </summary>
-	private void UpdateRegistersAzimuthStopped()
-	{
-		SetRegister((int)WriteBackRegPos.statusAzimuth, (ushort)MCUWriteBack.finishedMove);
-	}
-	
-	/// <summary>
-	/// Mark the elevation motors as having stopped.
-	/// </summary>
-	private void UpdateRegistersElevationStopped()
-	{
-		SetRegister((int)WriteBackRegPos.statusElevation, (ushort)MCUWriteBack.finishedMove);
-	}
-	
-	/// <summary>
-	/// Mark the azimuth motors as currently moving.
-	/// </summary>
-	private void UpdateRegistersAzimuthMoving() 
-	{
-		SetRegister((int)WriteBackRegPos.statusAzimuth, (ushort)MCUWriteBack.stillMoving);
-	}
-	
-	/// <summary>
-	/// Mark the elevation motors as currently moving.
-	/// </summary>
-	private void UpdateRegistersElevationMoving() 
-	{
-		SetRegister((int)WriteBackRegPos.statusElevation, (ushort)MCUWriteBack.stillMoving);
 	}
 	
 	/// <summary>
@@ -242,41 +161,91 @@ public class SimServer : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Generate and return an array of the outgoing modbus registers that the
-	/// simulation alters.
+	/// Update the status bits for azimuth and elevtion in the outgoing registers.
 	/// </summary>
-	private ushort[] GenerateOutgoing()
+	private void UpdateStatus()
 	{
-		ushort[] data = new ushort[OUTGOING_REGISTERS_SIZE];
-		int pos = 0;
-		SetData(data, pos++, (int)WriteBackRegPos.statusAzimuth);
-		SetData(data, pos++, (int)WriteBackRegPos.firstWordAzimuthSteps);
-		SetData(data, pos++, (int)WriteBackRegPos.secondWordAzimuthSteps);
-		SetData(data, pos++, (int)WriteBackRegPos.firstWordAzimuthEncoder);
-		SetData(data, pos++, (int)WriteBackRegPos.secondWordAzimuthEncoder);
+		if(tc.AzimuthMoving())
+		{
+			SetAzimuthStatusBit((int)StatusBit.moving);
+			ResetAzimuthStatusBit((int)StatusBit.stopped);
+		}
+		else
+		{
+			SetAzimuthStatusBit((int)StatusBit.stopped);
+			ResetAzimuthStatusBit((int)StatusBit.moving);
+		}
 		
-		SetData(data, pos++, (int)WriteBackRegPos.statusElevation);
-		SetData(data, pos++, (int)WriteBackRegPos.firstWordElevationSteps);
-		SetData(data, pos++, (int)WriteBackRegPos.secondWordElevationSteps);
-		SetData(data, pos++, (int)WriteBackRegPos.firstWordElevationEncoder);
-		SetData(data, pos++, (int)WriteBackRegPos.secondWordElevationEncoder);
-		return data;
+		if(tc.ElevationMoving())
+		{
+			SetElevationStatusBit((int)StatusBit.moving);
+			ResetElevationStatusBit((int)StatusBit.stopped);
+		}
+		else
+		{
+			SetElevationStatusBit((int)StatusBit.stopped);
+			ResetElevationStatusBit((int)StatusBit.moving);
+		}
+		
+		if(tc.Homed())
+			SetAzimuthStatusBit((int)StatusBit.homed);
+		else
+			ResetAzimuthStatusBit((int)StatusBit.homed);
 	}
 	
 	/// <summary>
-	/// Set the given register to the given data.
+	/// Set a specific azimuth status bit.
 	/// </summary>
-	private void SetRegister(int register, ushort data)
+	private void SetAzimuthStatusBit(int position)
 	{
-		MCU_Modbusserver.DataStore.HoldingRegisters[register] = data;
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int)OutgoingRegIndex.statusAzimuth] |= (ushort)(1 << position);
 	}
 	
 	/// <summary>
-	/// Set the given position of the given ushort array with the data from the given register position.
+	/// Reset a specific azimuth status bit.
 	/// </summary>
-	private void SetData(ushort[] data, int position, int register)
+	private void ResetAzimuthStatusBit(int position)
 	{
-		data[position] = MCU_Modbusserver.DataStore.HoldingRegisters[register];
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int)OutgoingRegIndex.statusAzimuth] &= (ushort)(0xffff - (1 << position));
+	}
+	
+	/// <summary>
+	/// Set a specific elevation status bit.
+	/// </summary>
+	private void SetElevationStatusBit(int position)
+	{
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int)OutgoingRegIndex.statusElevation] |= (ushort)(1 << position);
+	}
+	
+	/// <summary>
+	/// Reset a specific elevation status bit.
+	/// </summary>
+	private void ResetElevationStatusBit(int position)
+	{
+		MCU_Modbusserver.DataStore.HoldingRegisters[(int)OutgoingRegIndex.statusElevation] &= (ushort)(0xffff - (1 << position));
+	}
+	
+	/// <summary>
+	/// Update the azimuth and elevation step and encoder positions for the outgoing registers.
+	/// </summary>
+	private void UpdatePosition()
+	{
+		// Convert the telescope controller's current orietnation from degrees to steps and encoder values.
+		int azSteps = DegreesToSteps(tc.Azimuth(), AZIMUTH_GEARING_RATIO);
+		int elSteps = (-1) * DegreesToSteps(tc.Elevation() - 15.0f, ELEVATION_GEARING_RATIO);
+		int azEncoder = DegreesToEncoder(tc.Azimuth(), AZIMUTH_GEARING_RATIO);
+		int elEncoder = (-1) * DegreesToEncoder(tc.Elevation() - 15.0f, ELEVATION_GEARING_RATIO);
+		
+		// The integers representing the step and encoder values are spread across two ushort registers.
+		SetRegister((int)OutgoingRegIndex.firstWordAzimuthSteps, (ushort)(azSteps >> 16));
+		SetRegister((int)OutgoingRegIndex.secondWordAzimuthSteps, (ushort)(azSteps & 0xffff));
+		SetRegister((int)OutgoingRegIndex.firstWordElevationSteps, (ushort)(elSteps >> 16));
+		SetRegister((int)OutgoingRegIndex.secondWordElevationSteps, (ushort)(elSteps & 0xffff));
+		
+		SetRegister((int)OutgoingRegIndex.firstWordAzimuthEncoder, (ushort)(azEncoder >> 16));
+		SetRegister((int)OutgoingRegIndex.secondWordAzimuthEncoder, (ushort)(azEncoder & 0xffff));
+		SetRegister((int)OutgoingRegIndex.firstWordElevationEncoder, (ushort)(elEncoder >> 16));
+		SetRegister((int)OutgoingRegIndex.secondWordElevationEncoder, (ushort)(elEncoder & 0xffff));
 	}
 	
 	/// <summary>
@@ -293,5 +262,43 @@ public class SimServer : MonoBehaviour
 	private int DegreesToSteps(float degrees, int gearingRatio)
 	{
 		return (int)(degrees * STEPS_PER_REVOLUTION * gearingRatio / 360.0);
+	}
+	
+	/// <summary>
+	/// Set the given register to the given data.
+	/// </summary>
+	private void SetRegister(int register, ushort data)
+	{
+		MCU_Modbusserver.DataStore.HoldingRegisters[register] = data;
+	}
+	
+	/// <summary>
+	/// Generate and return an array of the outgoing modbus registers that the
+	/// simulation alters. For use in the UI.
+	/// </summary>
+	private ushort[] GenerateOutgoing()
+	{
+		ushort[] data = new ushort[OUTGOING_REGISTERS_SIZE];
+		int pos = 0;
+		SetData(data, pos++, (int)OutgoingRegIndex.statusAzimuth);
+		SetData(data, pos++, (int)OutgoingRegIndex.firstWordAzimuthSteps);
+		SetData(data, pos++, (int)OutgoingRegIndex.secondWordAzimuthSteps);
+		SetData(data, pos++, (int)OutgoingRegIndex.firstWordAzimuthEncoder);
+		SetData(data, pos++, (int)OutgoingRegIndex.secondWordAzimuthEncoder);
+		
+		SetData(data, pos++, (int)OutgoingRegIndex.statusElevation);
+		SetData(data, pos++, (int)OutgoingRegIndex.firstWordElevationSteps);
+		SetData(data, pos++, (int)OutgoingRegIndex.secondWordElevationSteps);
+		SetData(data, pos++, (int)OutgoingRegIndex.firstWordElevationEncoder);
+		SetData(data, pos++, (int)OutgoingRegIndex.secondWordElevationEncoder);
+		return data;
+	}
+	
+	/// <summary>
+	/// Set the given position of the given ushort array with the data from the given register position.
+	/// </summary>
+	private void SetData(ushort[] data, int position, int register)
+	{
+		data[position] = MCU_Modbusserver.DataStore.HoldingRegisters[register];
 	}
 }

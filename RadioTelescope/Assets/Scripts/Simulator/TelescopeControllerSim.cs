@@ -233,7 +233,7 @@ public class TelescopeControllerSim : MonoBehaviour
 			// Update the MCUCommand by subtracting the angle moved from the remaining degrees to move by.
 			moveBy -= AngleDistance(current, old);
 			
-			// If the total degrees remaining to move by is less than the epsilon, consider it zero.
+			// If the total degrees remaining to move by is less than the epsilon, consider it on target.
 			if(WithinEpsilon(moveBy))
 				moveBy = 0.0f;
 		}

@@ -67,11 +67,37 @@ public enum IncomingRegIndex : int
 	jerkElevation,
 }
 
+// These are the registers and names that we use for the simulation.
+// A renamed and trimmed down version of the MCUOutputRegs enum copied from the control room.
+public enum OutgoingRegIndex : int
+{
+	statusAzimuth = 1,
+	firstWordAzimuthSteps = 3,
+	secondWordAzimuthSteps = 4,
+	firstWordAzimuthEncoder = 5,
+	secondWordAzimuthEncoder = 6,
+	
+	statusElevation = 11,
+	firstWordElevationSteps = 13,
+	secondWordElevationSteps = 14,
+	firstWordElevationEncoder = 15,
+	secondWordElevationEncoder = 16
+}
+
+// These are the registers and names that we use for the simulation.
+// A renamed and trimmed down version of the MCUStatusBitsMSW enum copied from the control room.
+public enum StatusBit : int
+{
+	moving = 1,
+	homed = 4,
+	stopped = 7,
+}
+
 /// <summary>
 /// This was taken directly from the control room (MCUConstants.cs)
 /// Used to specify how we write back to the CR
 /// </summary>
-public enum OutgoingRegIndex : int
+public enum MCUOutputRegs : int
 {
 	/// <summary>
 	/// most signifigant word (16 bits) of the az axsys status <see cref="MCUStatusBitsMSW"/> for description of eacs bit
@@ -151,7 +177,7 @@ public enum OutgoingRegIndex : int
 /// taken from the control room, MCUConstants.cs
 /// desciptions taken from anf1-anf2-motion-controller-user-manual.pdf  page 76 - 78
 /// </summary>
-public enum StatusBit : int
+public enum MCUStatusBitsMSW : int
 {
 	/// <summary>
 	/// Set when the ANF1/2 axis is outputting pulses for clockwise motion
@@ -220,26 +246,4 @@ public enum StatusBit : int
 	/// Set to “1” when the axis is in Configuration Mode. Reset to “0” when the axis is in Command Mode
 	/// </summary>
 	Axis_Configuration_Mode = 15,
-}
-
-public enum MCUWriteBack : ushort
-{
-	stillMoving = 2,
-	finishedHome = 16,
-	finishedMove = 128,
-}
-
-public enum WriteBackRegPos : int
-{
-	statusAzimuth = 1,
-	firstWordAzimuthSteps = 3,
-	secondWordAzimuthSteps = 4,
-	firstWordAzimuthEncoder = 5,
-	secondWordAzimuthEncoder = 6,
-	
-	statusElevation = 11,
-	firstWordElevationSteps = 13,
-	secondWordElevationSteps = 14,
-	firstWordElevationEncoder = 15,
-	secondWordElevationEncoder = 16
 }
