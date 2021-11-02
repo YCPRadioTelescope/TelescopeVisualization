@@ -17042,8 +17042,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tc: {fileID: 1370658910}
   currentCommand: 
-  azimuthDegrees: 0
-  elevationDegrees: 0
+  azimuthData: 0
+  elevationData: 0
   azimuthSpeed: 0
   elevationSpeed: 0
   azimuthAcceleration: 0

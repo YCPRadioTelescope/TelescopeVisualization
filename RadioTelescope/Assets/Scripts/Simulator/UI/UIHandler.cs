@@ -52,6 +52,7 @@ public class UIHandler : MonoBehaviour
 	private ushort[] iRegisters;
 	private ushort[] oRegisters;
 	
+	// Variables for keeping track of the current base to display the registers in.
 	private int[] numberBase;
 	private int baseIndex = 0;
 	
@@ -139,7 +140,7 @@ public class UIHandler : MonoBehaviour
 		registersText.text += "1st steps".PadLeft(25) + " ";
 		registersText.text += "2nd steps".PadLeft(25) + " ";
 		registersText.text += "1st encoder".PadLeft(24) + " ";
-		registersText.text += "2nd encoder".PadLeft(21) + " ";
+		registersText.text += "2nd encoder".PadLeft(22) + " ";
 		registersText.text += "\n";
 		registersText.text += "Outgoing Azimuth:   <mspace=0.5em>";
 		for(int i = 0; i < oRegisters.Length / 2; i++)

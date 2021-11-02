@@ -79,8 +79,8 @@ public class TelescopeControllerSim : MonoBehaviour
 		}
 		
 		// Update the UI with the input azimuth and elevation.
-		ui.InputAzimuth(command.azimuthDegrees);
-		ui.InputElevation(command.elevationDegrees);
+		ui.InputAzimuth(command.azimuthData);
+		ui.InputElevation(command.elevationData);
 	}
 	
 	/// <summary>
@@ -168,7 +168,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public double TargetAzimuth()
 	{
-		return System.Math.Round(simTelescopeAzimuthDegrees + command.azimuthDegrees, 1);
+		return System.Math.Round(simTelescopeAzimuthDegrees + command.azimuthData, 1);
 	}
 	
 	/// <summary>
@@ -177,7 +177,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public double TargetElevation()
 	{
-		return System.Math.Round(simTelescopeElevationDegrees + command.elevationDegrees - 15.0f, 1);
+		return System.Math.Round(simTelescopeElevationDegrees + command.elevationData - 15.0f, 1);
 	}
 	
 	/// <summary>
@@ -209,8 +209,8 @@ public class TelescopeControllerSim : MonoBehaviour
 		float elJog = command.azJog ? 0.0f : 1.0f;
 		float target = command.posJog ? 1.0f : -1.0f;
 		
-		command.azimuthDegrees = target * azJog;
-		command.elevationDegrees = target * elJog;
+		command.azimuthData = target * azJog;
+		command.elevationData = target * elJog;
 	}
 	
 	/// <summary>
@@ -219,7 +219,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	private void UpdateAzimuth()
 	{
 		// If the amount of azimuth degrees to move by is non-zero, the azimuth must move.
-		ref float moveBy = ref command.azimuthDegrees;
+		ref float moveBy = ref command.azimuthData;
 		if(moveBy != 0.0f)
 		{
 			// Get the current orientation and movement speed
@@ -245,7 +245,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <summary>
 	private void UpdateElevation()
 	{
-		ref float moveBy = ref command.elevationDegrees;
+		ref float moveBy = ref command.elevationData;
 		// If the current elevation does not equal the target elevation, move toward the target.
 		if(moveBy != 0.0f)
 		{

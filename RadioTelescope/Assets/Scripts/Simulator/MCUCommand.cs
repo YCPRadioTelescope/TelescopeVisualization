@@ -18,18 +18,29 @@ public class MCUCommand : MonoBehaviour
 	/// member fields
 	///
 	public string currentCommand = "";
-	public float azimuthDegrees = 0.0f;
-	public float elevationDegrees = 0.0f;
+	
+	public float azimuthData = 0.0f;
+	public float elevationData = 0.0f;
 	public float azimuthSpeed = 0.0f;
 	public float elevationSpeed = 0.0f;
 	public float azimuthAcceleration = 0.0f;
 	public float elevationAcceleration = 0.0f;
 	public float azimuthDeceleration = 0.0f;
 	public float elevationDeceleration = 0.0f;
+	
 	public bool jog = false;
 	public bool posJog = false;
 	public bool azJog = false;
 	public bool ignoreCommand = false;
+	
+	private int azimuthDataBits = 0;
+	private int elevationDataBits = 0;
+	private int azimuthSpeedBits = 0;
+	private int elevationSpeedBits = 0;
+	private int azimuthAccelerationBits = 0;
+	private int elevationAccelerationBits = 0;
+	private int azimuthDecelerationBits = 0;
+	private int elevationDecelerationBits = 0;
 	
 	///
 	/// static constants (from the control room, not eyeballed for unity's sake)
@@ -46,10 +57,10 @@ public class MCUCommand : MonoBehaviour
 		azimuthSpeed = 20.0f;
 		elevationSpeed = 20.0f;
 		if(tc.Azimuth() < 180.0f)
-			azimuthDegrees = -tc.Azimuth();
+			azimuthData = -tc.Azimuth();
 		else
-			azimuthDegrees = 360.0f - tc.Azimuth();
-		elevationDegrees = -tc.Elevation() + 15.0f;
+			azimuthData = 360.0f - tc.Azimuth();
+		elevationData = -tc.Elevation() + 15.0f;
 	}
 	
 	// Receive a test movement from the UI.
@@ -57,8 +68,8 @@ public class MCUCommand : MonoBehaviour
 	{
 		Reset();
 		currentCommand = "simulation test movement";
-		azimuthDegrees = AngleDistance(azimuth, tc.Azimuth());
-		elevationDegrees = AngleDistance(elevation, tc.Elevation());
+		azimuthData = AngleDistance(azimuth, tc.Azimuth());
+		elevationData = AngleDistance(elevation, tc.Elevation());
 		azimuthSpeed = speed;
 		elevationSpeed = speed;
 	}
@@ -73,38 +84,41 @@ public class MCUCommand : MonoBehaviour
 		Reset();
 		
 		// Grab the words that determine the incoming command.
-		ushort firstWordAzimuth = registerData[(int)RegPos.firstWordAzimuth];
-		ushort secondWordAzimuth = registerData[(int)RegPos.secondWordAzimuth];
-		ushort firstWordElevation = registerData[(int)RegPos.firstWordElevation];
-		ushort secondWordElevation = registerData[(int)RegPos.secondWordElevation];
+		ushort firstCommandAzimuth = registerData[(int)IncomingRegIndex.firstCommandAzimuth];
+		ushort secondCommandAzimuth = registerData[(int)IncomingRegIndex.secondCommandAzimuth];
+		ushort firstCommandElevation = registerData[(int)IncomingRegIndex.firstCommandElevation];
+		ushort secondCommandElevation = registerData[(int)IncomingRegIndex.secondCommandElevation];
 		
-		// Grab the information from the other registers. All values received from the control room are in steps and will
+		// Grab the information from the other registers. Values received from the control room are in steps and will
 		// later be converted to degrees as necessary.
-		azimuthDegrees = (registerData[(int)RegPos.firstPosAzimuth] << 16) + registerData[(int)RegPos.secondPosAzimuth];
-		elevationDegrees = (registerData[(int)RegPos.firstPosElevation] << 16) + registerData[(int)RegPos.secondPosElevation];
+		azimuthDataBits = (registerData[(int)IncomingRegIndex.firstDataAzimuth] << 16) + registerData[(int)IncomingRegIndex.secondDataAzimuth];
+		elevationDataBits = (registerData[(int)IncomingRegIndex.firstDataElevation] << 16) + registerData[(int)IncomingRegIndex.secondDataElevation];
 		
-		azimuthSpeed = (registerData[(int)RegPos.firstSpeedAzimuth] << 16) + registerData[(int)RegPos.secondSpeedAzimuth];
-		elevationSpeed = (registerData[(int)RegPos.firstSpeedElevation] << 16) + registerData[(int)RegPos.secondSpeedElevation];
+		azimuthSpeedBits = (registerData[(int)IncomingRegIndex.firstSpeedAzimuth] << 16) + registerData[(int)IncomingRegIndex.secondSpeedAzimuth];
+		elevationSpeedBits = (registerData[(int)IncomingRegIndex.firstSpeedElevation] << 16) + registerData[(int)IncomingRegIndex.secondSpeedElevation];
 		
 		// NOTE FROM LUCAS: from my digging, the acceleration between the azimuth and elevation instructions is always the same
-		azimuthAcceleration = registerData[(int)RegPos.accelerationAzimuth];
-		elevationAcceleration = registerData[(int)RegPos.accelerationElevation];
+		// NOTE FROM JONATHAN: I'm creating a variable for both just in case this ever changes.
+		azimuthAccelerationBits = registerData[(int)IncomingRegIndex.accelerationAzimuth];
+		elevationAccelerationBits = registerData[(int)IncomingRegIndex.accelerationElevation];
 		
-		azimuthDeceleration = registerData[(int)RegPos.decelerationAzimuth];
-		elevationDeceleration = registerData[(int)RegPos.decelerationElevation];
+		// NOTE FROM JONATHAN: The control room sets the same value for the acceleration and deceleration, but again, grab the
+		// registers separately in case that ever change.
+		azimuthDecelerationBits = registerData[(int)IncomingRegIndex.decelerationAzimuth];
+		elevationDecelerationBits = registerData[(int)IncomingRegIndex.decelerationElevation];
 		
 		// Determine the incoming command and make any changes to the received information if necessary.
 		// Relative move:
-		if(firstWordAzimuth == (ushort)MoveType.RELATIVE_MOVE)
+		if(firstCommandAzimuth == (ushort)CommandType.RELATIVE_MOVE)
 		{
 			currentCommand = "relative move";
 			// The positive and negative directions on the hardware elevation motor are flipped
 			// compared to what the simulation uses, so flip the recevied value.
-			elevationDegrees *= -1;
 			ConvertToDegrees();
+			elevationData *= -1;
 		}
 		// Jogs:
-		else if(firstWordAzimuth == (ushort)MoveType.COUNTERCLOCKWISE_AZIMUTH_JOG)
+		else if(firstCommandAzimuth == (ushort)CommandType.POSITIVE_JOG)
 		{
 			currentCommand = "positive azimuth jog";
 			jog = true;
@@ -112,7 +126,7 @@ public class MCUCommand : MonoBehaviour
 			posJog = true;
 			ConvertToDegrees();
 		}
-		else if(firstWordAzimuth == (ushort)MoveType.CLOCKWISE_AZIMTUH_JOG)
+		else if(firstCommandAzimuth == (ushort)CommandType.NEGATIVE_JOG)
 		{
 			currentCommand = "negative azimuth jog";
 			jog = true;
@@ -120,7 +134,7 @@ public class MCUCommand : MonoBehaviour
 			posJog = false;
 			ConvertToDegrees();
 		}
-		else if(firstWordElevation == (ushort)MoveType.POSITIVE_ELEVATION_JOG)
+		else if(firstCommandElevation == (ushort)CommandType.POSITIVE_JOG)
 		{
 			currentCommand = "positive elevation jog";
 			jog = true;
@@ -128,7 +142,7 @@ public class MCUCommand : MonoBehaviour
 			posJog = true;
 			ConvertToDegrees();
 		}
-		else if(firstWordElevation == (ushort)MoveType.NEGATIVE_ELEVATION_JOG)
+		else if(firstCommandElevation == (ushort)CommandType.NEGATIVE_JOG)
 		{
 			currentCommand = "negative elevation jog";
 			jog = true;
@@ -138,44 +152,43 @@ public class MCUCommand : MonoBehaviour
 		}
 		// Homing:
 		// Clockwise and counterclockwise homes are currently not handled differently from one another.
-		else if(firstWordAzimuth == (ushort)MoveType.CLOCKWISE_HOME
-				|| firstWordAzimuth == (ushort)MoveType.COUNTERCLOCKWISE_HOME)
+		else if(firstCommandAzimuth == (ushort)CommandType.CLOCKWISE_HOME
+				|| firstCommandAzimuth == (ushort)CommandType.COUNTERCLOCKWISE_HOME)
 		{
 			currentCommand = "home";
 			ConvertToDegrees();
 			if(tc.Azimuth() < 180.0f)
-				azimuthDegrees = -tc.Azimuth();
+				azimuthData = -tc.Azimuth();
 			else
-				azimuthDegrees = 360.0f - tc.Azimuth();
-			elevationDegrees = -tc.Elevation() + 15.0f;
-		}
-		// Stops:
-		else if(secondWordAzimuth == (ushort)MoveType.CANCEL_MOVE)
-		{
-			currentCommand = "cancel move";
-		}
-		else if(firstWordAzimuth == (ushort)MoveType.CONTROLLED_STOP)
-		{
-			currentCommand = "controlled stop";
-		}
-		else if(firstWordAzimuth == (ushort)MoveType.IMMEDIATE_STOP)
-		{
-			currentCommand = "immediate stop";
+				azimuthData = 360.0f - tc.Azimuth();
+			elevationData = -tc.Elevation() + 15.0f;
 		}
 		// MCU related:
 		// TODO FROM LUCAS: write back proper registers
-		else if(firstWordAzimuth == (ushort)MoveType.CONFIGURE_MCU)
+		else if(firstCommandAzimuth == (ushort)CommandType.CONFIGURE_MCU)
 		{
 			currentCommand = "congifure MCU";
 			ignoreCommand = true;
 		}
 		// TODO FROM LUCAS: clear proper registers
-		else if(firstWordAzimuth == (ushort)MoveType.CLEAR_MCU_ERRORS)
+		else if(firstCommandAzimuth == (ushort)CommandType.CLEAR_MCU_ERRORS)
 		{
-			// NOTE FROM LUCAS: this case will get more love later, for now just set
-			// errorFlag (don't do anything with this MCUCommand object)
+			// NOTE FROM LUCAS: this case will get more love later
 			currentCommand = "clear MCU errors";
 			ignoreCommand = true;
+		}
+		// Stops:
+		else if(firstCommandAzimuth == (ushort)CommandType.CONTROLLED_STOP)
+		{
+			currentCommand = "controlled stop";
+		}
+		else if(firstCommandAzimuth == (ushort)CommandType.IMMEDIATE_STOP)
+		{
+			currentCommand = "immediate stop";
+		}
+		else if(secondCommandElevation == (ushort)CommandType.CANCEL_MOVE)
+		{
+			currentCommand = "cancel move";
 		}
 		else
 		{
@@ -188,38 +201,48 @@ public class MCUCommand : MonoBehaviour
 	private void Reset()
 	{
 		currentCommand = "";
-		azimuthDegrees = 0.0f;
-		elevationDegrees = 0.0f;
+	
+		azimuthData = 0.0f;
+		elevationData = 0.0f;
 		azimuthSpeed = 0.0f;
 		elevationSpeed = 0.0f;
 		azimuthAcceleration = 0.0f;
 		elevationAcceleration = 0.0f;
 		azimuthDeceleration = 0.0f;
 		elevationDeceleration = 0.0f;
+		
 		jog = false;
 		posJog = false;
 		azJog = false;
 		ignoreCommand = false;
+		
+		azimuthDataBits = 0;
+		elevationDataBits = 0;
+		azimuthSpeedBits = 0;
+		elevationSpeedBits = 0;
+		azimuthAccelerationBits = 0;
+		elevationAccelerationBits = 0;
+		azimuthDecelerationBits = 0;
+		elevationDecelerationBits = 0;
 	}
 	
 	/// <summary>
-	/// Helper method used to convert raw hex register values to workable values we can use on the controller side 
+	/// Helper method used to convert raw hex register values to floats used by the controller.
 	/// </summary>
 	private void ConvertToDegrees() 
 	{
-		// get everything to floats
-		Convert.ToSingle(azimuthSpeed);
-		Convert.ToSingle(elevationSpeed);
-		Convert.ToSingle(azimuthDegrees);
-		Convert.ToSingle(elevationDegrees);
-		
-		// next convert azimuth and elevation steps to degrees
-		// this process will most likely change when we want to make the process interruptable, so instead of an absolute conversion
+		// Convert all step values to floats in degrees.
+		// NOTE FROM LUCAS: this process will most likely change when we want to make the process interruptable, so instead of an absolute conversion
 		// something like (# of steps for 1 degree) -- future work
-		azimuthDegrees = ConvertStepsToDegrees(azimuthDegrees, AZIMUTH_GEARING_RATIO);
-		elevationDegrees = ConvertStepsToDegrees(elevationDegrees, ELEVATION_GEARING_RATIO);
-		azimuthSpeed = ConvertStepsToDegrees(azimuthSpeed, AZIMUTH_GEARING_RATIO);
-		elevationSpeed = ConvertStepsToDegrees(elevationSpeed, ELEVATION_GEARING_RATIO);
+		azimuthData = ConvertStepsToDegrees(azimuthDataBits, AZIMUTH_GEARING_RATIO);
+		elevationData = ConvertStepsToDegrees(elevationDataBits, ELEVATION_GEARING_RATIO);
+		azimuthSpeed = ConvertStepsToDegrees(azimuthSpeedBits, AZIMUTH_GEARING_RATIO);
+		elevationSpeed = ConvertStepsToDegrees(elevationSpeedBits, ELEVATION_GEARING_RATIO);
+		// TODO: Determine if the acceleration values should use the gearing ratios.
+		azimuthAcceleration = ConvertStepsToDegrees(azimuthAccelerationBits, 1);
+		elevationAcceleration = ConvertStepsToDegrees(elevationAccelerationBits, 1);
+		azimuthDeceleration = ConvertStepsToDegrees(azimuthDecelerationBits, 1);
+		elevationDeceleration = ConvertStepsToDegrees(elevationDecelerationBits, 1);
 	}
 	
 	/// <summary>
@@ -228,7 +251,7 @@ public class MCUCommand : MonoBehaviour
 	/// <param name="steps"> steps passed from the control room (or wherever)</param>
 	/// <param name="gearingRatio"> the constant ratio associated with the type of movement. For us, this will be azimuth or elevation gearing </param>
 	/// <returns> a float "degree" value from the information passed </returns>
-	private float ConvertStepsToDegrees(float steps, float gearingRatio)
+	private float ConvertStepsToDegrees(int steps, float gearingRatio)
 	{
 		return steps * 360.0f / (STEPS_PER_REVOLUTION * gearingRatio);
 	}

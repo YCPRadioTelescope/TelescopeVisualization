@@ -192,8 +192,8 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	private void UpdateRegistersFinishedHome()
 	{
-		SetRegister((int)WriteBackRegPos.finishedMovingAzimuth, (ushort)(MCUWriteBack.finishedHome) + (ushort)(MCUWriteBack.finishedMove));
-		SetRegister((int)WriteBackRegPos.finishedMovingElevation, (ushort)MCUWriteBack.finishedMove);
+		SetRegister((int)WriteBackRegPos.statusAzimuth, (ushort)(MCUWriteBack.finishedHome) + (ushort)(MCUWriteBack.finishedMove));
+		SetRegister((int)WriteBackRegPos.statusElevation, (ushort)MCUWriteBack.finishedMove);
 	}
 	
 	/// <summary>
@@ -201,7 +201,7 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	private void UpdateRegistersAzimuthStopped()
 	{
-		SetRegister((int)WriteBackRegPos.finishedMovingAzimuth, (ushort)MCUWriteBack.finishedMove);
+		SetRegister((int)WriteBackRegPos.statusAzimuth, (ushort)MCUWriteBack.finishedMove);
 	}
 	
 	/// <summary>
@@ -209,7 +209,7 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	private void UpdateRegistersElevationStopped()
 	{
-		SetRegister((int)WriteBackRegPos.finishedMovingElevation, (ushort)MCUWriteBack.finishedMove);
+		SetRegister((int)WriteBackRegPos.statusElevation, (ushort)MCUWriteBack.finishedMove);
 	}
 	
 	/// <summary>
@@ -217,7 +217,7 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	private void UpdateRegistersAzimuthMoving() 
 	{
-		SetRegister((int)WriteBackRegPos.stillMovingAzimuth, (ushort)MCUWriteBack.stillMoving);
+		SetRegister((int)WriteBackRegPos.statusAzimuth, (ushort)MCUWriteBack.stillMoving);
 	}
 	
 	/// <summary>
@@ -225,7 +225,7 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	private void UpdateRegistersElevationMoving() 
 	{
-		SetRegister((int)WriteBackRegPos.stillMovingElevation, (ushort)MCUWriteBack.stillMoving);
+		SetRegister((int)WriteBackRegPos.statusElevation, (ushort)MCUWriteBack.stillMoving);
 	}
 	
 	/// <summary>
@@ -249,13 +249,13 @@ public class SimServer : MonoBehaviour
 	{
 		ushort[] data = new ushort[OUTGOING_REGISTERS_SIZE];
 		int pos = 0;
-		SetData(data, pos++, (int)WriteBackRegPos.stillMovingAzimuth);
+		SetData(data, pos++, (int)WriteBackRegPos.statusAzimuth);
 		SetData(data, pos++, (int)WriteBackRegPos.firstWordAzimuthSteps);
 		SetData(data, pos++, (int)WriteBackRegPos.secondWordAzimuthSteps);
 		SetData(data, pos++, (int)WriteBackRegPos.firstWordAzimuthEncoder);
 		SetData(data, pos++, (int)WriteBackRegPos.secondWordAzimuthEncoder);
 		
-		SetData(data, pos++, (int)WriteBackRegPos.stillMovingElevation);
+		SetData(data, pos++, (int)WriteBackRegPos.statusElevation);
 		SetData(data, pos++, (int)WriteBackRegPos.firstWordElevationSteps);
 		SetData(data, pos++, (int)WriteBackRegPos.secondWordElevationSteps);
 		SetData(data, pos++, (int)WriteBackRegPos.firstWordElevationEncoder);
