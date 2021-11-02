@@ -40,6 +40,7 @@ public class UIHandler : MonoBehaviour
 	// UI object that displays the current state of the incoming and outgoing modbus registers.
 	public TMP_Text registersText;
 	public TMP_Text currentCommand;
+	public TMP_Text currentBase;
 	
 	// The latest received input azimuth and elevation.
 	private double azimuth;
@@ -106,8 +107,9 @@ public class UIHandler : MonoBehaviour
 		azimuthSpeedText.text = "Azimuth Speed: " + tc.AzimuthSpeed();
 		elevationSpeedText.text = "Elevation Speed: " + tc.ElevationSpeed();
 		
-		// Update the string for the current command.
+		// Update the string for the current command and display base.
 		currentCommand.text = "Current command: " + command.currentCommand;
+		currentBase.text = "Display base: " + numberBase[baseIndex].ToString();
 		
 		// Update the values shown on the modbus registers panel.
 		// First print the incoming azimuth and elevation registers.
