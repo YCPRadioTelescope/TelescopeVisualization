@@ -110,10 +110,10 @@ public class UIHandler : MonoBehaviour
 		
 		// Update the values shown on the modbus registers panel.
 		// First print the incoming azimuth and elevation registers.
-		registersText.text = "1st word".PadLeft(54) + " ";
-		registersText.text += "2nd word".PadLeft(25) + " ";
-		registersText.text += "1st position".PadLeft(25) + " ";
-		registersText.text += "2nd position".PadLeft(24) + " ";
+		registersText.text = "1st command".PadLeft(49) + " ";
+		registersText.text += "2nd command".PadLeft(20) + " ";
+		registersText.text += "1st data".PadLeft(25) + " ";
+		registersText.text += "2nd data".PadLeft(25) + " ";
 		registersText.text += "1st speed".PadLeft(24) + " ";
 		registersText.text += "2nd speed".PadLeft(24) + " ";
 		registersText.text += "acceleration".PadLeft(24) + " ";
@@ -135,7 +135,7 @@ public class UIHandler : MonoBehaviour
 		registersText.text += "</mspace>\n\n";
 		
 		// Print the outgoing azimuth and elevation registers.
-		registersText.text += "motors moving".PadLeft(50) + " ";
+		registersText.text += "status bits".PadLeft(55) + " ";
 		registersText.text += "1st steps".PadLeft(25) + " ";
 		registersText.text += "2nd steps".PadLeft(25) + " ";
 		registersText.text += "1st encoder".PadLeft(24) + " ";
