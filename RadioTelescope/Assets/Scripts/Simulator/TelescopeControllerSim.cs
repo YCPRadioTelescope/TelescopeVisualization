@@ -22,9 +22,11 @@ public class TelescopeControllerSim : MonoBehaviour
 	private float simTelescopeElevationDegrees;
 	
 	// Whether the azimuth or elevation have reached their target
-	// as defined by the MCUCommand.
+	// as defined by the MCUCommand, and the direction of travel.
 	private bool azimuthMoving = false;
+	private bool azimuthPosMotion = false;
 	private bool elevationMoving = false;
+	private bool elevationPosMotion = false;
 	
 	// If the angle and target are within this distance, consider them equal.
 	private float epsilon = 0.1f / 2.0f;
@@ -100,6 +102,14 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
+	/// Return true if the azimuth motor is moving in the positive direction.
+	/// </summary>
+	public bool AzimuthPosMotion()
+	{
+		return azimuthPosMotion;
+	}
+	
+	/// <summary>
 	/// Return the current elevation angle where negative values are below the horizon.
 	/// </summary>
 	public float Elevation()
@@ -116,7 +126,16 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Return true if the telescope orientation is at the homed position.
+	/// Return true if the elevation motor is moving in the positive direction.
+	/// </summary>
+	public bool ElevationPosMotion()
+	{
+		return elevationPosMotion;
+	}
+	
+	/// <summary>
+	/// Return true if the telescope orientation is at the homed position. This is when neither
+	/// motors are moving and the orientation is at 0,0 (0,15 in Unity angles).
 	/// </summary>
 	public bool Homed()
 	{
@@ -238,6 +257,7 @@ public class TelescopeControllerSim : MonoBehaviour
 				moveBy = 0.0f;
 		}
 		azimuthMoving = (moveBy != 0.0f);
+		azimuthPosMotion = (moveBy > 0.0f);
 	}
 	
 	/// <summary>
@@ -265,6 +285,7 @@ public class TelescopeControllerSim : MonoBehaviour
 				moveBy = 0.0f;
 		}
 		elevationMoving = (moveBy != 0.0f);
+		elevationPosMotion = (moveBy < 0.0f);
 	}
 
 	/// <summary>

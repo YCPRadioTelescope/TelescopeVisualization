@@ -71,26 +71,27 @@ public enum IncomingRegIndex : int
 // A renamed and trimmed down version of the MCUOutputRegs enum copied from the control room.
 public enum OutgoingRegIndex : int
 {
-	statusAzimuth = 1,
+	statusAzimuth = 1,			// AZ_Status_Bits_LSW
 	firstWordAzimuthSteps = 3,
 	secondWordAzimuthSteps = 4,
 	firstWordAzimuthEncoder = 5,
 	secondWordAzimuthEncoder = 6,
 	
-	statusElevation = 11,
+	statusElevation = 11,			// EL_Status_Bits_LSW
 	firstWordElevationSteps = 13,
 	secondWordElevationSteps = 14,
 	firstWordElevationEncoder = 15,
-	secondWordElevationEncoder = 16
+	secondWordElevationEncoder = 16,
 }
 
 // These are the registers and names that we use for the simulation.
 // A renamed and trimmed down version of the MCUStatusBitsMSW enum copied from the control room.
 public enum StatusBit : int
 {
-	moving = 1,
-	homed = 4,
-	stopped = 7,
+	negMoving = 0,	// CW_Motion
+	posMoving = 1,	// CCW_Motion
+	homed = 4,		// At_Home
+	stopped = 7,	// Move_Complete
 }
 
 /// <summary>

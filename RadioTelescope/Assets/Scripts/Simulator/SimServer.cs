@@ -167,24 +167,32 @@ public class SimServer : MonoBehaviour
 	{
 		if(tc.AzimuthMoving())
 		{
-			SetAzimuthStatusBit((int)StatusBit.moving);
+			if(tc.AzimuthPosMotion())
+				SetAzimuthStatusBit((int)StatusBit.posMoving);
+			else
+				SetAzimuthStatusBit((int)StatusBit.negMoving);
 			ResetAzimuthStatusBit((int)StatusBit.stopped);
 		}
 		else
 		{
 			SetAzimuthStatusBit((int)StatusBit.stopped);
-			ResetAzimuthStatusBit((int)StatusBit.moving);
+			ResetAzimuthStatusBit((int)StatusBit.posMoving);
+			ResetAzimuthStatusBit((int)StatusBit.negMoving);
 		}
 		
 		if(tc.ElevationMoving())
 		{
-			SetElevationStatusBit((int)StatusBit.moving);
+			if(tc.ElevationPosMotion())
+				SetElevationStatusBit((int)StatusBit.posMoving);
+			else
+				SetElevationStatusBit((int)StatusBit.negMoving);
 			ResetElevationStatusBit((int)StatusBit.stopped);
 		}
 		else
 		{
 			SetElevationStatusBit((int)StatusBit.stopped);
-			ResetElevationStatusBit((int)StatusBit.moving);
+			ResetElevationStatusBit((int)StatusBit.posMoving);
+			ResetElevationStatusBit((int)StatusBit.negMoving);
 		}
 		
 		if(tc.Homed())
