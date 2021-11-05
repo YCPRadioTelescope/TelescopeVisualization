@@ -123,7 +123,7 @@ public class SimServer : MonoBehaviour
 		while(runSimulator)
 		{
 			// Sleep so that we're not running as fast as the CPU allows, which is overkill.
-			Thread.Sleep(100);
+			Thread.Sleep(50);
 			
 			// Get the latest registers and update the UI.
 			current = CopyRegisters(1025, INCOMING_REGISTERS_SIZE);
@@ -132,8 +132,6 @@ public class SimServer : MonoBehaviour
 			// If these registers are new, update the MCUCommand object for the telescope controller.
 			if(!current.SequenceEqual(last))
 				command.UpdateCommand(current);
-			
-			// TODO FROM LUCAS: here we can write back more checks (like if an error happens)
 			
 			// Update the outgoing registers.
 			UpdateStatus();
@@ -165,6 +163,8 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	private void UpdateStatus()
 	{
+		// Set bit positions 0 or 1 depending on the direction of motor movement.
+		// Set bit posiitons 3 and 7 if the movement has completed.
 		if(tc.AzimuthMoving())
 		{
 			if(tc.AzimuthPosMotion())
@@ -172,10 +172,12 @@ public class SimServer : MonoBehaviour
 			else
 				SetAzimuthStatusBit((int)StatusBit.negMoving);
 			ResetAzimuthStatusBit((int)StatusBit.stopped);
+			ResetAzimuthStatusBit((int)StatusBit.complete);
 		}
 		else
 		{
 			SetAzimuthStatusBit((int)StatusBit.stopped);
+			SetAzimuthStatusBit((int)StatusBit.complete);
 			ResetAzimuthStatusBit((int)StatusBit.posMoving);
 			ResetAzimuthStatusBit((int)StatusBit.negMoving);
 		}
@@ -187,18 +189,49 @@ public class SimServer : MonoBehaviour
 			else
 				SetElevationStatusBit((int)StatusBit.negMoving);
 			ResetElevationStatusBit((int)StatusBit.stopped);
+			ResetElevationStatusBit((int)StatusBit.complete);
 		}
 		else
 		{
 			SetElevationStatusBit((int)StatusBit.stopped);
+			SetElevationStatusBit((int)StatusBit.complete);
 			ResetElevationStatusBit((int)StatusBit.posMoving);
 			ResetElevationStatusBit((int)StatusBit.negMoving);
 		}
 		
+		// Set bit position 4 if the telescope is in the home position.
+		// The control room only checks the azimuth status register, but
+		// set both.
 		if(tc.Homed())
-			SetAzimuthStatusBit((int)StatusBit.homed);
+			SetBothStatusBits((int)StatusBit.homed);
 		else
-			ResetAzimuthStatusBit((int)StatusBit.homed);
+			ResetBothStatusBits((int)StatusBit.homed);
+		
+		// Set bit position 11 if invalid input was received. That is,
+		// a command was received that the MCUCommand script didn't
+		// recognize.
+		if(command.invalidInput || tc.LimitSwitchHit())
+			SetBothStatusBits((int)StatusBit.ivalidInput);
+		else
+			ResetBothStatusBits((int)StatusBit.ivalidInput);
+	}
+	
+	/// <summary>
+	/// Set a specific status bit on both motor registers.
+	/// </summary>
+	private void SetBothStatusBits(int position)
+	{
+		SetAzimuthStatusBit(position);
+		SetElevationStatusBit(position);
+	}
+	
+	/// <summary>
+	/// Reset a specific status bit on both motor registers.
+	/// </summary>
+	private void ResetBothStatusBits(int position)
+	{
+		ResetAzimuthStatusBit(position);
+		ResetElevationStatusBit(position);
 	}
 	
 	/// <summary>

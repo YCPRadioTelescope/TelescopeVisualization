@@ -14,9 +14,6 @@ public class MCUCommand : MonoBehaviour
 	// The object that controls the telescope's movement according to the current command.
 	public TelescopeControllerSim tc;
 	
-	///
-	/// member fields
-	///
 	public string currentCommand = "";
 	
 	public float azimuthData = 0.0f;
@@ -31,7 +28,9 @@ public class MCUCommand : MonoBehaviour
 	public bool jog = false;
 	public bool posJog = false;
 	public bool azJog = false;
+	
 	public bool ignoreCommand = false;
+	public bool invalidInput = false;
 	
 	private int azimuthDataBits = 0;
 	private int elevationDataBits = 0;
@@ -42,9 +41,6 @@ public class MCUCommand : MonoBehaviour
 	private int azimuthDecelerationBits = 0;
 	private int elevationDecelerationBits = 0;
 	
-	///
-	/// static constants (from the control room, not eyeballed for unity's sake)
-	///
 	private const float STEPS_PER_REVOLUTION = 20000.0f;
 	private const float AZIMUTH_GEARING_RATIO = 500.0f;
 	private const float ELEVATION_GEARING_RATIO = 50.0f;
@@ -170,12 +166,10 @@ public class MCUCommand : MonoBehaviour
 			currentCommand = "congifure MCU";
 			ignoreCommand = true;
 		}
-		// TODO FROM LUCAS: clear proper registers
 		else if(firstCommandAzimuth == (ushort)CommandType.CLEAR_MCU_ERRORS)
 		{
-			// NOTE FROM LUCAS: this case will get more love later
 			currentCommand = "clear MCU errors";
-			ignoreCommand = true;
+			ClearMCUErrors();
 		}
 		// Stops:
 		else if(firstCommandAzimuth == (ushort)CommandType.CONTROLLED_STOP)
@@ -214,7 +208,9 @@ public class MCUCommand : MonoBehaviour
 		jog = false;
 		posJog = false;
 		azJog = false;
+		
 		ignoreCommand = false;
+		// Error bools are only reset by a ClearMCUErrors command.
 		
 		azimuthDataBits = 0;
 		elevationDataBits = 0;
@@ -224,6 +220,11 @@ public class MCUCommand : MonoBehaviour
 		elevationAccelerationBits = 0;
 		azimuthDecelerationBits = 0;
 		elevationDecelerationBits = 0;
+	}
+	
+	private void ClearMCUErrors()
+	{
+		invalidInput = false;
 	}
 	
 	/// <summary>

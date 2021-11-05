@@ -10,7 +10,7 @@
 /// </summary>
 public enum CommandType : ushort
 {
-	// Both axes, first command register
+	// Both axes, first command register:
 	RELATIVE_MOVE = 0x0002,
 	CONTROLLED_STOP = 0x0004,
 	IMMEDIATE_STOP = 0x0010,
@@ -18,10 +18,12 @@ public enum CommandType : ushort
 	COUNTERCLOCKWISE_HOME = 0x0040,
 	NEGATIVE_JOG = 0x0080,
 	POSITIVE_JOG = 0x0100,
-	CLEAR_MCU_ERRORS = 0x0800,
-	CONFIGURE_MCU = 0x852c,
+	CLEAR_MCU_ERRORS = 0x0800, // MCU errors = bits 8, 9, 11, 12, 13
 	
-	// Both axes, second command register
+	// Azimuth first command register:
+	CONFIGURE_MCU = 0x852c, // 0x852d is received on the elevation register
+	
+	// Both axes, second command register:
 	CANCEL_MOVE = 0x0003,
 }
 
@@ -67,184 +69,95 @@ public enum IncomingRegIndex : int
 	jerkElevation,
 }
 
-// These are the registers and names that we use for the simulation.
-// A renamed and trimmed down version of the MCUOutputRegs enum copied from the control room.
+// These are the register indicies and names that we use for the simulation.
+// A renamed and trimmed down version of the MCUOutputRegs enum copied from
+// the control room, which can be found in the MCUConstants file.
 public enum OutgoingRegIndex : int
 {
-	statusAzimuth = 1,			// AZ_Status_Bits_LSW
+	// For some unknown reason, the index positions seen here are shifted up
+	// by one compared to the indices on the control room. The control room
+	// still understand what we're sending back, so evidently we're putting
+	// data in the right place.
+	statusAzimuth = 1,					// AZ_Status_Bits_MSW
 	firstWordAzimuthSteps = 3,
 	secondWordAzimuthSteps = 4,
 	firstWordAzimuthEncoder = 5,
 	secondWordAzimuthEncoder = 6,
 	
-	statusElevation = 11,			// EL_Status_Bits_LSW
+	// Register 9 bit 14 should be flippped ever 0.5 seconds.
+	// Register 9 bit 13 should be set if connection to the CR is lost.
+	
+	statusElevation = 11,				// EL_Status_Bits_MSW
 	firstWordElevationSteps = 13,
 	secondWordElevationSteps = 14,
 	firstWordElevationEncoder = 15,
 	secondWordElevationEncoder = 16,
 }
 
-// These are the registers and names that we use for the simulation.
-// A renamed and trimmed down version of the MCUStatusBitsMSW enum copied from the control room.
+// These are the bit positions and names that we use for the simulation.
+// A renamed and trimmed down version of the MCUStatusBitsMSW enum copied from
+// the control room, which can be found in the MCUConstants file.
 public enum StatusBit : int
 {
-	negMoving = 0,	// CW_Motion
-	posMoving = 1,	// CCW_Motion
-	homed = 4,		// At_Home
-	stopped = 7,	// Move_Complete
-}
-
-/// <summary>
-/// This was taken directly from the control room (MCUConstants.cs)
-/// Used to specify how we write back to the CR
-/// </summary>
-public enum MCUOutputRegs : int
-{
-	/// <summary>
-	/// most signifigant word (16 bits) of the az axsys status <see cref="MCUStatusBitsMSW"/> for description of eacs bit
-	/// </summary>
-	AZ_Status_Bits_MSW = 0,
-	/// <summary>
-	/// least signifigant word (16 bits) of the az axsys status <see cref="MCUStutusBitsLSW"/> for description of eacs bit
-	/// </summary>
-	AZ_Status_Bits_LSW = 1,
-	/// <summary>
-	/// this is the position of the axsys in terms of motor step count (most signifigant word)
-	/// </summary>
-	AZ_Current_Position_MSW = 2,
-	/// <summary>
-	/// this is the position of the axsys in terms of motor step count (least signifigant word)
-	/// </summary>
-	AZ_Current_Position_LSW = 3,
-	/// <summary>
-	/// if we were using encoders on the motors this is where the data from those encoders would be
-	/// </summary>
-	AZ_MTR_Encoder_Pos_MSW = 4,
-	/// <summary>
-	/// if we were using encoders on the motors this is where the data from those encoders would be
-	/// </summary>
-	AZ_MTR_Encoder_Pos_LSW = 5,
-	/// <summary>
-	/// if the MCU is told to capture the current position this is where that data will be stored
-	/// </summary>
-	AZ_Capture_Data_MSW = 6,
-	/// <summary>
-	/// if the MCU is told to capture the current position this is where that data will be stored
-	/// </summary>
-	AZ_Capture_Data_LSW = 7,
-	RESERVED1 = 8,
-	/// <summary>
-	/// used to track network conectivity bit 14 of this register will flip every .5 seconds,
-	/// bit 13 is set when the MCU looses or has previously lost ethernet conectivity
-	/// </summary>
-	NetworkConnectivity = 9,
-	/// <summary>
-	/// most signifigant word (16 bits) of the EL axsys status <see cref="MCUStatusBitsMSW"/> for description of eacs bit
-	/// </summary>
-	EL_Status_Bits_MSW = 10,
-	/// <summary>
-	/// least signifigant word (16 bits) of the EL axsys status <see cref="MCUStutusBitsLSW"/> for description of eacs bit
-	/// </summary>
-	EL_Status_Bits_LSW = 11,
-	/// <summary>
-	/// this is the position of the axsys in terms of motor step count (most signifigant word)
-	/// </summary>
-	EL_Current_Position_MSW = 12,
-	/// <summary>
-	/// this is the position of the axsys in terms of motor step count (least signifigant word)
-	/// </summary>
-	EL_Current_Position_LSW = 13,
-	/// <summary>
-	/// if we were using encoders on the motors this is where the data from those encoders would be
-	/// </summary>
-	EL_MTR_Encoder_Pos_MSW = 14,
-	/// <summary>
-	/// if we were using encoders on the motors this is where the data from those encoders would be
-	/// </summary>
-	EL_MTR_Encoder_Pos_LSW = 15,
-	/// <summary>
-	/// if the MCU is told to capture the current position this is where that data will be stored
-	/// </summary>
-	EL_Capture_Data_MSW = 16,
-	/// <summary>
-	/// if the MCU is told to capture the current position this is where that data will be stored
-	/// </summary>
-	EL_Capture_Data_LSW = 17,
-	RESERVED2 = 18,
-	RESERVED3 = 19
-}
-
-/// <summary>
-/// taken from the control room, MCUConstants.cs
-/// desciptions taken from anf1-anf2-motion-controller-user-manual.pdf  page 76 - 78
-/// </summary>
-public enum MCUStatusBitsMSW : int
-{
-	/// <summary>
-	/// Set when the ANF1/2 axis is outputting pulses for clockwise motion
-	/// </summary>
-	CW_Motion = 0,
-	/// <summary>
-	/// Set when the ANF1/2 axis is outputting pulses for counter-clockwise motion
-	/// </summary>
-	CCW_Motion = 1,
-	/// <summary>
-	/// Set when the ANF1/2 axis has stopped motion as a result of a Hold Move Command
-	/// </summary>
-	Hold_State = 2,
-	/// <summary>
-	/// Set when the ANF1/2 axis is not in motion for any reason
-	/// </summary>
-	Axis_Stopped = 3,
-	/// <summary>
-	/// This bit is only set after the successful completion of a homing command
-	/// </summary>
-	At_Home = 4,
-	/// <summary>
-	/// Set when the ANF1/2 axis is accelerating during any move
-	/// </summary>
-	Move_Accelerating = 5,
-	/// <summary>
-	/// Set when the ANF1/2 axis is decelerating during any move
-	/// </summary>
-	Move_Decelerating = 6,
-	/// <summary>
-	/// Set when the ANF1/2 axis has successfully completed an Absolute, Relative,
-	/// Blend, or Interpolated Move
-	/// </summary>
-	Move_Complete = 7,
-	/// <summary>
-	/// Set when the ANF1/2 could not home the axis because of an error durring homeing see MCU documaentation for list of potential eroorrs
-	/// </summary>
-	Home_Invalid_Error = 8,
-	/// <summary>
-	/// Set when there was an error in the last Program Blend Profile data block //we don't use blend move so this shouldnt come up
-	/// </summary>
-	Profile_Invalid = 9,
-	/// <summary>
-	/// this bit is set when the position stored in the MCU could be incorrect.
-	/// set under the fowling conditions, Axis switched to Command Mode | An Immediate Stop command was issued | An Emergency Stop input was activated | CW or CCW Limit reached
-	/// </summary>
-	Position_Invalid = 10,
-	/// <summary>
-	/// see MCU documaentation for list of potential eroorrs
-	/// </summary>
-	Input_Error = 11,
-	/// <summary>
-	/// Set when the last command issued to the ANF1/2 axis forced an error
-	/// </summary>
-	Command_Error = 12,
-	/// <summary>
-	/// set when the axis has a configuration error
-	/// </summary>
-	Configuration_Error = 13,
-	/// <summary>
-	/// Set when the axis is enabled. Axis 2 of an ANF2 is disabled by default. An
-	/// axis is automatically enabled when valid configuration data is written to it
-	/// </summary>
-	Axis_Enabled = 14,
-	/// <summary>
-	/// Set to “1” when the axis is in Configuration Mode. Reset to “0” when the axis is in Command Mode
-	/// </summary>
-	Axis_Configuration_Mode = 15,
+	// Set if the motor is moving in the negative or positive direction.
+	negMoving = 0,			// CW_Motion
+	posMoving = 1,			// CCW_Motion
+	
+	// Set if the motors are not moving.
+	// NOTE FROM JONATHAN: The CR NEVER looks for this bit.
+	stopped = 3,			// Axis_Stopped
+	
+	// Set if the telescope has successfully homed.
+	homed = 4,				// At_Home
+	
+	// Set if a movement has successfully completed.
+	complete = 7,			// Move_Complete
+	
+	// Set if the "limit swithes" are hit. The control room assumes that this
+	// bit being set means a limit switch was hit. See MCUManager::MovementMonitor
+	ivalidInput = 11,		// Input_Error
+	
+	///
+	/// UNUSED STATUS BITS:
+	///
+	
+	// Hold_State is never sent, as the control room never sends
+	// Hold_Move that would cause this status bit to flip.
+	holdState = 2,			// Hold_State
+	
+	// Accelerating and deceleration are unimplemented on the
+	// simulation.
+	// NOTE FROM JONATHAN: The CR NEVER looks for these bits.
+	accelerating = 5,		// Move_Accelerating
+	decelerating = 6,		// Move_Decelerating
+	
+	// Set if there's an error in homing. Potential failure scenario?
+	invalidHome = 8,		// Home_Invalid_Error
+	
+	// Set if a bad blend move is sent, but we never use blend moves.
+	invalidProfile = 9,		// Profile_Invalid
+	
+	// Set if a movement was prematurely stopped by an E-stop or limit switch.
+	// Could be set if a limit switch is hit and the target is beyond the limit switch.
+	// NOTE FROM JONATHAN: The CR NEVER looks for this bit.
+	invalidPosition = 10,	// Position_Invalid
+	
+	// "Set when the last command issued to the ANF1/2 axis forced an error"
+	invalidCommand = 12,	// Command_Error
+	
+	// "Set when the axis has a configuration error"
+	// Failure scenario? Set this after receiving configure MCU?
+	// NOTE FROM JONATHAN: The CR NEVER looks for this bit.
+	invalidConfiguration = 13, // Configuration_Error
+	
+	// "Set when the axis is enabled. An axis is automatically enabled when valid
+	// configuration data is written to it"
+	// Could be set when config MCU is receive.
+	// NOTE FROM JONATHAN: The CR NEVER looks for this bit.
+	axisEnabled = 14, 		// Axis_Enabled
+	
+	// "Set to '1' when the axis is in Configuration Mode. Reset to '0' when the axis is in Command Mode"
+	// Could be set when config MCU is receive, then reset later.
+	// NOTE FROM JONATHAN: The CR NEVER looks for this bit.
+	axisConfigMode = 15,	// Axis_Configuration_Mode
 }

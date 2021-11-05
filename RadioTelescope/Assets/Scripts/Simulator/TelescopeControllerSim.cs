@@ -146,6 +146,17 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
+	/// Return true if the telescope elevation has hit a limit switch. This is true if the
+	/// current elevation is at a limit value and it has a target to go even further beyond that.
+	/// </summary>
+	public bool LimitSwitchHit()
+	{
+		float current = simTelescopeElevationDegrees;
+		float target = current + command.elevationData;
+		return (current == maxEl && target > maxEl) || (current == minEl && target < minEl);
+	}
+	
+	/// <summary>
 	/// Return the angle of the azimuth object truncated to a single decimal place.
 	/// For use in the UI.
 	/// </summary>
