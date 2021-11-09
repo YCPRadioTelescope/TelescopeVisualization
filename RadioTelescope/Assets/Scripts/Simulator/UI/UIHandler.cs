@@ -70,7 +70,7 @@ public class UIHandler : MonoBehaviour
 		
 		// Initialize the incoming and outgoing register values to all 0s.
 		iRegisters = new ushort[20];
-		oRegisters = new ushort[11];
+		oRegisters = new ushort[13];
 		
 		numberBase = new int[3];
 		numberBase[0] = 2;
@@ -138,7 +138,8 @@ public class UIHandler : MonoBehaviour
 		registersText.text += "</mspace>\n\n";
 		
 		// Print the outgoing azimuth and elevation registers.
-		registersText.text += "status bits".PadLeft(55) + " ";
+		registersText.text += "1st status bits".PadLeft(52) + " ";
+		registersText.text += "2nd status bits".PadLeft(25) + " ";
 		registersText.text += "1st steps".PadLeft(25) + " ";
 		registersText.text += "2nd steps".PadLeft(25) + " ";
 		registersText.text += "1st encoder".PadLeft(24) + " ";

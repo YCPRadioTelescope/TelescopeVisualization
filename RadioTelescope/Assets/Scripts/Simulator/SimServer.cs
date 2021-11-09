@@ -52,7 +52,7 @@ public class SimServer : MonoBehaviour
 	private const int ENCODER_COUNTS_PER_REVOLUTION_BEFORE_GEARING = 8000;
 	
 	private const int INCOMING_REGISTERS_SIZE = 20;
-	private const int OUTGOING_REGISTERS_SIZE = 11;
+	private const int OUTGOING_REGISTERS_SIZE = 13;
 	
 	private const float HEARTBEAT_FLIP = 0.5f;
 	private float timer = 0.0f;
@@ -330,7 +330,7 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	private void SetAzimuthStatusBit(int position)
 	{
-		SetBit((int)OutgoingRegIndex.statusAzimuth, position);
+		SetBit((int)OutgoingRegIndex.firstStatusAzimuth, position);
 	}
 	
 	/// <summary>
@@ -338,7 +338,7 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	private void ResetAzimuthStatusBit(int position)
 	{
-		ResetBit((int)OutgoingRegIndex.statusAzimuth, position);
+		ResetBit((int)OutgoingRegIndex.firstStatusAzimuth, position);
 	}
 	
 	/// <summary>
@@ -346,7 +346,7 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	private void SetElevationStatusBit(int position)
 	{
-		SetBit((int)OutgoingRegIndex.statusElevation, position);
+		SetBit((int)OutgoingRegIndex.firstStatusElevation, position);
 	}
 	
 	/// <summary>
@@ -354,7 +354,7 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	private void ResetElevationStatusBit(int position)
 	{
-		ResetBit((int)OutgoingRegIndex.statusElevation, position);
+		ResetBit((int)OutgoingRegIndex.firstStatusElevation, position);
 	}
 	
 	/// <summary>
@@ -444,14 +444,16 @@ public class SimServer : MonoBehaviour
 	{
 		ushort[] data = new ushort[OUTGOING_REGISTERS_SIZE];
 		int pos = 0;
-		SetData(data, pos++, (int)OutgoingRegIndex.statusAzimuth);
+		SetData(data, pos++, (int)OutgoingRegIndex.firstStatusAzimuth);
+		SetData(data, pos++, (int)OutgoingRegIndex.secondStatusAzimuth);
 		SetData(data, pos++, (int)OutgoingRegIndex.firstWordAzimuthSteps);
 		SetData(data, pos++, (int)OutgoingRegIndex.secondWordAzimuthSteps);
 		SetData(data, pos++, (int)OutgoingRegIndex.firstWordAzimuthEncoder);
 		SetData(data, pos++, (int)OutgoingRegIndex.secondWordAzimuthEncoder);
 		SetData(data, pos++, (int)OutgoingRegIndex.heartbeat);
 		
-		SetData(data, pos++, (int)OutgoingRegIndex.statusElevation);
+		SetData(data, pos++, (int)OutgoingRegIndex.firstStatusElevation);
+		SetData(data, pos++, (int)OutgoingRegIndex.secondStatusElevation);
 		SetData(data, pos++, (int)OutgoingRegIndex.firstWordElevationSteps);
 		SetData(data, pos++, (int)OutgoingRegIndex.secondWordElevationSteps);
 		SetData(data, pos++, (int)OutgoingRegIndex.firstWordElevationEncoder);

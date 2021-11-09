@@ -78,8 +78,8 @@ public enum OutgoingRegIndex : int
 	// by one compared to the indices on the control room. The control room
 	// still understand what we're sending back, so evidently we're putting
 	// data in the right place.
-	statusAzimuth = 1,					// AZ_Status_Bits_MSW
-	// 2 = AZ_Status_Bist_LSW
+	firstStatusAzimuth = 1,				// AZ_Status_Bits_MSW
+	secondStatusAzimuth = 2,			// AZ_Status_Bist_LSW
 	firstWordAzimuthSteps = 3,			// AZ_Current_Position_MSW
 	secondWordAzimuthSteps = 4,			// AZ_Current_Position_LSW
 	firstWordAzimuthEncoder = 5,		// AZ_MTR_Encoder_Pos_MSW
@@ -89,8 +89,8 @@ public enum OutgoingRegIndex : int
 	// Register 10 bit 14 should be flippped every 0.5 seconds.
 	// Register 10 bit 13 should be set if connection to the CR is lost.
 	
-	statusElevation = 11,				// EL_Status_Bits_MSW
-	// 12 = EL_Status_Bist_LSW
+	firstStatusElevation = 11,			// EL_Status_Bits_MSW
+	secondStatusElevation = 12,			// EL_Status_Bist_LSW
 	firstWordElevationSteps = 13,		// EL_Current_Position_MSW
 	secondWordElevationSteps = 14,		// EL_Current_Position_LSW
 	firstWordElevationEncoder = 15,		// EL_MTR_Encoder_Pos_MSW
