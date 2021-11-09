@@ -104,62 +104,63 @@ public enum OutgoingRegIndex : int
 public enum StatusBit : int
 {
 	// Set if the motor is moving in the negative or positive direction.
-	negMoving = 0,			// CW_Motion				0x1
-	posMoving = 1,			// CCW_Motion				0x2
+	negMoving = 0,			// CW_Motion				0x0001
+	posMoving = 1,			// CCW_Motion				0x0002
+	
+	// Hold_State is never sent, as the control room never sends.
+	// Hold_Move that would cause this status bit to flip.
+	// NOTE: The CR doesn't look for this bit.
+	hold = 2,				// Hold_State				0x0004
 	
 	// Set if the motors are not moving.
 	// NOTE: The CR doesn't look for this bit.
-	stopped = 3,			// Axis_Stopped				0x8
+	stopped = 3,			// Axis_Stopped				0x0008
 	
 	// Set if the motor is in the homed position.
-	homed = 4,				// At_Home					0x10
+	homed = 4,				// At_Home					0x0010
 	
 	// Set if the motors are accelerating or decelerating.
 	// NOTE: proper acceleration and deceleration are not yet implemented.
 	// The sim just takes the first third of a movement as accelerating,
 	// the middle third as neither, and the last third as decelerating.
 	// NOTE: The CR doesn't look for these bits.
-	accelerating = 5,		// Move_Accelerating		0x20
-	decelerating = 6,		// Move_Decelerating		0x40
+	accelerating = 5,		// Move_Accelerating		0x0020
+	decelerating = 6,		// Move_Decelerating		0x0040
 	
 	// Set if a relative movement command has successfully completed.
-	complete = 7,			// Move_Complete			0x80
-	
-	// Set if the "limit swithes" are hit. The control room assumes that this
-	// bit being set means a limit switch was hit. See MCUManager::MovementMonitor
-	ivalidInput = 11,		// Input_Error				0x800
-	
-	// Always set active after receiving MCU configure
-	// NOTE: The CR doesn't look for this bit.
-	axisEnabled = 14, 		// Axis_Enabled				0x4000
-	
-	///
-	/// UNUSED STATUS BITS:
-	///
-	
-	// Hold_State is never sent, as the control room never sends.
-	// Hold_Move that would cause this status bit to flip.
-	// NOTE: The CR doesn't look for this bit.
-	holdState = 2,			// Hold_State				0x4
+	complete = 7,			// Move_Complete			0x0080
 	
 	// Set if there's an error in homing. Potential failure scenario?
-	invalidHome = 8,		// Home_Invalid_Error		0x100
+	// NOTE: Never set by the simulation.
+	invalidHome = 8,		// Home_Invalid_Error		0x0100
 	
 	// Set if a bad blend move is sent, but we never use blend moves.
-	invalidProfile = 9,		// Profile_Invalid			0x200
+	// NOTE: Never set by the simulation.
+	invalidProfile = 9,		// Profile_Invalid			0x0200
 	
 	// Set if a movement was prematurely stopped by an E-stop or limit switch.
 	// Could be set if a limit switch is hit and the target is beyond the limit switch.
 	// NOTE: The CR doesn't look for this bit.
-	invalidPosition = 10,	// Position_Invalid			0x400
+	// NOTE: Never set by the simulation.
+	invalidPosition = 10,	// Position_Invalid			0x0400
+	
+	// Set if the "limit swithes" are hit. The control room assumes that this
+	// bit being set means a limit switch was hit. See MCUManager::MovementMonitor
+	invalidInput = 11,		// Input_Error				0x0800
 	
 	// "Set when the last command issued to the ANF1/2 axis forced an error"
+	// NOTE: Never set by the simulation.
 	invalidCommand = 12,	// Command_Error			0x1000
 	
 	// "Set when the axis has a configuration error"
 	// Failure scenario? Set this after receiving configure MCU?
 	// NOTE: The CR doesn't look for this bit.
+	// NOTE: Never set by the simulation.
 	invalidConfig = 13,		// Configuration_Error		0x2000
+	
+	// Always set active after receiving MCU configure
+	// NOTE: The CR doesn't look for this bit.
+	axisEnabled = 14, 		// Axis_Enabled				0x4000
 	
 	// "Set to '1' when the axis is in Configuration Mode. Reset to '0' when the axis is in Command Mode"
 	// Could be set when config MCU is receive, then reset later.

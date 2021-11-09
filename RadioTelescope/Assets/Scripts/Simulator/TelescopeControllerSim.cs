@@ -71,6 +71,9 @@ public class TelescopeControllerSim : MonoBehaviour
 		// Update the azimuth and elevation positions.
 		UpdateAzimuth();
 		UpdateElevation();
+		
+		// Determine if any errors have occurred.
+		HandleErrors();
 	}
 	
 	/// <summary>
@@ -92,6 +95,24 @@ public class TelescopeControllerSim : MonoBehaviour
 		// Update the UI with the input azimuth and elevation.
 		ui.InputAzimuth(command.azimuthData);
 		ui.InputElevation(command.elevationData);
+	}
+	
+	public void HandleErrors()
+	{
+		command.invalidInput = LimitSwitchHit();
+	}
+	
+	/// <summary>
+	/// Return true if the telescope elevation has hit a limit switch. This is true if the
+	/// current elevation is beyond a limit value or at a limit value and it has a target
+	/// to go even further beyond that.
+	/// </summary>
+	public bool LimitSwitchHit()
+	{
+		float current = simTelescopeElevationDegrees;
+		float target = current + command.elevationData;
+		return (current > maxEl || (current == maxEl && target > maxEl))
+			|| (current < minEl || (current == minEl && target < minEl));
 	}
 	
 	/// <summary>
@@ -205,18 +226,6 @@ public class TelescopeControllerSim : MonoBehaviour
 	public bool ElevationHomed()
 	{
 		return !ElevationMoving() && WithinEpsilon(AngleDistance(Elevation(), 15.0f));
-	}
-	
-	/// <summary>
-	/// Return true if the telescope elevation has hit a limit switch. This is true if the
-	/// current elevation is at a limit value and it has a target to go even further beyond that.
-	/// </summary>
-	public bool LimitSwitchHit()
-	{
-		float current = simTelescopeElevationDegrees;
-		float target = current + command.elevationData;
-		return (current >= maxEl || (current == maxEl && target > maxEl))
-			|| (current <= minEl || (current == minEl && target < minEl));
 	}
 	
 	/// <summary>

@@ -262,13 +262,43 @@ public class SimServer : MonoBehaviour
 			ResetElevationStatusBit((int)StatusBit.decelerating);
 		}
 		
+		// Set bit 8.
+		if(command.invalidHome)
+			SetBothStatusBits((int)StatusBit.invalidHome);
+		else
+			ResetBothStatusBits((int)StatusBit.invalidHome);
+		
+		// Set bit 9.
+		if(command.invalidProfile)
+			SetBothStatusBits((int)StatusBit.invalidProfile);
+		else
+			ResetBothStatusBits((int)StatusBit.invalidProfile);
+		
+		// Set bit 10.
+		if(command.invalidPosition)
+			SetBothStatusBits((int)StatusBit.invalidPosition);
+		else
+			ResetBothStatusBits((int)StatusBit.invalidPosition);
+		
 		// Set bit position 11 if invalid input was received. That is,
 		// a command was received that the MCUCommand script didn't
 		// recognize.
-		if(command.invalidInput || tc.LimitSwitchHit())
-			SetBothStatusBits((int)StatusBit.ivalidInput);
+		if(command.invalidInput)
+			SetBothStatusBits((int)StatusBit.invalidInput);
 		else
-			ResetBothStatusBits((int)StatusBit.ivalidInput);
+			ResetBothStatusBits((int)StatusBit.invalidInput);
+		
+		// Set bit 12.
+		if(command.invalidCommand)
+			SetBothStatusBits((int)StatusBit.invalidCommand);
+		else
+			ResetBothStatusBits((int)StatusBit.invalidCommand);
+		
+		// Set bit 13.
+		if(command.invalidConfig)
+			SetBothStatusBits((int)StatusBit.invalidConfig);
+		else
+			ResetBothStatusBits((int)StatusBit.invalidConfig);
 		
 		// Set bit position 14 if the simulation has received a configure MCU command.
 		if(command.configured)

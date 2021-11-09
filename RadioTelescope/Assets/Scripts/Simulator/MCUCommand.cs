@@ -37,8 +37,9 @@ public class MCUCommand : MonoBehaviour
 	public bool ignoreCommand = false;
 	
 	public bool invalidHome = false;
-	public bool invalidInput = false;
 	public bool invalidProfile = false;
+	public bool invalidPosition = false;
+	public bool invalidInput = false;
 	public bool invalidCommand = false;
 	public bool invalidConfig = false;
 	
@@ -242,8 +243,9 @@ public class MCUCommand : MonoBehaviour
 	private void ClearMCUErrors()
 	{
 		invalidHome = false;
-		invalidInput = false;
 		invalidProfile = false;
+		// invalidPosition is not cleared by ClearMCUErrors.
+		invalidInput = false;
 		invalidCommand = false;
 		invalidConfig = false;
 	}
