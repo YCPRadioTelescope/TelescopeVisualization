@@ -164,22 +164,50 @@ public class SimServer : MonoBehaviour
 	private void UpdateStatus()
 	{
 		// Set bit positions 0 or 1 depending on the direction of motor movement.
-		// Set bit posiitons 3 and 7 if the movement has completed.
+		// Bit position 2 is never set.
+		// Set bit position 3 if the motor isn't moving.
+		// Set bit position 4 if the motor is in the home position.
+		// Set bit positions 5 or 6 depending on the direction of accelerating, should the motors be moving.
+		// Set bit posiiton 7 if a relative movement command has completed.
 		if(tc.AzimuthMoving())
 		{
 			if(tc.AzimuthPosMotion())
 				SetAzimuthStatusBit((int)StatusBit.posMoving);
 			else
 				SetAzimuthStatusBit((int)StatusBit.negMoving);
+			
+			if(tc.AzimuthAccelerating())
+			{
+				SetAzimuthStatusBit((int)StatusBit.accelerating);
+				ResetAzimuthStatusBit((int)StatusBit.decelerating);
+			}
+			else if(tc.AzimuthDecelerating())
+			{
+				SetAzimuthStatusBit((int)StatusBit.decelerating);
+				ResetAzimuthStatusBit((int)StatusBit.accelerating);
+			}
+			else
+			{
+				ResetAzimuthStatusBit((int)StatusBit.accelerating);
+				ResetAzimuthStatusBit((int)StatusBit.decelerating);
+			}
+			
+			ResetAzimuthStatusBit((int)StatusBit.homed);
 			ResetAzimuthStatusBit((int)StatusBit.stopped);
 			ResetAzimuthStatusBit((int)StatusBit.complete);
 		}
 		else
 		{
 			SetAzimuthStatusBit((int)StatusBit.stopped);
-			SetAzimuthStatusBit((int)StatusBit.complete);
+			if(tc.AzimuthHomed())
+				SetAzimuthStatusBit((int)StatusBit.homed);
+			if(tc.RelativeMove())
+				SetAzimuthStatusBit((int)StatusBit.complete);
+			
 			ResetAzimuthStatusBit((int)StatusBit.posMoving);
 			ResetAzimuthStatusBit((int)StatusBit.negMoving);
+			ResetAzimuthStatusBit((int)StatusBit.accelerating);
+			ResetAzimuthStatusBit((int)StatusBit.decelerating);
 		}
 		
 		if(tc.ElevationMoving())
@@ -188,24 +216,40 @@ public class SimServer : MonoBehaviour
 				SetElevationStatusBit((int)StatusBit.posMoving);
 			else
 				SetElevationStatusBit((int)StatusBit.negMoving);
+			
+			if(tc.ElevationAccelerating())
+			{
+				SetElevationStatusBit((int)StatusBit.accelerating);
+				ResetElevationStatusBit((int)StatusBit.decelerating);
+			}
+			else if(tc.ElevationDecelerating())
+			{
+				SetElevationStatusBit((int)StatusBit.decelerating);
+				ResetElevationStatusBit((int)StatusBit.accelerating);
+			}
+			else
+			{
+				ResetElevationStatusBit((int)StatusBit.accelerating);
+				ResetElevationStatusBit((int)StatusBit.decelerating);
+			}
+			
+			ResetElevationStatusBit((int)StatusBit.homed);
 			ResetElevationStatusBit((int)StatusBit.stopped);
 			ResetElevationStatusBit((int)StatusBit.complete);
 		}
 		else
 		{
 			SetElevationStatusBit((int)StatusBit.stopped);
-			SetElevationStatusBit((int)StatusBit.complete);
+			if(tc.ElevationHomed())
+				SetElevationStatusBit((int)StatusBit.homed);
+			if(tc.RelativeMove())
+				SetElevationStatusBit((int)StatusBit.complete);
+			
 			ResetElevationStatusBit((int)StatusBit.posMoving);
 			ResetElevationStatusBit((int)StatusBit.negMoving);
+			ResetElevationStatusBit((int)StatusBit.accelerating);
+			ResetElevationStatusBit((int)StatusBit.decelerating);
 		}
-		
-		// Set bit position 4 if the telescope is in the home position.
-		// The control room only checks the azimuth status register, but
-		// set both.
-		if(tc.Homed())
-			SetBothStatusBits((int)StatusBit.homed);
-		else
-			ResetBothStatusBits((int)StatusBit.homed);
 		
 		// Set bit position 11 if invalid input was received. That is,
 		// a command was received that the MCUCommand script didn't
@@ -214,6 +258,12 @@ public class SimServer : MonoBehaviour
 			SetBothStatusBits((int)StatusBit.ivalidInput);
 		else
 			ResetBothStatusBits((int)StatusBit.ivalidInput);
+		
+		// Set bit position 14 if the simulation has received a configure MCU command.
+		if(command.configured)
+			SetBothStatusBits((int)StatusBit.axisEnabled);
+		else
+			ResetBothStatusBits((int)StatusBit.axisEnabled);
 	}
 	
 	/// <summary>

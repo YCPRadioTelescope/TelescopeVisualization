@@ -21,15 +21,24 @@ public class TelescopeControllerSim : MonoBehaviour
 	private float simTelescopeAzimuthDegrees;
 	private float simTelescopeElevationDegrees;
 	
-	// Whether the azimuth or elevation have reached their target
-	// as defined by the MCUCommand, and the direction of travel.
+	// Whether the azimuth or elevation motors are moving,
+	// the direction of travel (true = positive, false = negative),
+	// and the acceleration direction.
+	// Always check the moving bool before checking the motion or accelerating
+	// bools.
 	private bool azimuthMoving = false;
 	private bool azimuthPosMotion = false;
+	private bool azimuthAccelerating = false;
+	private bool azimuthDecelerating = false;
 	private bool elevationMoving = false;
 	private bool elevationPosMotion = false;
+	private bool elevationAccelerating = false;
+	private bool elevationDecelerating = false;
+	
+	private bool executingRelativeMove = false;
 	
 	// If the angle and target are within this distance, consider them equal.
-	private float epsilon = 0.1f / 2.0f;
+	private float epsilon = 0.001f;
 	
 	// The max and min allowed angles for the elevation, expressed as the 
 	// actual angle plus 15 degrees to convert the actual angle to the 
@@ -65,24 +74,32 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Determine what the current command is and update the target orientation, if necessary.
+	/// Determine what the current command is update necessary variables.
 	/// </summary>
 	public void HandleCommand() 
 	{
 		if(command.ignoreCommand == true) 
 			return;
 		
-		// Some commands require special handling.
 		if(command.jog) 
 			HandleJog();
-		else
-		{
-			// This command was a relative move or a stop move, which requires no special handling.
-		}
+		else if(command.relativeMove)
+			executingRelativeMove = true;
+		
+		if(!command.stop  && !command.relativeMove && executingRelativeMove)
+			executingRelativeMove = false;
 		
 		// Update the UI with the input azimuth and elevation.
 		ui.InputAzimuth(command.azimuthData);
 		ui.InputElevation(command.elevationData);
+	}
+	
+	/// <summary>
+	/// Return true if a relative move was received.
+	/// </summary>
+	public bool RelativeMove()
+	{
+		return executingRelativeMove;
 	}
 	
 	/// <summary>
@@ -102,11 +119,40 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Return true if the azimuth motor is moving in the positive direction.
+	/// Return true if the azimuth motor is moving in the positive direction
+	/// and false if it is moving in the negative direction.
+	/// Always check AzimuthMoving before checking this function.
 	/// </summary>
 	public bool AzimuthPosMotion()
 	{
 		return azimuthPosMotion;
+	}
+	
+	/// <summary>
+	/// Return true if the azimuth motor has positive acceleration and
+	/// false if it has negative acceleration (i.e. it is decelerating).
+	/// Always check AzimuthMoving before checking this function.
+	/// </summary>
+	public bool AzimuthAccelerating()
+	{
+		return azimuthAccelerating;
+	}
+	
+	/// <summary>
+	/// Return true if the azimuth motor has negative acceleration (i.e. deceleration).
+	/// Always check AzimuthMoving before checking this function.
+	/// </summary>
+	public bool AzimuthDecelerating()
+	{
+		return azimuthDecelerating;
+	}
+	
+	/// <summary>
+	/// Return true if the azimuth orientation is at the homed position.
+	/// </summary>
+	public bool AzimuthHomed()
+	{
+		return !AzimuthMoving() && WithinEpsilon(AngleDistance(Azimuth(), 0.0f));
 	}
 	
 	/// <summary>
@@ -126,7 +172,9 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Return true if the elevation motor is moving in the positive direction.
+	/// Return true if the elevation motor is moving in the positive direction
+	/// and false if it is moving in the negative direction.
+	/// Always check ElevationMoving before checking this function.
 	/// </summary>
 	public bool ElevationPosMotion()
 	{
@@ -134,15 +182,29 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Return true if the telescope orientation is at the homed position. This is when neither
-	/// motors are moving and the orientation is at 0,0 (0,15 in Unity angles).
+	/// Return true if the elevation motor has positive acceleration.
+	/// Always check ElevationMoving before checking this function.
 	/// </summary>
-	public bool Homed()
+	public bool ElevationAccelerating()
 	{
-		return !AzimuthMoving()
-			&& !ElevationMoving()
-			&& WithinEpsilon(AngleDistance(Azimuth(), 0.0f))
-			&& WithinEpsilon(AngleDistance(Elevation(), 15.0f));
+		return elevationAccelerating;
+	}
+	
+	/// <summary>
+	/// Return true if the elevation motor has negative acceleration (i.e. deceleration).
+	/// Always check ElevationMoving before checking this function.
+	/// </summary>
+	public bool ElevationDecelerating()
+	{
+		return elevationDecelerating;
+	}
+	
+	/// <summary>
+	/// Return true if the elevation orientation is at the homed position.
+	/// </summary>
+	public bool ElevationHomed()
+	{
+		return !ElevationMoving() && WithinEpsilon(AngleDistance(Elevation(), 15.0f));
 	}
 	
 	/// <summary>
@@ -153,7 +215,8 @@ public class TelescopeControllerSim : MonoBehaviour
 	{
 		float current = simTelescopeElevationDegrees;
 		float target = current + command.elevationData;
-		return (current == maxEl && target > maxEl) || (current == minEl && target < minEl);
+		return (current >= maxEl || (current == maxEl && target > maxEl))
+			|| (current <= minEl || (current == minEl && target < minEl));
 	}
 	
 	/// <summary>
@@ -269,6 +332,8 @@ public class TelescopeControllerSim : MonoBehaviour
 		}
 		azimuthMoving = (moveBy != 0.0f);
 		azimuthPosMotion = (moveBy > 0.0f);
+		azimuthAccelerating = (Mathf.Abs(moveBy) > (Mathf.Abs(command.cachedAzData) * 2.0f / 3.0f));
+		azimuthDecelerating = (Mathf.Abs(moveBy) < (Mathf.Abs(command.cachedAzData) / 3.0f));
 	}
 	
 	/// <summary>
@@ -296,7 +361,9 @@ public class TelescopeControllerSim : MonoBehaviour
 				moveBy = 0.0f;
 		}
 		elevationMoving = (moveBy != 0.0f);
-		elevationPosMotion = (moveBy < 0.0f);
+		elevationPosMotion = (moveBy > 0.0f);
+		elevationAccelerating = (Mathf.Abs(moveBy) > (Mathf.Abs(command.cachedAzData) * 2.0f / 3.0f));
+		elevationDecelerating = (Mathf.Abs(moveBy) < (Mathf.Abs(command.cachedElData) / 3.0f));
 	}
 
 	/// <summary>

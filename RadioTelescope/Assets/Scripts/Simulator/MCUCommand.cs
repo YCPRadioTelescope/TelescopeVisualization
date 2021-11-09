@@ -24,13 +24,23 @@ public class MCUCommand : MonoBehaviour
 	public float elevationAcceleration = 0.0f;
 	public float azimuthDeceleration = 0.0f;
 	public float elevationDeceleration = 0.0f;
+	public float cachedAzData = 0.0f;
+	public float cachedElData = 0.0f;
 	
+	public bool configured = false;
+	public bool relativeMove = false;
 	public bool jog = false;
 	public bool posJog = false;
 	public bool azJog = false;
+	public bool stop = false;
 	
 	public bool ignoreCommand = false;
+	
+	public bool invalidHome = false;
 	public bool invalidInput = false;
+	public bool invalidProfile = false;
+	public bool invalidCommand = false;
+	public bool invalidConfig = false;
 	
 	private int azimuthDataBits = 0;
 	private int elevationDataBits = 0;
@@ -93,13 +103,9 @@ public class MCUCommand : MonoBehaviour
 		azimuthSpeedBits = (registerData[(int)IncomingRegIndex.firstSpeedAzimuth] << 16) + registerData[(int)IncomingRegIndex.secondSpeedAzimuth];
 		elevationSpeedBits = (registerData[(int)IncomingRegIndex.firstSpeedElevation] << 16) + registerData[(int)IncomingRegIndex.secondSpeedElevation];
 		
-		// NOTE FROM LUCAS: from my digging, the acceleration between the azimuth and elevation instructions is always the same
-		// NOTE FROM JONATHAN: I'm creating a variable for both just in case this ever changes.
 		azimuthAccelerationBits = registerData[(int)IncomingRegIndex.accelerationAzimuth];
 		elevationAccelerationBits = registerData[(int)IncomingRegIndex.accelerationElevation];
 		
-		// NOTE FROM JONATHAN: The control room sets the same value for the acceleration and deceleration, but again, grab the
-		// registers separately in case that ever change.
 		azimuthDecelerationBits = registerData[(int)IncomingRegIndex.decelerationAzimuth];
 		elevationDecelerationBits = registerData[(int)IncomingRegIndex.decelerationElevation];
 		
@@ -108,6 +114,7 @@ public class MCUCommand : MonoBehaviour
 		if(firstCommandAzimuth == (ushort)CommandType.RELATIVE_MOVE)
 		{
 			currentCommand = "relative move";
+			relativeMove = true;
 			// The positive and negative directions on the hardware elevation motor are flipped
 			// compared to what the simulation uses, so flip the recevied value.
 			ConvertToDegrees();
@@ -163,7 +170,8 @@ public class MCUCommand : MonoBehaviour
 		// TODO FROM LUCAS: write back proper registers
 		else if(firstCommandAzimuth == (ushort)CommandType.CONFIGURE_MCU)
 		{
-			currentCommand = "congifure MCU";
+			currentCommand = "configure MCU";
+			configured = true;
 			ignoreCommand = true;
 		}
 		else if(firstCommandAzimuth == (ushort)CommandType.CLEAR_MCU_ERRORS)
@@ -175,14 +183,17 @@ public class MCUCommand : MonoBehaviour
 		else if(firstCommandAzimuth == (ushort)CommandType.CONTROLLED_STOP)
 		{
 			currentCommand = "controlled stop";
+			stop = true;
 		}
 		else if(firstCommandAzimuth == (ushort)CommandType.IMMEDIATE_STOP)
 		{
 			currentCommand = "immediate stop";
+			stop = true;
 		}
 		else if(secondCommandElevation == (ushort)CommandType.CANCEL_MOVE)
 		{
 			currentCommand = "cancel move";
+			stop = true;
 		}
 		else
 		{
@@ -195,7 +206,7 @@ public class MCUCommand : MonoBehaviour
 	private void Reset()
 	{
 		currentCommand = "";
-	
+		
 		azimuthData = 0.0f;
 		elevationData = 0.0f;
 		azimuthSpeed = 0.0f;
@@ -204,12 +215,18 @@ public class MCUCommand : MonoBehaviour
 		elevationAcceleration = 0.0f;
 		azimuthDeceleration = 0.0f;
 		elevationDeceleration = 0.0f;
+		cachedAzData = 0.0f;
+		cachedElData = 0.0f;
 		
+		// Configured is always true after connecting.
+		relativeMove = false;
 		jog = false;
 		posJog = false;
 		azJog = false;
+		stop = false;
 		
 		ignoreCommand = false;
+		
 		// Error bools are only reset by a ClearMCUErrors command.
 		
 		azimuthDataBits = 0;
@@ -224,7 +241,11 @@ public class MCUCommand : MonoBehaviour
 	
 	private void ClearMCUErrors()
 	{
+		invalidHome = false;
 		invalidInput = false;
+		invalidProfile = false;
+		invalidCommand = false;
+		invalidConfig = false;
 	}
 	
 	/// <summary>
@@ -233,13 +254,22 @@ public class MCUCommand : MonoBehaviour
 	private void ConvertToDegrees() 
 	{
 		// Convert all step values to floats in degrees.
-		// NOTE FROM LUCAS: this process will most likely change when we want to make the process interruptable, so instead of an absolute conversion
-		// something like (# of steps for 1 degree) -- future work
 		azimuthData = ConvertStepsToDegrees(azimuthDataBits, AZIMUTH_GEARING_RATIO);
 		elevationData = ConvertStepsToDegrees(elevationDataBits, ELEVATION_GEARING_RATIO);
 		azimuthSpeed = ConvertStepsToDegrees(azimuthSpeedBits, AZIMUTH_GEARING_RATIO);
 		elevationSpeed = ConvertStepsToDegrees(elevationSpeedBits, ELEVATION_GEARING_RATIO);
-		// TODO: Determine if the acceleration values should use the gearing ratios.
+		
+		// The azimuth and elevation data fields get modified as the simulation telescope moves.
+		// Cache the number of steps to determine the initial input values of the command.
+		// Don't cache the data for a stop command as to save the input for the command prior
+		// to the stop.
+		if(!stop)
+		{
+			cachedAzData = azimuthData;
+			cachedElData = elevationData;
+		}
+		
+		// The acceleration that is received already has the gearing ratios applied, hence the gearing ratio of 1.
 		azimuthAcceleration = ConvertStepsToDegrees(azimuthAccelerationBits, 1);
 		elevationAcceleration = ConvertStepsToDegrees(elevationAccelerationBits, 1);
 		azimuthDeceleration = ConvertStepsToDegrees(azimuthDecelerationBits, 1);

@@ -79,19 +79,23 @@ public enum OutgoingRegIndex : int
 	// still understand what we're sending back, so evidently we're putting
 	// data in the right place.
 	statusAzimuth = 1,					// AZ_Status_Bits_MSW
+	// 2 = LSW status
 	firstWordAzimuthSteps = 3,
 	secondWordAzimuthSteps = 4,
 	firstWordAzimuthEncoder = 5,
 	secondWordAzimuthEncoder = 6,
-	
-	// Register 9 bit 14 should be flippped ever 0.5 seconds.
-	// Register 9 bit 13 should be set if connection to the CR is lost.
+	// 7, 8, 9 unused.
+	// 10 is heartbeat.
+	// Register 10 bit 14 should be flippped every 0.5 seconds.
+	// Register 10 bit 13 should be set if connection to the CR is lost.
 	
 	statusElevation = 11,				// EL_Status_Bits_MSW
+	// 12 = LSW status
 	firstWordElevationSteps = 13,
 	secondWordElevationSteps = 14,
 	firstWordElevationEncoder = 15,
 	secondWordElevationEncoder = 16,
+	// 17, 18, 19, 20 unused
 }
 
 // These are the bit positions and names that we use for the simulation.
@@ -100,64 +104,65 @@ public enum OutgoingRegIndex : int
 public enum StatusBit : int
 {
 	// Set if the motor is moving in the negative or positive direction.
-	negMoving = 0,			// CW_Motion
-	posMoving = 1,			// CCW_Motion
+	negMoving = 0,			// CW_Motion				0x1
+	posMoving = 1,			// CCW_Motion				0x2
 	
 	// Set if the motors are not moving.
-	// NOTE FROM JONATHAN: The CR NEVER looks for this bit.
-	stopped = 3,			// Axis_Stopped
+	// NOTE: The CR doesn't look for this bit.
+	stopped = 3,			// Axis_Stopped				0x8
 	
-	// Set if the telescope has successfully homed.
-	homed = 4,				// At_Home
+	// Set if the motor is in the homed position.
+	homed = 4,				// At_Home					0x10
 	
-	// Set if a movement has successfully completed.
-	complete = 7,			// Move_Complete
+	// Set if the motors are accelerating or decelerating.
+	// NOTE: proper acceleration and deceleration are not yet implemented.
+	// The sim just takes the first third of a movement as accelerating,
+	// the middle third as neither, and the last third as decelerating.
+	// NOTE: The CR doesn't look for these bits.
+	accelerating = 5,		// Move_Accelerating		0x20
+	decelerating = 6,		// Move_Decelerating		0x40
+	
+	// Set if a relative movement command has successfully completed.
+	complete = 7,			// Move_Complete			0x80
 	
 	// Set if the "limit swithes" are hit. The control room assumes that this
 	// bit being set means a limit switch was hit. See MCUManager::MovementMonitor
-	ivalidInput = 11,		// Input_Error
+	ivalidInput = 11,		// Input_Error				0x800
+	
+	// Always set active after receiving MCU configure
+	// NOTE: The CR doesn't look for this bit.
+	axisEnabled = 14, 		// Axis_Enabled				0x4000
 	
 	///
 	/// UNUSED STATUS BITS:
 	///
 	
-	// Hold_State is never sent, as the control room never sends
+	// Hold_State is never sent, as the control room never sends.
 	// Hold_Move that would cause this status bit to flip.
-	holdState = 2,			// Hold_State
-	
-	// Accelerating and deceleration are unimplemented on the
-	// simulation.
-	// NOTE FROM JONATHAN: The CR NEVER looks for these bits.
-	accelerating = 5,		// Move_Accelerating
-	decelerating = 6,		// Move_Decelerating
+	// NOTE: The CR doesn't look for this bit.
+	holdState = 2,			// Hold_State				0x4
 	
 	// Set if there's an error in homing. Potential failure scenario?
-	invalidHome = 8,		// Home_Invalid_Error
+	invalidHome = 8,		// Home_Invalid_Error		0x100
 	
 	// Set if a bad blend move is sent, but we never use blend moves.
-	invalidProfile = 9,		// Profile_Invalid
+	invalidProfile = 9,		// Profile_Invalid			0x200
 	
 	// Set if a movement was prematurely stopped by an E-stop or limit switch.
 	// Could be set if a limit switch is hit and the target is beyond the limit switch.
-	// NOTE FROM JONATHAN: The CR NEVER looks for this bit.
-	invalidPosition = 10,	// Position_Invalid
+	// NOTE: The CR doesn't look for this bit.
+	invalidPosition = 10,	// Position_Invalid			0x400
 	
 	// "Set when the last command issued to the ANF1/2 axis forced an error"
-	invalidCommand = 12,	// Command_Error
+	invalidCommand = 12,	// Command_Error			0x1000
 	
 	// "Set when the axis has a configuration error"
 	// Failure scenario? Set this after receiving configure MCU?
-	// NOTE FROM JONATHAN: The CR NEVER looks for this bit.
-	invalidConfiguration = 13, // Configuration_Error
-	
-	// "Set when the axis is enabled. An axis is automatically enabled when valid
-	// configuration data is written to it"
-	// Could be set when config MCU is receive.
-	// NOTE FROM JONATHAN: The CR NEVER looks for this bit.
-	axisEnabled = 14, 		// Axis_Enabled
+	// NOTE: The CR doesn't look for this bit.
+	invalidConfig = 13,		// Configuration_Error		0x2000
 	
 	// "Set to '1' when the axis is in Configuration Mode. Reset to '0' when the axis is in Command Mode"
 	// Could be set when config MCU is receive, then reset later.
-	// NOTE FROM JONATHAN: The CR NEVER looks for this bit.
-	axisConfigMode = 15,	// Axis_Configuration_Mode
+	// NOTE: The CR doesn't look for this bit.
+	axisConfigMode = 15,	// Axis_Configuration_Mode	0x8000
 }
