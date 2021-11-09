@@ -79,22 +79,22 @@ public enum OutgoingRegIndex : int
 	// still understand what we're sending back, so evidently we're putting
 	// data in the right place.
 	statusAzimuth = 1,					// AZ_Status_Bits_MSW
-	// 2 = LSW status
-	firstWordAzimuthSteps = 3,
-	secondWordAzimuthSteps = 4,
-	firstWordAzimuthEncoder = 5,
-	secondWordAzimuthEncoder = 6,
+	// 2 = AZ_Status_Bist_LSW
+	firstWordAzimuthSteps = 3,			// AZ_Current_Position_MSW
+	secondWordAzimuthSteps = 4,			// AZ_Current_Position_LSW
+	firstWordAzimuthEncoder = 5,		// AZ_MTR_Encoder_Pos_MSW
+	secondWordAzimuthEncoder = 6,		// AZ_MTR_Encoder_Pos_LSW
 	// 7, 8, 9 unused.
-	// 10 is heartbeat.
+	heartbeat = 10,						// NetworkConnectivity
 	// Register 10 bit 14 should be flippped every 0.5 seconds.
 	// Register 10 bit 13 should be set if connection to the CR is lost.
 	
 	statusElevation = 11,				// EL_Status_Bits_MSW
-	// 12 = LSW status
-	firstWordElevationSteps = 13,
-	secondWordElevationSteps = 14,
-	firstWordElevationEncoder = 15,
-	secondWordElevationEncoder = 16,
+	// 12 = EL_Status_Bist_LSW
+	firstWordElevationSteps = 13,		// EL_Current_Position_MSW
+	secondWordElevationSteps = 14,		// EL_Current_Position_LSW
+	firstWordElevationEncoder = 15,		// EL_MTR_Encoder_Pos_MSW
+	secondWordElevationEncoder = 16,	// EL_MTR_Encoder_Pos_LSW
 	// 17, 18, 19, 20 unused
 }
 

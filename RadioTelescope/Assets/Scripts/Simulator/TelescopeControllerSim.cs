@@ -49,7 +49,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <summary>
 	/// Start is called before the first frame.
 	/// </summary>
-	public void Start()
+	void Start()
 	{
 		// Set the current azimuth and elevation degrees to the rotation
 		// of the game objects.
@@ -63,7 +63,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <summary>
 	/// Update is called once per frame.
 	/// </summary>
-	public void Update()
+	void Update()
 	{
 		// Determine what the current command is.
 		HandleCommand();
@@ -74,7 +74,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Determine what the current command is update necessary variables.
+	/// Determine what the current command is and update necessary variables.
 	/// </summary>
 	public void HandleCommand() 
 	{

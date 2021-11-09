@@ -52,7 +52,15 @@ public class SimServer : MonoBehaviour
 	private const int ENCODER_COUNTS_PER_REVOLUTION_BEFORE_GEARING = 8000;
 	
 	private const int INCOMING_REGISTERS_SIZE = 20;
-	private const int OUTGOING_REGISTERS_SIZE = 10;
+	private const int OUTGOING_REGISTERS_SIZE = 11;
+	
+	private const float HEARTBEAT_FLIP = 0.5f;
+	private float timer = 0.0f;
+	
+	void Update()
+	{
+		timer += Time.deltaTime;
+	}
 	
 	/// <summary>
 	/// Establish the TCP connection to the control room and start the MCU thread
@@ -118,6 +126,8 @@ public class SimServer : MonoBehaviour
 		MCU_Modbusserver.DataStore = DataStoreFactory.CreateDefaultDataStore(0, 0, 1054, 0);
 		MCU_Modbusserver.Listen();
 		
+		timer = 0.0f;
+		
 		ushort[] current;
 		ushort[] last = new ushort[INCOMING_REGISTERS_SIZE];
 		while(runSimulator)
@@ -135,6 +145,7 @@ public class SimServer : MonoBehaviour
 			
 			// Update the outgoing registers.
 			UpdateStatus();
+			UpdateHeartbeat();
 			UpdatePosition();
 			
 			// Update the UI with the outgoing register values.
@@ -289,7 +300,7 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	private void SetAzimuthStatusBit(int position)
 	{
-		MCU_Modbusserver.DataStore.HoldingRegisters[(int)OutgoingRegIndex.statusAzimuth] |= (ushort)(1 << position);
+		SetBit((int)OutgoingRegIndex.statusAzimuth, position);
 	}
 	
 	/// <summary>
@@ -297,7 +308,7 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	private void ResetAzimuthStatusBit(int position)
 	{
-		MCU_Modbusserver.DataStore.HoldingRegisters[(int)OutgoingRegIndex.statusAzimuth] &= (ushort)(0xffff - (1 << position));
+		ResetBit((int)OutgoingRegIndex.statusAzimuth, position);
 	}
 	
 	/// <summary>
@@ -305,7 +316,7 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	private void SetElevationStatusBit(int position)
 	{
-		MCU_Modbusserver.DataStore.HoldingRegisters[(int)OutgoingRegIndex.statusElevation] |= (ushort)(1 << position);
+		SetBit((int)OutgoingRegIndex.statusElevation, position);
 	}
 	
 	/// <summary>
@@ -313,7 +324,39 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	private void ResetElevationStatusBit(int position)
 	{
-		MCU_Modbusserver.DataStore.HoldingRegisters[(int)OutgoingRegIndex.statusElevation] &= (ushort)(0xffff - (1 << position));
+		ResetBit((int)OutgoingRegIndex.statusElevation, position);
+	}
+	
+	/// <summary>
+	/// Update the heartbeat.
+	/// </summary>
+	private void UpdateHeartbeat()
+	{
+		const int HEARTBEAT_BIT = 14;
+		
+		if(timer >= HEARTBEAT_FLIP)
+		{
+			timer -= HEARTBEAT_FLIP;
+			if(GetBit((int)OutgoingRegIndex.heartbeat, HEARTBEAT_BIT))
+				ResetBit((int)OutgoingRegIndex.heartbeat, HEARTBEAT_BIT);
+			else
+				SetBit((int)OutgoingRegIndex.heartbeat, HEARTBEAT_BIT);
+		}
+	}
+	
+	private bool GetBit(int index, int position)
+	{
+		return ((MCU_Modbusserver.DataStore.HoldingRegisters[index] >> position) & 1) == 1;
+	}
+	
+	private void SetBit(int index, int position)
+	{
+		MCU_Modbusserver.DataStore.HoldingRegisters[index] |= (ushort)(1 << position);
+	}
+	
+	private void ResetBit(int index, int position)
+	{
+		MCU_Modbusserver.DataStore.HoldingRegisters[index] &= (ushort)(0xffff - (1 << position));
 	}
 	
 	/// <summary>
@@ -376,6 +419,7 @@ public class SimServer : MonoBehaviour
 		SetData(data, pos++, (int)OutgoingRegIndex.secondWordAzimuthSteps);
 		SetData(data, pos++, (int)OutgoingRegIndex.firstWordAzimuthEncoder);
 		SetData(data, pos++, (int)OutgoingRegIndex.secondWordAzimuthEncoder);
+		SetData(data, pos++, (int)OutgoingRegIndex.heartbeat);
 		
 		SetData(data, pos++, (int)OutgoingRegIndex.statusElevation);
 		SetData(data, pos++, (int)OutgoingRegIndex.firstWordElevationSteps);

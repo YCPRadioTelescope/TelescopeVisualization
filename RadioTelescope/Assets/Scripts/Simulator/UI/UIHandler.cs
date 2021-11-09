@@ -70,7 +70,7 @@ public class UIHandler : MonoBehaviour
 		
 		// Initialize the incoming and outgoing register values to all 0s.
 		iRegisters = new ushort[20];
-		oRegisters = new ushort[10];
+		oRegisters = new ushort[11];
 		
 		numberBase = new int[3];
 		numberBase[0] = 2;
@@ -143,16 +143,17 @@ public class UIHandler : MonoBehaviour
 		registersText.text += "2nd steps".PadLeft(25) + " ";
 		registersText.text += "1st encoder".PadLeft(24) + " ";
 		registersText.text += "2nd encoder".PadLeft(22) + " ";
+		registersText.text += "heartbeat".PadLeft(25) + " ";
 		registersText.text += "\n";
 		registersText.text += "Outgoing Azimuth:   <mspace=0.5em>";
-		for(int i = 0; i < oRegisters.Length / 2; i++)
+		for(int i = 0; i < oRegisters.Length / 2 + 1; i++)
 		{
 			string text = Convert.ToString(oRegisters[i], numberBase[baseIndex]);
 			registersText.text += text.PadLeft(17) + "|";
 		}
 		registersText.text += "</mspace>\n";
 		registersText.text += "Outgoing Elevation: <mspace=0.5em>";
-		for(int i = oRegisters.Length / 2; i < oRegisters.Length; i++)
+		for(int i = oRegisters.Length / 2 + 1; i < oRegisters.Length; i++)
 		{
 			string text = Convert.ToString(oRegisters[i], numberBase[baseIndex]);
 			registersText.text += text.PadLeft(17) + "|";
