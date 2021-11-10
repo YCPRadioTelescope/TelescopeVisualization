@@ -101,7 +101,7 @@ public enum OutgoingRegIndex : int
 // These are the bit positions and names that we use for the simulation.
 // A renamed and trimmed down version of the MCUStatusBitsMSW enum copied from
 // the control room, which can be found in the MCUConstants file.
-public enum StatusBit : int
+public enum MSWStatusBit : int
 {
 	// Set if the motor is moving in the negative or positive direction.
 	negMoving = 0,			// CW_Motion				0x0001
@@ -170,4 +170,13 @@ public enum StatusBit : int
 	// If ever this was set, we'd just have it flipped on as the simulation starts,
 	// then flip it off after the configure MCU command is received.
 	axisConfigMode = 15,	// Axis_Configuration_Mode	0x8000
+}
+
+// These are the bit positions and names that we use for the simulation.
+// A renamed and trimmed down version of the MCUStatusBitsLSW enum copied from
+// the control room, which can be found in the MCUConstants file.
+public enum LSWStatusBit : int
+{
+	home = 2, //Home_Input
+	writeComplete = 7, // Move_Complete_Output_State
 }

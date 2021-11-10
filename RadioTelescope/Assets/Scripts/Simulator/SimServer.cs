@@ -144,7 +144,8 @@ public class SimServer : MonoBehaviour
 				command.UpdateCommand(current);
 			
 			// Update the outgoing registers.
-			UpdateStatus();
+			UpdateMSWStatus();
+			UpdateLSWStatus();
 			UpdateHeartbeat();
 			UpdatePosition();
 			
@@ -172,7 +173,7 @@ public class SimServer : MonoBehaviour
 	/// <summary>
 	/// Update the status bits for azimuth and elevtion in the outgoing registers.
 	/// </summary>
-	private void UpdateStatus()
+	private void UpdateMSWStatus()
 	{
 		// Set bit positions 0 or 1 depending on the direction of motor movement.
 		// Bit 2 is unused/unimplemented.
@@ -183,83 +184,83 @@ public class SimServer : MonoBehaviour
 		if(tc.AzimuthMoving())
 		{
 			if(tc.AzimuthPosMotion())
-				SetAzimuthStatusBit((int)StatusBit.posMoving);
+				SetAzimuthStatusBit((int)MSWStatusBit.posMoving);
 			else
-				SetAzimuthStatusBit((int)StatusBit.negMoving);
+				SetAzimuthStatusBit((int)MSWStatusBit.negMoving);
 			
 			if(tc.AzimuthAccelerating())
 			{
-				SetAzimuthStatusBit((int)StatusBit.accelerating);
-				ResetAzimuthStatusBit((int)StatusBit.decelerating);
+				SetAzimuthStatusBit((int)MSWStatusBit.accelerating);
+				ResetAzimuthStatusBit((int)MSWStatusBit.decelerating);
 			}
 			else if(tc.AzimuthDecelerating())
 			{
-				SetAzimuthStatusBit((int)StatusBit.decelerating);
-				ResetAzimuthStatusBit((int)StatusBit.accelerating);
+				SetAzimuthStatusBit((int)MSWStatusBit.decelerating);
+				ResetAzimuthStatusBit((int)MSWStatusBit.accelerating);
 			}
 			else
 			{
-				ResetAzimuthStatusBit((int)StatusBit.accelerating);
-				ResetAzimuthStatusBit((int)StatusBit.decelerating);
+				ResetAzimuthStatusBit((int)MSWStatusBit.accelerating);
+				ResetAzimuthStatusBit((int)MSWStatusBit.decelerating);
 			}
 			
-			ResetAzimuthStatusBit((int)StatusBit.homed);
-			ResetAzimuthStatusBit((int)StatusBit.stopped);
-			ResetAzimuthStatusBit((int)StatusBit.complete);
+			ResetAzimuthStatusBit((int)MSWStatusBit.homed);
+			ResetAzimuthStatusBit((int)MSWStatusBit.stopped);
+			ResetAzimuthStatusBit((int)MSWStatusBit.complete);
 		}
 		else
 		{
-			SetAzimuthStatusBit((int)StatusBit.stopped);
+			SetAzimuthStatusBit((int)MSWStatusBit.stopped);
 			if(tc.AzimuthHomed())
-				SetAzimuthStatusBit((int)StatusBit.homed);
+				SetAzimuthStatusBit((int)MSWStatusBit.homed);
 			if(tc.RelativeMove())
-				SetAzimuthStatusBit((int)StatusBit.complete);
+				SetAzimuthStatusBit((int)MSWStatusBit.complete);
 			
-			ResetAzimuthStatusBit((int)StatusBit.posMoving);
-			ResetAzimuthStatusBit((int)StatusBit.negMoving);
-			ResetAzimuthStatusBit((int)StatusBit.accelerating);
-			ResetAzimuthStatusBit((int)StatusBit.decelerating);
+			ResetAzimuthStatusBit((int)MSWStatusBit.posMoving);
+			ResetAzimuthStatusBit((int)MSWStatusBit.negMoving);
+			ResetAzimuthStatusBit((int)MSWStatusBit.accelerating);
+			ResetAzimuthStatusBit((int)MSWStatusBit.decelerating);
 		}
 		
 		if(tc.ElevationMoving())
 		{
 			if(tc.ElevationPosMotion())
-				SetElevationStatusBit((int)StatusBit.posMoving);
+				SetElevationStatusBit((int)MSWStatusBit.posMoving);
 			else
-				SetElevationStatusBit((int)StatusBit.negMoving);
+				SetElevationStatusBit((int)MSWStatusBit.negMoving);
 			
 			if(tc.ElevationAccelerating())
 			{
-				SetElevationStatusBit((int)StatusBit.accelerating);
-				ResetElevationStatusBit((int)StatusBit.decelerating);
+				SetElevationStatusBit((int)MSWStatusBit.accelerating);
+				ResetElevationStatusBit((int)MSWStatusBit.decelerating);
 			}
 			else if(tc.ElevationDecelerating())
 			{
-				SetElevationStatusBit((int)StatusBit.decelerating);
-				ResetElevationStatusBit((int)StatusBit.accelerating);
+				SetElevationStatusBit((int)MSWStatusBit.decelerating);
+				ResetElevationStatusBit((int)MSWStatusBit.accelerating);
 			}
 			else
 			{
-				ResetElevationStatusBit((int)StatusBit.accelerating);
-				ResetElevationStatusBit((int)StatusBit.decelerating);
+				ResetElevationStatusBit((int)MSWStatusBit.accelerating);
+				ResetElevationStatusBit((int)MSWStatusBit.decelerating);
 			}
 			
-			ResetElevationStatusBit((int)StatusBit.homed);
-			ResetElevationStatusBit((int)StatusBit.stopped);
-			ResetElevationStatusBit((int)StatusBit.complete);
+			ResetElevationStatusBit((int)MSWStatusBit.homed);
+			ResetElevationStatusBit((int)MSWStatusBit.stopped);
+			ResetElevationStatusBit((int)MSWStatusBit.complete);
 		}
 		else
 		{
-			SetElevationStatusBit((int)StatusBit.stopped);
+			SetElevationStatusBit((int)MSWStatusBit.stopped);
 			if(tc.ElevationHomed())
-				SetElevationStatusBit((int)StatusBit.homed);
+				SetElevationStatusBit((int)MSWStatusBit.homed);
 			if(tc.RelativeMove())
-				SetElevationStatusBit((int)StatusBit.complete);
+				SetElevationStatusBit((int)MSWStatusBit.complete);
 			
-			ResetElevationStatusBit((int)StatusBit.posMoving);
-			ResetElevationStatusBit((int)StatusBit.negMoving);
-			ResetElevationStatusBit((int)StatusBit.accelerating);
-			ResetElevationStatusBit((int)StatusBit.decelerating);
+			ResetElevationStatusBit((int)MSWStatusBit.posMoving);
+			ResetElevationStatusBit((int)MSWStatusBit.negMoving);
+			ResetElevationStatusBit((int)MSWStatusBit.accelerating);
+			ResetElevationStatusBit((int)MSWStatusBit.decelerating);
 		}
 		
 		// Bit 8 and 9 are unused/unimplemented.
@@ -267,29 +268,51 @@ public class SimServer : MonoBehaviour
 		// Set bit 10 when the simulation has first been started. Bit 10 is reset
 		// after the telescope has been homed for the first time.
 		if(command.invalidAzimuthPosition)
-			SetAzimuthStatusBit((int)StatusBit.invalidPosition);
+			SetAzimuthStatusBit((int)MSWStatusBit.invalidPosition);
 		else
-			ResetAzimuthStatusBit((int)StatusBit.invalidPosition);
+			ResetAzimuthStatusBit((int)MSWStatusBit.invalidPosition);
 		
 		if(command.invalidElevationPosition)
-			SetElevationStatusBit((int)StatusBit.invalidPosition);
+			SetElevationStatusBit((int)MSWStatusBit.invalidPosition);
 		else
-			ResetElevationStatusBit((int)StatusBit.invalidPosition);
+			ResetElevationStatusBit((int)MSWStatusBit.invalidPosition);
 		
 		// Set bit position 11 if a limit switch has been hit.
 		// command.invalidInput gets set true in this case in TelescopeController.
 		if(command.invalidInput)
-			SetBothStatusBits((int)StatusBit.invalidInput);
+			SetBothStatusBits((int)MSWStatusBit.invalidInput);
 		else
-			ResetBothStatusBits((int)StatusBit.invalidInput);
+			ResetBothStatusBits((int)MSWStatusBit.invalidInput);
 		
 		// Bit 12 and 13 are unused/unimplemented.
 		
 		// Set bit position 14 if the simulation has received a configure MCU command.
 		if(command.configured)
-			SetBothStatusBits((int)StatusBit.axisEnabled);
+			SetBothStatusBits((int)MSWStatusBit.axisEnabled);
 		else
-			ResetBothStatusBits((int)StatusBit.axisEnabled);
+			ResetBothStatusBits((int)MSWStatusBit.axisEnabled);
+	}
+	
+	private void UpdateLSWStatus()
+	{
+		// If the telescope has been homed, LSW status bit 2 gets set depending
+		// on the telescope's orientation relative to the home position.
+		if(!command.invalidAzimuthPosition && tc.Azimuth() > 180.0f)
+			SetBit((int)OutgoingRegIndex.secondStatusAzimuth, (int)LSWStatusBit.home);
+		else
+			ResetBit((int)OutgoingRegIndex.secondStatusAzimuth, (int)LSWStatusBit.home);
+		
+		if(!command.invalidElevationPosition && tc.Elevation() > 15.0f)
+			SetBit((int)OutgoingRegIndex.secondStatusElevation, (int)LSWStatusBit.home);
+		else
+			ResetBit((int)OutgoingRegIndex.secondStatusElevation, (int)LSWStatusBit.home);
+		
+		// If at any point a relative move as send, LSW status bit 7 get set.
+		if(command.relativeMove && Mathf.Abs(command.cachedAzData) > 0.0f)
+			SetBit((int)OutgoingRegIndex.secondStatusAzimuth, (int)LSWStatusBit.writeComplete);
+		
+		if(command.relativeMove && Mathf.Abs(command.cachedElData) > 0.0f)
+			SetBit((int)OutgoingRegIndex.secondStatusElevation, (int)LSWStatusBit.writeComplete);
 	}
 	
 	/// <summary>
