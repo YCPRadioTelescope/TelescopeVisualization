@@ -32,16 +32,16 @@ public class MCUCommand : MonoBehaviour
 	public bool jog = false;
 	public bool posJog = false;
 	public bool azJog = false;
+	public bool home = false;
 	public bool stop = false;
 	
 	public bool ignoreCommand = false;
 	
-	public bool invalidHome = false;
-	public bool invalidProfile = false;
-	public bool invalidPosition = false;
+	// The hardware always starts with the invalid position bits flipped.
+	// The telescope must be homed to turn this off.
+	public bool invalidAzimuthPosition = true;
+	public bool invalidElevationPosition = true;
 	public bool invalidInput = false;
-	public bool invalidCommand = false;
-	public bool invalidConfig = false;
 	
 	private int azimuthDataBits = 0;
 	private int elevationDataBits = 0;
@@ -160,6 +160,7 @@ public class MCUCommand : MonoBehaviour
 				|| firstCommandAzimuth == (ushort)CommandType.COUNTERCLOCKWISE_HOME)
 		{
 			currentCommand = "home";
+			home = true;
 			ConvertToDegrees();
 			if(tc.Azimuth() < 180.0f)
 				azimuthData = -tc.Azimuth();
@@ -224,6 +225,7 @@ public class MCUCommand : MonoBehaviour
 		jog = false;
 		posJog = false;
 		azJog = false;
+		home = false;
 		stop = false;
 		
 		ignoreCommand = false;
@@ -242,12 +244,8 @@ public class MCUCommand : MonoBehaviour
 	
 	private void ClearMCUErrors()
 	{
-		invalidHome = false;
-		invalidProfile = false;
 		// invalidPosition is not cleared by ClearMCUErrors.
 		invalidInput = false;
-		invalidCommand = false;
-		invalidConfig = false;
 	}
 	
 	/// <summary>

@@ -175,7 +175,7 @@ public class SimServer : MonoBehaviour
 	private void UpdateStatus()
 	{
 		// Set bit positions 0 or 1 depending on the direction of motor movement.
-		// Bit position 2 is never set.
+		// Bit 2 is unused/unimplemented.
 		// Set bit position 3 if the motor isn't moving.
 		// Set bit position 4 if the motor is in the home position.
 		// Set bit positions 5 or 6 depending on the direction of accelerating, should the motors be moving.
@@ -262,43 +262,28 @@ public class SimServer : MonoBehaviour
 			ResetElevationStatusBit((int)StatusBit.decelerating);
 		}
 		
-		// Set bit 8.
-		if(command.invalidHome)
-			SetBothStatusBits((int)StatusBit.invalidHome);
-		else
-			ResetBothStatusBits((int)StatusBit.invalidHome);
+		// Bit 8 and 9 are unused/unimplemented.
 		
-		// Set bit 9.
-		if(command.invalidProfile)
-			SetBothStatusBits((int)StatusBit.invalidProfile);
+		// Set bit 10 when the simulation has first been started. Bit 10 is reset
+		// after the telescope has been homed for the first time.
+		if(command.invalidAzimuthPosition)
+			SetAzimuthStatusBit((int)StatusBit.invalidPosition);
 		else
-			ResetBothStatusBits((int)StatusBit.invalidProfile);
+			ResetAzimuthStatusBit((int)StatusBit.invalidPosition);
 		
-		// Set bit 10.
-		if(command.invalidPosition)
-			SetBothStatusBits((int)StatusBit.invalidPosition);
+		if(command.invalidElevationPosition)
+			SetElevationStatusBit((int)StatusBit.invalidPosition);
 		else
-			ResetBothStatusBits((int)StatusBit.invalidPosition);
+			ResetElevationStatusBit((int)StatusBit.invalidPosition);
 		
-		// Set bit position 11 if invalid input was received. That is,
-		// a command was received that the MCUCommand script didn't
-		// recognize.
+		// Set bit position 11 if a limit switch has been hit.
+		// command.invalidInput gets set true in this case in TelescopeController.
 		if(command.invalidInput)
 			SetBothStatusBits((int)StatusBit.invalidInput);
 		else
 			ResetBothStatusBits((int)StatusBit.invalidInput);
 		
-		// Set bit 12.
-		if(command.invalidCommand)
-			SetBothStatusBits((int)StatusBit.invalidCommand);
-		else
-			ResetBothStatusBits((int)StatusBit.invalidCommand);
-		
-		// Set bit 13.
-		if(command.invalidConfig)
-			SetBothStatusBits((int)StatusBit.invalidConfig);
-		else
-			ResetBothStatusBits((int)StatusBit.invalidConfig);
+		// Bit 12 and 13 are unused/unimplemented.
 		
 		// Set bit position 14 if the simulation has received a configure MCU command.
 		if(command.configured)
@@ -374,16 +359,25 @@ public class SimServer : MonoBehaviour
 		}
 	}
 	
+	/// <summary>
+	/// Get the state of a specific bit position in a specific register index.
+	/// </summary>
 	private bool GetBit(int index, int position)
 	{
 		return ((MCU_Modbusserver.DataStore.HoldingRegisters[index] >> position) & 1) == 1;
 	}
 	
+	/// <summary>
+	/// Set a specific bit position in a specific register index.
+	/// </summary>
 	private void SetBit(int index, int position)
 	{
 		MCU_Modbusserver.DataStore.HoldingRegisters[index] |= (ushort)(1 << position);
 	}
 	
+	/// <summary>
+	/// Reset a specific bit position in a specific register index.
+	/// </summary>
 	private void ResetBit(int index, int position)
 	{
 		MCU_Modbusserver.DataStore.HoldingRegisters[index] &= (ushort)(0xffff - (1 << position));

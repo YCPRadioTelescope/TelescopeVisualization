@@ -107,11 +107,6 @@ public enum StatusBit : int
 	negMoving = 0,			// CW_Motion				0x0001
 	posMoving = 1,			// CCW_Motion				0x0002
 	
-	// Hold_State is never sent, as the control room never sends.
-	// Hold_Move that would cause this status bit to flip.
-	// NOTE: The CR doesn't look for this bit.
-	hold = 2,				// Hold_State				0x0004
-	
 	// Set if the motors are not moving.
 	// NOTE: The CR doesn't look for this bit.
 	stopped = 3,			// Axis_Stopped				0x0008
@@ -130,40 +125,49 @@ public enum StatusBit : int
 	// Set if a relative movement command has successfully completed.
 	complete = 7,			// Move_Complete			0x0080
 	
-	// Set if there's an error in homing. Potential failure scenario?
-	// NOTE: Never set by the simulation.
-	invalidHome = 8,		// Home_Invalid_Error		0x0100
-	
-	// Set if a bad blend move is sent, but we never use blend moves.
-	// NOTE: Never set by the simulation.
-	invalidProfile = 9,		// Profile_Invalid			0x0200
-	
-	// Set if a movement was prematurely stopped by an E-stop or limit switch.
-	// Could be set if a limit switch is hit and the target is beyond the limit switch.
+	// Set if the hardware/simulation has been turned on but has yet to be homed.
+	// Might also be hit by the hardware if a limit switch is hit.
 	// NOTE: The CR doesn't look for this bit.
-	// NOTE: Never set by the simulation.
 	invalidPosition = 10,	// Position_Invalid			0x0400
 	
 	// Set if the "limit swithes" are hit. The control room assumes that this
 	// bit being set means a limit switch was hit. See MCUManager::MovementMonitor
+	// for how that is handled.
 	invalidInput = 11,		// Input_Error				0x0800
-	
-	// "Set when the last command issued to the ANF1/2 axis forced an error"
-	// NOTE: Never set by the simulation.
-	invalidCommand = 12,	// Command_Error			0x1000
-	
-	// "Set when the axis has a configuration error"
-	// Failure scenario? Set this after receiving configure MCU?
-	// NOTE: The CR doesn't look for this bit.
-	// NOTE: Never set by the simulation.
-	invalidConfig = 13,		// Configuration_Error		0x2000
 	
 	// Always set active after receiving MCU configure
 	// NOTE: The CR doesn't look for this bit.
 	axisEnabled = 14, 		// Axis_Enabled				0x4000
 	
-	// "Set to '1' when the axis is in Configuration Mode. Reset to '0' when the axis is in Command Mode"
-	// Could be set when config MCU is receive, then reset later.
-	// NOTE: The CR doesn't look for this bit.
+	///
+	/// UNUSED/UNIMPLEMENTED
+	///
+	
+	// Hold_State would be flipped if the control room sent a Hold_Move
+	// command, but the control room never does this.
+	hold = 2,				// Hold_State				0x0004
+	
+	// This would presumably be set of there were an issue with homing, but
+	// no such issue has ever been encountered. The control room
+	// also isn't built to handle such an error, so testing it would be meaningless.
+	invalidHome = 8,		// Home_Invalid_Error		0x0100
+	
+	// Profile_Invalid would be flipped if an invalid blend move were sent,
+	// but the control room doesn't send blend moves.
+	invalidProfile = 9,		// Profile_Invalid			0x0200
+	
+	// We should never received invalid commands from the control room.
+	invalidCommand = 12,	// Command_Error			0x1000
+	
+	// Would presumably be flipped if configuration somehow fails. This hasn't
+	// been observed on the hardware, and the control room isn't built
+	// to handle such an error, so testing it would be meaningless.
+	invalidConfig = 13,		// Configuration_Error		0x2000
+	
+	// Presumably set when the hardware starts up, but would be meaningless to
+	// set on the simulation since the control room always sends a configure MCU
+	// command upon connecting.
+	// If ever this was set, we'd just have it flipped on as the simulation starts,
+	// then flip it off after the configure MCU command is received.
 	axisConfigMode = 15,	// Axis_Configuration_Mode	0x8000
 }

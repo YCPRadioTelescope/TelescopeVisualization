@@ -74,6 +74,12 @@ public class TelescopeControllerSim : MonoBehaviour
 		
 		// Determine if any errors have occurred.
 		HandleErrors();
+		
+		// If the telescope is homed for the first time, the position is now valid.
+		if(command.home && AzimuthHomed())
+			command.invalidAzimuthPosition = false;
+		if(command.home && ElevationHomed())
+			command.invalidElevationPosition = false;
 	}
 	
 	/// <summary>
