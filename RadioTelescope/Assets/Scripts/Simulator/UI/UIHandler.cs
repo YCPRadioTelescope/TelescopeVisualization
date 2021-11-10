@@ -113,14 +113,14 @@ public class UIHandler : MonoBehaviour
 		
 		// Update the values shown on the modbus registers panel.
 		// First print the incoming azimuth and elevation registers.
-		registersText.text = "1st command".PadLeft(49) + " ";
-		registersText.text += "2nd command".PadLeft(20) + " ";
-		registersText.text += "1st data".PadLeft(25) + " ";
-		registersText.text += "2nd data".PadLeft(25) + " ";
-		registersText.text += "1st speed".PadLeft(24) + " ";
-		registersText.text += "2nd speed".PadLeft(24) + " ";
-		registersText.text += "acceleration".PadLeft(24) + " ";
-		registersText.text += "deceleration".PadLeft(24) + " ";
+		registersText.text = "MSW command".PadLeft(45) + " ";
+		registersText.text += "LSW command".PadLeft(17) + " ";
+		registersText.text += "MSW data".PadLeft(22) + " ";
+		registersText.text += "LSW data".PadLeft(22) + " ";
+		registersText.text += "MSW speed".PadLeft(22) + " ";
+		registersText.text += "LSW speed".PadLeft(22) + " ";
+		registersText.text += "acceleration".PadLeft(23) + " ";
+		registersText.text += "deceleration".PadLeft(23) + " ";
 		registersText.text += "\n";
 		registersText.text += "Incoming Azimuth:  <mspace=0.5em>";
 		for(int i = 0; i < iRegisters.Length / 2 - unused; i++)
@@ -138,13 +138,13 @@ public class UIHandler : MonoBehaviour
 		registersText.text += "</mspace>\n\n";
 		
 		// Print the outgoing azimuth and elevation registers.
-		registersText.text += "1st status bits".PadLeft(52) + " ";
-		registersText.text += "2nd status bits".PadLeft(25) + " ";
-		registersText.text += "1st steps".PadLeft(25) + " ";
-		registersText.text += "2nd steps".PadLeft(25) + " ";
-		registersText.text += "1st encoder".PadLeft(24) + " ";
-		registersText.text += "2nd encoder".PadLeft(22) + " ";
-		registersText.text += "heartbeat".PadLeft(25) + " ";
+		registersText.text += "MSW status bits".PadLeft(49) + " ";
+		registersText.text += "LSW status bits".PadLeft(22) + " ";
+		registersText.text += "MSW steps".PadLeft(22) + " ";
+		registersText.text += "LSW steps".PadLeft(22) + " ";
+		registersText.text += "MSW encoder".PadLeft(21) + " ";
+		registersText.text += "LSW encoder".PadLeft(20) + " ";
+		registersText.text += "heartbeat".PadLeft(24) + " ";
 		registersText.text += "\n";
 		registersText.text += "Outgoing Azimuth:   <mspace=0.5em>";
 		for(int i = 0; i < oRegisters.Length / 2 + 1; i++)
