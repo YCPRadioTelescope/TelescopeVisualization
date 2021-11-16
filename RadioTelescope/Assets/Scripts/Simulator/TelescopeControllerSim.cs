@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using log4net;
 using UnityEngine;
 
 // This script controls the telescope according to the inputs from
 // the control room as received by the MCUCommand updated by SimServer.
 public class TelescopeControllerSim : MonoBehaviour
 {
+	// log4net logger
+	private static readonly ILog Log = LogManager.GetLogger(typeof(TelescopeControllerSim));
+	
 	// The game objects that get rotated by a movement command.
 	public GameObject azimuth;
 	public GameObject elevation;
@@ -61,6 +65,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		
 		// Initialize the MCUCommand.
 		command.InitSim();
+		Log.Debug("Log4net Testing: start");
 	}
 	
 	/// <summary>
@@ -68,6 +73,8 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
+		Log.Debug("Log4net Testing: update");
+		
 		// Determine what the current command is.
 		HandleCommand();
 		
