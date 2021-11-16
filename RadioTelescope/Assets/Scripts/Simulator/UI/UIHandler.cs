@@ -55,7 +55,7 @@ public class UIHandler : MonoBehaviour
 	
 	// Variables for keeping track of the current base to display the registers in.
 	private int[] numberBase;
-	private int baseIndex = 0;
+	private int baseIndex = 2;
 	
 	// Start is called before the first frame update.
 	void Start()
