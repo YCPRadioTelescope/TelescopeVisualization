@@ -30,10 +30,13 @@ public class TelescopeControllerSim : MonoBehaviour
 	private bool azimuthPosMotion = false;
 	private bool azimuthAccelerating = false;
 	private bool azimuthDecelerating = false;
+	private bool azimuthHomed = false;
+	
 	private bool elevationMoving = false;
 	private bool elevationPosMotion = false;
 	private bool elevationAccelerating = false;
 	private bool elevationDecelerating = false;
+	private bool elevationHomed = false;
 	
 	private bool executingRelativeMove = false;
 	
@@ -75,11 +78,8 @@ public class TelescopeControllerSim : MonoBehaviour
 		// Determine if any errors have occurred.
 		HandleErrors();
 		
-		// If the telescope is homed for the first time, the position is now valid.
-		if(command.home && AzimuthHomed())
-			command.invalidAzimuthPosition = false;
-		if(command.home && ElevationHomed())
-			command.invalidElevationPosition = false;
+		// Update any non-error output.
+		HandleOutput();
 	}
 	
 	/// <summary>
@@ -95,7 +95,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		else if(command.relativeMove)
 			executingRelativeMove = true;
 		
-		if(!command.stop  && !command.relativeMove && executingRelativeMove)
+		if(!command.stop && !command.relativeMove && executingRelativeMove)
 			executingRelativeMove = false;
 		
 		// Update the UI with the input azimuth and elevation.
@@ -103,9 +103,36 @@ public class TelescopeControllerSim : MonoBehaviour
 		ui.InputElevation(command.elevationData);
 	}
 	
+	/// <summary>
+	/// Determine if any errors have occurred and update the necessary boolean values
+	/// so that the SimServer can set the correct error bits.
+	/// </summary>
 	public void HandleErrors()
 	{
 		command.invalidInput = LimitSwitchHit();
+	}
+	/// <summary>
+	/// Determine if any special output needs tracked and update the necessary boolean
+	/// values so that the SimServer can set the correct error bits.
+	/// </summary>
+	public void HandleOutput()
+	{
+		if(command.home && !AzimuthMoving())
+		{
+			command.invalidAzimuthPosition = false;
+			azimuthHomed = true;
+		}
+		else if(!command.home && command.azimuthData != 0.0f)
+			azimuthHomed = false;
+		
+		if(command.home && !ElevationMoving())
+		{
+			command.invalidElevationPosition = false;
+			elevationHomed = true;
+		}
+		else if(!command.home && command.elevationData != 0.0f)
+			elevationHomed = false;
+		
 	}
 	
 	/// <summary>
@@ -179,7 +206,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public bool AzimuthHomed()
 	{
-		return !AzimuthMoving() && WithinEpsilon(AngleDistance(Azimuth(), 0.0f));
+		return azimuthHomed;
 	}
 	
 	/// <summary>
@@ -231,7 +258,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public bool ElevationHomed()
 	{
-		return !ElevationMoving() && WithinEpsilon(AngleDistance(Elevation(), 15.0f));
+		return elevationHomed;
 	}
 	
 	/// <summary>
