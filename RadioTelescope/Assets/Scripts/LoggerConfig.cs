@@ -29,7 +29,7 @@ public static class LoggerConfig
 		BasicConfigurator.Configure(console, file);
 		
 		// Overwrite any previous log file.
-		StreamWriter writer = new StreamWriter("Log.txt");
+		using(StreamWriter writer = new StreamWriter("Log.txt"));
 	}
 }
 
@@ -47,8 +47,9 @@ public class FileLogger : AppenderSkeleton
 	protected override void Append(LoggingEvent loggingEvent)
 	{
 		var message = RenderLoggingEvent(loggingEvent);
-		StreamWriter writer = new StreamWriter("Log.txt", true);
-		writer.Write(message);
-		writer.Close();
+		using(StreamWriter writer = new StreamWriter("Log.txt", true))
+		{
+			writer.Write(message);
+		}
 	}
 }
