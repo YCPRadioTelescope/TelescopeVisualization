@@ -11,7 +11,7 @@ public static class LoggerConfig
 	private static void ConfigureLogging()
 	{
 		PatternLayout consoleLayout = new PatternLayout
-			{ ConversionPattern = "%d{ABSOLUTE} %c{1}:%L - %m%n" };
+			{ ConversionPattern = "%c{1}:%L - %m%n" };
 		consoleLayout.ActivateOptions();
 		
 		ConsoleLogger console = new ConsoleLogger();
@@ -29,7 +29,7 @@ public static class LoggerConfig
 		BasicConfigurator.Configure(console, file);
 		
 		// Overwrite any previous log file.
-		using(StreamWriter writer = new StreamWriter("Log.txt"));
+		using(StreamWriter writer = new StreamWriter("Log.txt")) {};
 	}
 }
 
@@ -37,19 +37,28 @@ public class ConsoleLogger : AppenderSkeleton
 {
 	protected override void Append(LoggingEvent loggingEvent)
 	{
-		var message = RenderLoggingEvent(loggingEvent);
+		string message = RenderLoggingEvent(loggingEvent);
 		Debug.Log(message);
 	}
 }
 
 public class FileLogger : AppenderSkeleton
 {
+	private string last = "";
+	
 	protected override void Append(LoggingEvent loggingEvent)
 	{
-		var message = RenderLoggingEvent(loggingEvent);
+		string message = RenderLoggingEvent(loggingEvent);
+		
+		// Don't write duplicate messages.
+		string truncated = message.Substring(message.IndexOf(" ") + 1);
+		if(last == truncated)
+			return;
+		
 		using(StreamWriter writer = new StreamWriter("Log.txt", true))
 		{
 			writer.Write(message);
 		}
+		last = truncated;
 	}
 }

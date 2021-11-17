@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using log4net;
 
 // master list of known register data
 // https://docs.google.com/spreadsheets/d/1vBKsnV7Xso0u19ZyhtVimiCXpZjc007usVjvAsxHJNU/edit#gid=0
@@ -11,6 +12,9 @@ using System;
 /// </summary>
 public class MCUCommand : MonoBehaviour 
 {
+	// log4net logger.
+	private static readonly ILog Log = LogManager.GetLogger(typeof(MCUCommand));
+	
 	// The object that controls the telescope's movement according to the current command.
 	public TelescopeControllerSim tc;
 	

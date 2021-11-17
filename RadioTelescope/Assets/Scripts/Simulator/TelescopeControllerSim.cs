@@ -8,7 +8,7 @@ using UnityEngine;
 // the control room as received by the MCUCommand updated by SimServer.
 public class TelescopeControllerSim : MonoBehaviour
 {
-	// log4net logger
+	// log4net logger.
 	private static readonly ILog Log = LogManager.GetLogger(typeof(TelescopeControllerSim));
 	
 	// The game objects that get rotated by a movement command.
@@ -65,7 +65,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		
 		// Initialize the MCUCommand.
 		command.InitSim();
-		Log.Debug("Log4net Testing: start");
+		Log.Debug("Initializing simulator.");
 	}
 	
 	/// <summary>
@@ -73,8 +73,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-		Log.Debug("Log4net Testing: update");
-		
+		Log.Debug("Updating.");
 		// Determine what the current command is.
 		HandleCommand();
 		

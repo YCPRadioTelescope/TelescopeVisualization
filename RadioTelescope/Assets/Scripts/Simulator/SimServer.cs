@@ -8,12 +8,16 @@ using System.Threading;
 using UnityEngine;
 using Modbus.Data;
 using Modbus.Device;
+using log4net;
 
 // This script is what communicates with the control room, receiving commands through the
 // modbus registers and updating the the MCUCommand object that the TelescopeController uses
 // to determine what the telescope object should do.
 public class SimServer : MonoBehaviour
 {
+	// log4net logger.
+	private static readonly ILog Log = LogManager.GetLogger(typeof(SimServer));
+	
 	// The object that controls the telescope's movement according to the current command.
 	public TelescopeControllerSim tc;
 	
