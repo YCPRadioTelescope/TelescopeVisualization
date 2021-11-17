@@ -73,9 +73,17 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	public void StartServer()
 	{
+		Log.Debug("Start sim button pressed.");
+		
 		// Don't attempt to start the simulator twice.
 		if(runSimulator)
+		{
+			ui.FailedSimStart();
+			Log.Debug("Sim server is already running.");
 			return;
+		}
+		
+		Log.Debug("Attempting to start sim server.");
 		
 		// Create the TCP listener for the control room connection and
 		// the MCUThread that will monitor the modbus registers.
@@ -86,15 +94,9 @@ public class SimServer : MonoBehaviour
 		}
 		catch(Exception e)
 		{
-			if((e is ArgumentNullException) || (e is ArgumentOutOfRangeException))
-			{
-				Debug.Log(e);
-				return;
-			}
-			else
-			{
-				throw e;
-			}
+			ui.FailedSimStart();
+			Log.Debug("Failed starting sim server: " + e);
+			return;
 		}
 		
 		// Start the TCP listener.
@@ -104,17 +106,16 @@ public class SimServer : MonoBehaviour
 		}
 		catch(Exception e)
 		{
-			if((e is SocketException) || (e is ArgumentOutOfRangeException) || (e is InvalidOperationException))
-			{
-				Debug.Log(e);
-				return;
-			}
+			ui.FailedSimStart();
+			Log.Debug("Failed starting sim server: " + e);
+			return;
 		}
 		
 		// Mark the simulation as having been started and start the MCU thread.
 		runSimulator = true;
 		MCU_emulator_thread.Start();
 		ui.StartSim();
+		Log.Debug("Sim server successfully started.");
 	}
 	
 	/// <summary>
@@ -301,17 +302,18 @@ public class SimServer : MonoBehaviour
 	{
 		// If the telescope has been homed, LSW status bit 2 gets set depending
 		// on the telescope's orientation relative to the home position.
-		if(!command.invalidAzimuthPosition && tc.Azimuth() > 180.0f)
+		if(!command.invalidAzimuthPosition && (tc.Azimuth() > 180.0f || tc.AzimuthHomed()))
 			SetBit((int)OutgoingRegIndex.secondStatusAzimuth, (int)LSWStatusBit.home);
 		else
 			ResetBit((int)OutgoingRegIndex.secondStatusAzimuth, (int)LSWStatusBit.home);
 		
-		if(!command.invalidElevationPosition && tc.Elevation() > 15.0f)
+		if(!command.invalidElevationPosition && (tc.Elevation() > 15.0f || tc.ElevationHomed()))
 			SetBit((int)OutgoingRegIndex.secondStatusElevation, (int)LSWStatusBit.home);
 		else
 			ResetBit((int)OutgoingRegIndex.secondStatusElevation, (int)LSWStatusBit.home);
 		
-		// If at any point a relative move as send, LSW status bit 7 get set.
+		// If at any point a relative move is sent, LSW status bit 7 gets set.
+		// At no point have these bits been seen to reset on the hardware.
 		if(command.relativeMove && Mathf.Abs(command.cachedAzData) > 0.0f)
 			SetBit((int)OutgoingRegIndex.secondStatusAzimuth, (int)LSWStatusBit.writeComplete);
 		

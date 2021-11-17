@@ -57,6 +57,11 @@ public class UIHandler : MonoBehaviour
 	private int[] numberBase;
 	private int baseIndex = 2;
 	
+	private float timer = 0.0f;
+	private bool failedSim = false;
+	private Color old;
+	private int flash = 0;
+	
 	// Start is called before the first frame update.
 	void Start()
 	{
@@ -86,6 +91,28 @@ public class UIHandler : MonoBehaviour
 			Application.Quit();
 		if(Input.GetKeyDown((KeyCode.B)))
 			baseIndex = (baseIndex + 1) % 3;
+		
+		timer += Time.deltaTime;
+		if(failedSim)
+		{
+			if(flash > 0)
+			{
+				if(flash % 2 == 1)
+					startButton.GetComponent<Image>().color = Color.red;
+				else
+					startButton.GetComponent<Image>().color = old;
+				if(timer > 0.3f)
+				{
+					flash--;
+					timer -= 0.3f;
+				}
+			}
+			else
+			{
+				startButton.GetComponent<Image>().color = old;
+				failedSim = false;
+			}
+		}
 	}
 	
 	// OnGUI generates GUI elements each frame.
@@ -179,6 +206,17 @@ public class UIHandler : MonoBehaviour
 	public void StartSim()
 	{
 		startButton.GetComponent<Image>().color = Color.green;
+	}
+	
+	public void FailedSimStart()
+	{
+		if(failedSim)
+			return;
+		
+		timer = 0.0f;
+		failedSim = true;
+		old = startButton.GetComponent<Image>().color;
+		flash = 3;
 	}
 	
 	// Updating the input azimuth target.

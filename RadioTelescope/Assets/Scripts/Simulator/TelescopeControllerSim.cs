@@ -73,7 +73,6 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-		Log.Debug("Updating.");
 		// Determine what the current command is.
 		HandleCommand();
 		
