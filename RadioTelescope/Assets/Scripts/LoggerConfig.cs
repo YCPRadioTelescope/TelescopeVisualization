@@ -2,6 +2,7 @@ using log4net.Appender;
 using log4net.Config;
 using log4net.Core;
 using log4net.Layout;
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ public static class LoggerConfig
 	private static void ConfigureLogging()
 	{
 		PatternLayout consoleLayout = new PatternLayout
-			{ ConversionPattern = "%c{1}:%L - %m%n" };
+			{ ConversionPattern = "%-5p %c{1}:%L - %m%n" };
 		consoleLayout.ActivateOptions();
 		
 		ConsoleLogger console = new ConsoleLogger();
@@ -19,7 +20,7 @@ public static class LoggerConfig
 		console.ActivateOptions();
 		
 		PatternLayout fileLayout = new PatternLayout
-			{ ConversionPattern = "%d{ABSOLUTE} %c{1} - %m%n" };
+			{ ConversionPattern = "%d{ABSOLUTE} %-5p %c{1} - %m%n" };
 		fileLayout.ActivateOptions();
 		
 		FileLogger file = new FileLogger();
@@ -27,9 +28,6 @@ public static class LoggerConfig
 		file.ActivateOptions();
 		
 		BasicConfigurator.Configure(console, file);
-		
-		// Overwrite any previous log file.
-		using(StreamWriter writer = new StreamWriter("Log.txt")) {};
 	}
 }
 
@@ -45,9 +43,16 @@ public class ConsoleLogger : AppenderSkeleton
 public class FileLogger : AppenderSkeleton
 {
 	private string last = "";
+	private string logName = "";
 	
 	protected override void Append(LoggingEvent loggingEvent)
 	{
+		if(logName == "")
+		{
+			string date = DateTime.Now.ToString().Replace("/", "-").Replace(":", ".");
+			logName = "Simulation Log " + date + ".txt"; 
+		}
+		
 		string message = RenderLoggingEvent(loggingEvent);
 		
 		// Don't write duplicate messages.
@@ -55,7 +60,7 @@ public class FileLogger : AppenderSkeleton
 		if(last == truncated)
 			return;
 		
-		using(StreamWriter writer = new StreamWriter("Log.txt", true))
+		using(StreamWriter writer = new StreamWriter("Logs\\" + logName, true))
 		{
 			writer.Write(message);
 		}
