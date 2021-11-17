@@ -91,6 +91,7 @@ public class MCUCommand : MonoBehaviour
 	/// <param name="registerData"> Raw register data from the modbus registers. </param>
 	public void UpdateCommand(ushort[] registerData)
 	{
+		Log.Debug("Received new MCU register data.");
 		// Reset the state of the MCUCommand so that information doesn't carry over from the previous command.
 		Reset();
 		
@@ -114,6 +115,7 @@ public class MCUCommand : MonoBehaviour
 		azimuthDecelerationBits = registerData[(int)IncomingRegIndex.decelerationAzimuth];
 		elevationDecelerationBits = registerData[(int)IncomingRegIndex.decelerationElevation];
 		
+		Log.Debug("Parsing register data:");
 		// Determine the incoming command and make any changes to the received information if necessary.
 		// Relative move:
 		if(firstCommandAzimuth == (ushort)CommandType.RELATIVE_MOVE)
@@ -124,6 +126,7 @@ public class MCUCommand : MonoBehaviour
 			// compared to what the simulation uses, so flip the recevied value.
 			ConvertToDegrees();
 			elevationData *= -1;
+			Log.Debug("	Relative move.");
 		}
 		// Jogs:
 		else if(firstCommandAzimuth == (ushort)CommandType.POSITIVE_JOG)
@@ -133,6 +136,7 @@ public class MCUCommand : MonoBehaviour
 			azJog = true;
 			posJog = true;
 			ConvertToDegrees();
+			Log.Debug("	Positive (CCW) azimuth jog.");
 		}
 		else if(firstCommandAzimuth == (ushort)CommandType.NEGATIVE_JOG)
 		{
@@ -141,6 +145,7 @@ public class MCUCommand : MonoBehaviour
 			azJog = true;
 			posJog = false;
 			ConvertToDegrees();
+			Log.Debug("	Negative (CW) azimuth jog.");
 		}
 		else if(firstCommandElevation == (ushort)CommandType.POSITIVE_JOG)
 		{
@@ -149,6 +154,7 @@ public class MCUCommand : MonoBehaviour
 			azJog = false;
 			posJog = true;
 			ConvertToDegrees();
+			Log.Debug("	Positive elevation jog.");
 		}
 		else if(firstCommandElevation == (ushort)CommandType.NEGATIVE_JOG)
 		{
@@ -157,6 +163,7 @@ public class MCUCommand : MonoBehaviour
 			azJog = false;
 			posJog = false;
 			ConvertToDegrees();
+			Log.Debug("	Negative elevation jog.");
 		}
 		// Homing:
 		// Clockwise and counterclockwise homes are currently not handled differently from one another.
@@ -171,6 +178,7 @@ public class MCUCommand : MonoBehaviour
 			else
 				azimuthData = 360.0f - tc.Azimuth();
 			elevationData = -tc.Elevation() + 15.0f;
+			Log.Debug("	Home.");
 		}
 		// MCU related:
 		// TODO FROM LUCAS: write back proper registers
@@ -179,32 +187,38 @@ public class MCUCommand : MonoBehaviour
 			currentCommand = "configure MCU";
 			configured = true;
 			ignoreCommand = true;
+			Log.Debug("	Configure MCU.");
 		}
 		else if(firstCommandAzimuth == (ushort)CommandType.CLEAR_MCU_ERRORS)
 		{
 			currentCommand = "clear MCU errors";
 			ClearMCUErrors();
+			Log.Debug("	Clear MCU errors.");
 		}
 		// Stops:
 		else if(firstCommandAzimuth == (ushort)CommandType.CONTROLLED_STOP)
 		{
 			currentCommand = "controlled stop";
 			stop = true;
+			Log.Debug("	Controlled stop.");
 		}
 		else if(firstCommandAzimuth == (ushort)CommandType.IMMEDIATE_STOP)
 		{
 			currentCommand = "immediate stop";
 			stop = true;
+			Log.Debug("	Immediate stop.");
 		}
 		else if(secondCommandElevation == (ushort)CommandType.CANCEL_MOVE)
 		{
 			currentCommand = "cancel move";
 			stop = true;
+			Log.Debug("	Cancel move.");
 		}
 		else
 		{
 			currentCommand = "unknown command";
 			ignoreCommand = true;
+			Log.Warn("	Unknown command received.");
 		}
 	}
 	

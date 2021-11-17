@@ -79,7 +79,7 @@ public class SimServer : MonoBehaviour
 		if(runSimulator)
 		{
 			ui.FailedSimStart();
-			Log.Debug("Sim server is already running.");
+			Log.Warn("Sim server is already running.");
 			return;
 		}
 		
@@ -95,7 +95,7 @@ public class SimServer : MonoBehaviour
 		catch(Exception e)
 		{
 			ui.FailedSimStart();
-			Log.Debug("Failed starting sim server: " + e);
+			Log.Error("Failed starting sim server: " + e);
 			return;
 		}
 		
@@ -107,7 +107,7 @@ public class SimServer : MonoBehaviour
 		catch(Exception e)
 		{
 			ui.FailedSimStart();
-			Log.Debug("Failed starting sim server: " + e);
+			Log.Error("Failed starting sim server: " + e);
 			return;
 		}
 		
