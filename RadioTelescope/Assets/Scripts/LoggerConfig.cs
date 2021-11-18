@@ -12,7 +12,7 @@ public static class LoggerConfig
 	private static void ConfigureLogging()
 	{
 		PatternLayout consoleLayout = new PatternLayout
-			{ ConversionPattern = "%-5p %c{1}:%L - %m%n" };
+			{ ConversionPattern = "%p %c{1}:%L - %m%n" };
 		consoleLayout.ActivateOptions();
 		
 		ConsoleLogger console = new ConsoleLogger();
@@ -20,7 +20,7 @@ public static class LoggerConfig
 		console.ActivateOptions();
 		
 		PatternLayout fileLayout = new PatternLayout
-			{ ConversionPattern = "%d{ABSOLUTE} %-5p %c{1} - %m%n" };
+			{ ConversionPattern = "%d{ABSOLUTE} %-5p %-22c{1} - %m%n" };
 		fileLayout.ActivateOptions();
 		
 		FileLogger file = new FileLogger();
@@ -33,10 +33,16 @@ public static class LoggerConfig
 
 public class ConsoleLogger : AppenderSkeleton
 {
+	private string last = "";
 	protected override void Append(LoggingEvent loggingEvent)
 	{
 		string message = RenderLoggingEvent(loggingEvent);
+		if(message == last)
+			return;
+		
 		Debug.Log(message);
+		
+		last = message;
 	}
 }
 

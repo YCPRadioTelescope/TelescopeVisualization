@@ -115,7 +115,10 @@ public class TelescopeControllerSim : MonoBehaviour
 	public void HandleErrors()
 	{
 		command.invalidInput = LimitSwitchHit();
+		if(command.invalidInput)
+			Log.Warn("A limit switch has been hit.");
 	}
+	
 	/// <summary>
 	/// Determine if any special output needs tracked and update the necessary boolean
 	/// values so that the SimServer can set the correct error bits.
@@ -374,8 +377,11 @@ public class TelescopeControllerSim : MonoBehaviour
 			moveBy -= AngleDistance(current, old);
 			
 			// If the total degrees remaining to move by is less than the epsilon, consider it on target.
-			if(WithinEpsilon(moveBy))
+			if(moveBy != 0.0f && WithinEpsilon(moveBy))
+			{
+				Log.Debug("Threw out the remaining " + moveBy + " degree azimuth movement because it was smaller than the accepted epsilon value of " + epsilon + ".");
 				moveBy = 0.0f;
+			}
 		}
 		azimuthMoving = (moveBy != 0.0f);
 		azimuthPosMotion = (moveBy > 0.0f);
@@ -404,8 +410,11 @@ public class TelescopeControllerSim : MonoBehaviour
 			moveBy -= AngleDistance(current, old);
 			
 			// If the total degrees remaining to move by is less than the epsilon, consider it zero.
-			if(WithinEpsilon(moveBy))
+			if(moveBy != 0.0f && WithinEpsilon(moveBy))
+			{
+				Log.Debug("Threw out the remaining " + moveBy + " degree elevation movement because it was smaller than the accepted epsilon value of " + epsilon + ".");
 				moveBy = 0.0f;
+			}
 		}
 		elevationMoving = (moveBy != 0.0f);
 		elevationPosMotion = (moveBy > 0.0f);

@@ -79,11 +79,11 @@ public class SimServer : MonoBehaviour
 		if(runSimulator)
 		{
 			ui.FailedSimStart();
-			Log.Warn("Sim server is already running.");
+			Log.Warn("	Sim server is already running.");
 			return;
 		}
 		
-		Log.Debug("Attempting to start sim server.");
+		Log.Debug("	Attempting to start sim server.");
 		
 		// Create the TCP listener for the control room connection and
 		// the MCUThread that will monitor the modbus registers.
@@ -95,7 +95,7 @@ public class SimServer : MonoBehaviour
 		catch(Exception e)
 		{
 			ui.FailedSimStart();
-			Log.Error("Failed starting sim server: " + e);
+			Log.Error("	Failed starting sim server: " + e);
 			return;
 		}
 		
@@ -107,7 +107,7 @@ public class SimServer : MonoBehaviour
 		catch(Exception e)
 		{
 			ui.FailedSimStart();
-			Log.Error("Failed starting sim server: " + e);
+			Log.Error("	Failed starting sim server: " + e);
 			return;
 		}
 		
@@ -115,7 +115,7 @@ public class SimServer : MonoBehaviour
 		runSimulator = true;
 		MCU_emulator_thread.Start();
 		ui.StartSim();
-		Log.Debug("Sim server successfully started.");
+		Log.Debug("	Sim server successfully started.");
 	}
 	
 	/// <summary>
@@ -296,6 +296,8 @@ public class SimServer : MonoBehaviour
 			SetBothStatusBits((int)MSWStatusBit.axisEnabled);
 		else
 			ResetBothStatusBits((int)MSWStatusBit.axisEnabled);
+		
+		// Bit 15 is unused/unimplemented.
 	}
 	
 	private void UpdateLSWStatus()

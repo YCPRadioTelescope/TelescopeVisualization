@@ -77,12 +77,14 @@ public class MCUCommand : MonoBehaviour
 	// Receive a test movement from the UI.
 	public void TestMove(float azimuth, float elevation, float speed)
 	{
+		Log.Debug("Received test movement from simulation UI.");
 		Reset();
 		currentCommand = "simulation test movement";
 		azimuthData = AngleDistance(azimuth, tc.Azimuth());
 		elevationData = AngleDistance(elevation, tc.Elevation());
 		azimuthSpeed = speed;
 		elevationSpeed = speed;
+		Log.Debug("	Moving by (" + azimuthData + "," + elevationData + ") at a speed of " + speed + " degrees/second.");
 	}
 	
 	/// <summary>
@@ -281,6 +283,8 @@ public class MCUCommand : MonoBehaviour
 		// Cache the number of steps to determine the initial input values of the command.
 		// Don't cache the data for a stop command as to save the input for the command prior
 		// to the stop.
+		// This is only used to determine whether the acceleration or deceleration bits should be
+		// set.
 		if(!stop)
 		{
 			cachedAzData = azimuthData;
