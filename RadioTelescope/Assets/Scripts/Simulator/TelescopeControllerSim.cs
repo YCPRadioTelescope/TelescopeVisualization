@@ -97,11 +97,6 @@ public class TelescopeControllerSim : MonoBehaviour
 		
 		if(command.jog) 
 			HandleJog();
-		else if(command.relativeMove)
-			executingRelativeMove = true;
-		
-		if(!command.stop && !command.relativeMove && executingRelativeMove)
-			executingRelativeMove = false;
 		
 		// Update the UI with the input azimuth and elevation.
 		ui.InputAzimuth(command.azimuthData);
@@ -125,12 +120,25 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public void HandleOutput()
 	{
+		// If the current command is a relative move, record that so that the
+		// move complete bit can be set.
+		if(command.relativeMove)
+			executingRelativeMove = true;
+		// If the current command is not a relative move or a stop command, then
+		// the move complete bit shouldn't be set.
+		else if(!command.stop)
+			executingRelativeMove = false;
+		
+		// If the current command is a home command and the axis has stopped moving,
+		// then this axis is homed.
 		if(command.home && !AzimuthMoving())
 		{
 			command.invalidAzimuthPosition = false;
 			azimuthHomed = true;
 		}
-		else if(!command.home && command.azimuthData != 0.0f)
+		// If the current command is not a home command and it moves this axis, 
+		// then this axis is not homed.
+		else if(!command.home && AzimuthMoving())
 			azimuthHomed = false;
 		
 		if(command.home && !ElevationMoving())
@@ -138,7 +146,7 @@ public class TelescopeControllerSim : MonoBehaviour
 			command.invalidElevationPosition = false;
 			elevationHomed = true;
 		}
-		else if(!command.home && command.elevationData != 0.0f)
+		else if(!command.home && ElevationMoving())
 			elevationHomed = false;
 		
 	}
@@ -437,9 +445,8 @@ public class TelescopeControllerSim : MonoBehaviour
 		
 		// If we're closer to the target than the movement speed, lower the movement
 		// speed so that we don't overshoot it.
-		int sign = speed < 0 ? -1 : 1;
 		if(Mathf.Abs(moveBy) < Mathf.Abs(speed)) 
-		 	speed = Mathf.Abs(moveBy) * sign;
+		 	speed = moveBy;
 		
 		// Rotate the azimuth game object by the final speed.
 		azimuth.transform.Rotate(0, speed, 0);
@@ -463,15 +470,14 @@ public class TelescopeControllerSim : MonoBehaviour
 		
 		// If we're closer to the target than the movement speed, lower the movement
 		// speed so that we don't overshoot it.
-		int sign = speed < 0 ? -1 : 1;
 		if(Mathf.Abs(moveBy) < Mathf.Abs(speed))
-			speed = Mathf.Abs(moveBy) * sign;
+			speed = moveBy;
 		
 		// If we're closer to the target than the allowed bounds, lower the movement
 		// speed so that we don't go out of bounds.
 		float bounded = BoundElevation(elevation.transform.eulerAngles.z + speed);
 		if(bounded == minEl || bounded == maxEl)
-			speed = Mathf.Abs(bounded - current) * sign;
+			speed = bounded - current;
 		
 		// Rotate the elevation game object by the final speed.
 		elevation.transform.Rotate(0, 0, speed);

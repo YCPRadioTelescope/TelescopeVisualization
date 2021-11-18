@@ -316,10 +316,12 @@ public class SimServer : MonoBehaviour
 		
 		// If at any point a relative move is sent, LSW status bit 7 gets set.
 		// At no point have these bits been seen to reset on the hardware.
-		if(command.relativeMove && Mathf.Abs(command.cachedAzData) > 0.0f)
+		if(!GetBit((int)OutgoingRegIndex.secondStatusAzimuth, (int)LSWStatusBit.writeComplete)
+				&& command.relativeMove && command.azimuthData != 0.0f)
 			SetBit((int)OutgoingRegIndex.secondStatusAzimuth, (int)LSWStatusBit.writeComplete);
 		
-		if(command.relativeMove && Mathf.Abs(command.cachedElData) > 0.0f)
+		if(!GetBit((int)OutgoingRegIndex.secondStatusElevation, (int)LSWStatusBit.writeComplete)
+				&& command.relativeMove && command.elevationData != 0.0f)
 			SetBit((int)OutgoingRegIndex.secondStatusElevation, (int)LSWStatusBit.writeComplete);
 	}
 	
