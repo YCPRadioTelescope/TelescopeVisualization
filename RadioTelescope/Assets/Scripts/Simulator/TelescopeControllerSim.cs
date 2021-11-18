@@ -58,6 +58,8 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
+		Log.Debug("Initializing simulator.");
+		
 		// Set the current azimuth and elevation degrees to the rotation
 		// of the game objects.
 		simTelescopeAzimuthDegrees = azimuth.transform.eulerAngles.y;
@@ -65,7 +67,6 @@ public class TelescopeControllerSim : MonoBehaviour
 		
 		// Initialize the MCUCommand.
 		command.InitSim();
-		Log.Debug("Initializing simulator.");
 	}
 	
 	/// <summary>

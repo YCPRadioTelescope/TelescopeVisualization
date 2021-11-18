@@ -39,7 +39,8 @@ public class MCUCommand : MonoBehaviour
 	public bool home = false;
 	public bool stop = false;
 	
-	public bool ignoreCommand = false;
+	// All commands are ignored until we can confirm that they're valid.
+	public bool ignoreCommand = true;
 	
 	// The hardware always starts with the invalid position bits flipped.
 	// The telescope must be homed to turn this off.
@@ -63,6 +64,7 @@ public class MCUCommand : MonoBehaviour
 	// Initialize the simulation telescope to point to the home position.
 	public void InitSim()
 	{
+		Log.Debug("Received simulation initialization.");
 		Reset();
 		currentCommand = "simulation initialization";
 		azimuthSpeed = 20.0f;
@@ -72,6 +74,9 @@ public class MCUCommand : MonoBehaviour
 		else
 			azimuthData = 360.0f - tc.Azimuth();
 		elevationData = -tc.Elevation() + 15.0f;
+		LogMove();
+		Log.Debug("Executing command.\n");
+		ignoreCommand = false;
 	}
 	
 	// Receive a test movement from the UI.
@@ -84,7 +89,9 @@ public class MCUCommand : MonoBehaviour
 		elevationData = AngleDistance(elevation, tc.Elevation());
 		azimuthSpeed = speed;
 		elevationSpeed = speed;
-		Log.Debug("	Moving by (" + azimuthData + "," + elevationData + ") at a speed of " + speed + " degrees/second.");
+		LogMove();
+		Log.Debug("Executing command.\n");
+		ignoreCommand = false;
 	}
 	
 	/// <summary>
@@ -93,10 +100,11 @@ public class MCUCommand : MonoBehaviour
 	/// <param name="registerData"> Raw register data from the modbus registers. </param>
 	public void UpdateCommand(ushort[] registerData)
 	{
-		Log.Debug("Received new MCU register data.");
+		Log.Debug("Received new register data from SimServer.");
 		// Reset the state of the MCUCommand so that information doesn't carry over from the previous command.
 		Reset();
 		
+		Log.Debug("	Parsing register data:");
 		// Grab the words that determine the incoming command.
 		ushort firstCommandAzimuth = registerData[(int)IncomingRegIndex.firstCommandAzimuth];
 		ushort secondCommandAzimuth = registerData[(int)IncomingRegIndex.secondCommandAzimuth];
@@ -117,8 +125,20 @@ public class MCUCommand : MonoBehaviour
 		azimuthDecelerationBits = registerData[(int)IncomingRegIndex.decelerationAzimuth];
 		elevationDecelerationBits = registerData[(int)IncomingRegIndex.decelerationElevation];
 		
-		Log.Debug("Parsing register data:");
+		Log.Debug("		MSW Command Azimuth:   0x" + Convert.ToString(firstCommandAzimuth, 16));
+		Log.Debug("		LSW Command Azimuth:   0x" + Convert.ToString(secondCommandAzimuth, 16));
+		Log.Debug("		Azimuth Data:          0x" + Convert.ToString(azimuthDataBits, 16));
+		Log.Debug("		Azimuth Speed:         0x" + Convert.ToString(azimuthSpeedBits, 16) + "\n");
+		
+		Log.Debug("		MSW Command Elevation: 0x" + Convert.ToString(firstCommandElevation, 16));
+		Log.Debug("		LSW Command Elevation: 0x" + Convert.ToString(secondCommandElevation, 16));
+		Log.Debug("		Elevation Data:        0x" + Convert.ToString(elevationDataBits, 16));
+		Log.Debug("		Elevation Speed:       0x" + Convert.ToString(elevationSpeedBits, 16) + "\n");
+		
+		Log.Debug("		Acceleration:          0x" + Convert.ToString(azimuthAccelerationBits, 16));
+		
 		// Determine the incoming command and make any changes to the received information if necessary.
+		bool ignore = false;
 		// Relative move:
 		if(firstCommandAzimuth == (ushort)CommandType.RELATIVE_MOVE)
 		{
@@ -129,6 +149,7 @@ public class MCUCommand : MonoBehaviour
 			ConvertToDegrees();
 			elevationData *= -1;
 			Log.Debug("	Relative move.");
+			LogMove(2);
 		}
 		// Jogs:
 		else if(firstCommandAzimuth == (ushort)CommandType.POSITIVE_JOG)
@@ -181,15 +202,16 @@ public class MCUCommand : MonoBehaviour
 				azimuthData = 360.0f - tc.Azimuth();
 			elevationData = -tc.Elevation() + 15.0f;
 			Log.Debug("	Home.");
+			LogMove(2);
 		}
 		// MCU related:
 		// TODO FROM LUCAS: write back proper registers
 		else if(firstCommandAzimuth == (ushort)CommandType.CONFIGURE_MCU)
 		{
 			currentCommand = "configure MCU";
+			ignore = true;
 			configured = true;
-			ignoreCommand = true;
-			Log.Debug("	Configure MCU.");
+			Log.Debug("	Configure MCU.\n");
 		}
 		else if(firstCommandAzimuth == (ushort)CommandType.CLEAR_MCU_ERRORS)
 		{
@@ -219,8 +241,14 @@ public class MCUCommand : MonoBehaviour
 		else
 		{
 			currentCommand = "unknown command";
-			ignoreCommand = true;
-			Log.Warn("	Unknown command received.");
+			ignore = true;
+			Log.Warn("	Unknown command received. Command will be ignored.\n");
+		}
+		
+		if(!ignore)
+		{
+			Log.Debug("Executing command.\n");
+			ignoreCommand = false;
 		}
 	}
 	
@@ -248,7 +276,7 @@ public class MCUCommand : MonoBehaviour
 		home = false;
 		stop = false;
 		
-		ignoreCommand = false;
+		ignoreCommand = true;
 		
 		// Error bools are only reset by a ClearMCUErrors command.
 		
@@ -260,6 +288,15 @@ public class MCUCommand : MonoBehaviour
 		elevationAccelerationBits = 0;
 		azimuthDecelerationBits = 0;
 		elevationDecelerationBits = 0;
+	}
+	
+	private void LogMove(int tabs = 1)
+	{
+		string whitespace = "";
+		for(int i = 0; i < tabs; ++i)
+			whitespace += "\t";
+		Log.Debug(whitespace + "Moving by (" + azimuthData + "," + elevationData + ") at a speed of (" + azimuthSpeed + "," + elevationSpeed + ") degrees/second.");
+		Log.Debug(whitespace + "Estimated completion time: " + Mathf.Max(Mathf.Abs(azimuthData)/azimuthSpeed, Mathf.Abs(elevationData)/elevationSpeed) + "s");
 	}
 	
 	private void ClearMCUErrors()

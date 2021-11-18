@@ -135,6 +135,7 @@ public class SimServer : MonoBehaviour
 		
 		ushort[] current;
 		ushort[] last = new ushort[INCOMING_REGISTERS_SIZE];
+		Log.Debug("The MCU thread is now running. Listening for new register data from the control room.");
 		while(runSimulator)
 		{
 			// Sleep so that we're not running as fast as the CPU allows, which is overkill.
@@ -146,7 +147,10 @@ public class SimServer : MonoBehaviour
 			
 			// If these registers are new, update the MCUCommand object for the telescope controller.
 			if(!current.SequenceEqual(last))
+			{
+				Log.Debug("Received new register data. Sending to MCUCommand.\n");
 				command.UpdateCommand(current);
+			}
 			
 			// Update the outgoing registers.
 			UpdateMSWStatus();
