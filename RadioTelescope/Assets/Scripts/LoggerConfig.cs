@@ -66,7 +66,7 @@ public class FileLogger : AppenderSkeleton
 		if(last == truncated)
 			return;
 		
-		using(StreamWriter writer = new StreamWriter("Logs\\" + logName, true))
+		using(StreamWriter writer = new StreamWriter(logName, true))
 		{
 			writer.Write(message);
 		}
