@@ -65,7 +65,7 @@ public class MCUCommand : MonoBehaviour
 	public void InitSim()
 	{
 		Log.Debug("Received simulation initialization.");
-		Reset();
+		ResetState();
 		currentCommand = "simulation initialization";
 		azimuthSpeed = 20.0f;
 		azimuthAcceleration = 0.9f;
@@ -89,7 +89,7 @@ public class MCUCommand : MonoBehaviour
 	public void TestMove(float azimuth, float elevation, float speed)
 	{
 		Log.Debug("Received test movement from simulation UI.");
-		Reset();
+		ResetState();
 		currentCommand = "simulation test movement";
 		azimuthData = AngleDistance(azimuth, tc.Azimuth());
 		elevationData = AngleDistance(elevation, tc.Elevation());
@@ -114,7 +114,7 @@ public class MCUCommand : MonoBehaviour
 	{
 		Log.Debug("Received new register data from SimServer.");
 		// Reset the state of the MCUCommand so that information doesn't carry over from the previous command.
-		Reset();
+		ResetState();
 		
 		Log.Debug("	Parsing register data:");
 		// Grab the words that determine the incoming command.
@@ -265,7 +265,7 @@ public class MCUCommand : MonoBehaviour
 	}
 	
 	// Reset the state of the MCUCommand.
-	private void Reset()
+	private void ResetState()
 	{
 		currentCommand = "";
 		
@@ -302,19 +302,77 @@ public class MCUCommand : MonoBehaviour
 		elevationDecelerationBits = 0;
 	}
 	
+	private void ClearMCUErrors()
+	{
+		// invalidPosition is not cleared by ClearMCUErrors.
+		invalidInput = false;
+	}
+	
 	private void LogMove(int tabs = 1)
 	{
 		string whitespace = "";
 		for(int i = 0; i < tabs; ++i)
 			whitespace += "\t";
 		Log.Debug(whitespace + "Moving by (" + azimuthData + "," + elevationData + ") at a speed of (" + azimuthSpeed + "," + elevationSpeed + ") degrees/second.");
-		Log.Debug(whitespace + "Estimated completion time: " + Mathf.Max(Mathf.Abs(azimuthData)/azimuthSpeed, Mathf.Abs(elevationData)/elevationSpeed) + "s");
+		Log.Debug(whitespace + "Estimated completion time: " + EstimateMovement() + "s");
 	}
 	
-	private void ClearMCUErrors()
+	private float EstimateMovement()
 	{
-		// invalidPosition is not cleared by ClearMCUErrors.
-		invalidInput = false;
+		float azimuthTime = MovementTime(Mathf.Abs(azimuthData), azimuthSpeed, azimuthAcceleration, azimuthDeceleration);
+		float elevationTime = MovementTime(Mathf.Abs(elevationData), elevationSpeed, elevationAcceleration, elevationDeceleration);
+		return Mathf.Max(azimuthTime, elevationTime);
+	}
+	
+	private float MovementTime(float movement, float maxSpeed, float accel, float decel)
+	{
+		float remaining = movement;
+		float speed = 0.0f;
+		float frameTime = 1.0f / 5.0f;
+		float time = 0.0f;
+		
+		// Simulate a movement to determine about how long it should take.
+		while(remaining > 0.01f)
+		{
+			float progress = 1.0f - remaining / movement;
+			float stoppingDistance = StoppingDistance(speed, decel);
+			
+			if(progress <= 0.5)
+			{
+				speed += accel * frameTime;
+				if(speed >= maxSpeed)
+					speed = maxSpeed;
+			}
+			else if(stoppingDistance >= remaining)
+			{
+				speed -= decel * frameTime;
+				if(speed <= 0.0f)
+					speed = 0.0f;
+			}
+			
+			time += frameTime;
+			remaining -= speed * frameTime;
+		}
+		return time;
+	}
+	
+	private float StoppingDistance(float speed, float decel)
+	{
+		// Kinematics!
+		//		dx = change in distance
+		//		v0 = velocity original
+		//		vf = velocity final
+		//		a = acceleration
+		//		t = time
+		
+		// vf = v0 + at
+		// t = (vf - v0) / a
+		// 		v0 = 0, vf = azSpeed, a = accel, t = time to reach 0 velocity.
+		float stoppingTime = speed / decel;
+		
+		// dx = v0t + 0.5at^2
+		//		v0 = azSpeed, t = stopping time, a = accel, dx = distance to reach 0 velocity.
+		return speed * stoppingTime - 0.5f * decel * stoppingTime * stoppingTime;
 	}
 	
 	/// <summary>

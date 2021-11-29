@@ -21,10 +21,11 @@ public class TelescopeControllerSim : MonoBehaviour
 	// The object that updates the UI with the state of variables.
 	public UIHandler ui;
 	
-	// The current values of the azimuth and elevation.
+	// The current values of the azimuth and elevation in degrees.
 	private float simTelescopeAzimuthDegrees;
 	private float simTelescopeElevationDegrees;
 	
+	// The current azimuth and elevation speeds in degrees per second.
 	private float azSpeed = 0.0f;
 	private float elSpeed = 0.0f;
 	
@@ -92,7 +93,10 @@ public class TelescopeControllerSim : MonoBehaviour
 		HandleOutput();
 	}
 	
-	void OnApplicationQuit()
+	/// <summary>
+	/// Update is called when the scene ends.
+	/// </summary>
+	void OnDestroy()
 	{
 		Log.Debug("END SIMULATION INSTANCE\n\n\n");
 	}
@@ -525,7 +529,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <param name="speed">The current rotation speed in degrees per second.</param>
 	/// <param name="decel">The deceleration rate in degrees per second squared.</param>
 	/// <returns>The distance in degrees required to stop.</returns>
-	public float StoppingDistance(float speed, float decel)
+	private float StoppingDistance(float speed, float decel)
 	{
 		// Kinematics!
 		//		dx = change in distance
