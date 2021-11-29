@@ -25,6 +25,9 @@ public class TelescopeControllerSim : MonoBehaviour
 	private float simTelescopeAzimuthDegrees;
 	private float simTelescopeElevationDegrees;
 	
+	private float azSpeed = 0.0f;
+	private float elSpeed = 0.0f;
+	
 	// Whether the azimuth or elevation motors are moving,
 	// the direction of travel (true = positive, false = negative),
 	// and the acceleration direction.
@@ -344,7 +347,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public double AzimuthSpeed()
 	{
-		return System.Math.Round(command.azimuthSpeed, 2);
+		return System.Math.Round(azSpeed, 2);
 	}
 	
 	/// <summary>
@@ -353,7 +356,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public double ElevationSpeed()
 	{
-		return System.Math.Round(command.elevationSpeed, 2);
+		return System.Math.Round(elSpeed, 2);
 	}
 	
 	/// <summary>
@@ -376,17 +379,17 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <summary>
 	private void UpdateAzimuth()
 	{
-		// If the amount of azimuth degrees to move by is non-zero, the azimuth must move.
 		ref float moveBy = ref command.azimuthData;
+		// If the amount of azimuth degrees to move by is non-zero, the azimuth must move.
 		if(moveBy != 0.0f)
 		{
 			// Get the current orientation and movement speed
 			ref float current = ref simTelescopeAzimuthDegrees;
 			float old = current;
-			float speed = command.azimuthSpeed;
+			ShiftAzimuthSpeed(moveBy);
 			
 			// Move the azimuth.
-			current = ChangeAzimuth(current, moveBy, moveBy < 0.0f ? -speed : speed);
+			current = MoveAzimuth(current, moveBy, moveBy < 0.0f ? -azSpeed : azSpeed);
 			
 			// Update the MCUCommand by subtracting the angle moved from the remaining degrees to move by.
 			moveBy -= AngleDistance(current, old);
@@ -398,10 +401,11 @@ public class TelescopeControllerSim : MonoBehaviour
 				moveBy = 0.0f;
 			}
 		}
+		else
+			azSpeed = 0.0f;
+		
 		azimuthMoving = (moveBy != 0.0f);
 		azimuthPosMotion = (moveBy > 0.0f);
-		azimuthAccelerating = (Mathf.Abs(moveBy) > (Mathf.Abs(command.cachedAzData) * 2.0f / 3.0f));
-		azimuthDecelerating = (Mathf.Abs(moveBy) < (Mathf.Abs(command.cachedAzData) / 3.0f));
 	}
 	
 	/// <summary>
@@ -416,10 +420,10 @@ public class TelescopeControllerSim : MonoBehaviour
 			// Get the current orientation and movement speed
 			ref float current = ref simTelescopeElevationDegrees;
 			float old = current;
-			float speed = command.elevationSpeed;
+			ShiftElevationSpeed(moveBy);
 			
 			// Move the elevation.
-			current = ChangeElevation(current, moveBy, moveBy < 0.0f ? -speed : speed);
+			current = MoveElevation(current, moveBy, moveBy < 0.0f ? -elSpeed : elSpeed);
 			
 			// Update the MCUCommand by subtracting the angle moved from the remaining degrees to move by.
 			moveBy -= AngleDistance(current, old);
@@ -431,20 +435,123 @@ public class TelescopeControllerSim : MonoBehaviour
 				moveBy = 0.0f;
 			}
 		}
+		else
+			elSpeed = 0.0f;
+		
 		elevationMoving = (moveBy != 0.0f);
 		elevationPosMotion = (moveBy > 0.0f);
-		elevationAccelerating = (Mathf.Abs(moveBy) > (Mathf.Abs(command.cachedAzData) * 2.0f / 3.0f));
-		elevationDecelerating = (Mathf.Abs(moveBy) < (Mathf.Abs(command.cachedElData) / 3.0f));
 	}
-
+	
+	/// <summary>
+	/// Shift the current azimuth speed up or down according to acceleration and deceleration.
+	/// </summary>
+	/// <param name="remaining">The remaining number of degrees to move by for the current movement.</param>
+	private void ShiftAzimuthSpeed(float remaining)
+	{
+		remaining = Mathf.Abs(remaining);
+		float progress = 1.0f - remaining / Mathf.Abs(command.cachedAzData);
+		float maxSpeed = command.azimuthSpeed;
+		float accel = command.azimuthAcceleration;
+		float decel = command.azimuthDeceleration;
+		
+		// Accelerate if we're in the first 50% of a movement.
+		if(progress <= 0.5f)
+		{
+			azSpeed += accel * Time.deltaTime;
+			if(azSpeed >= maxSpeed)
+				azSpeed = maxSpeed;
+			
+			azimuthAccelerating = (azSpeed != maxSpeed);
+			azimuthDecelerating = false;
+		}
+		// Don't accelerate if we're in the last 50% of a movement.
+		else if(progress > 0.5f)
+		{
+			// Decelerate if the remaining movement is smaller than the stopping distance.
+			if(StoppingDistance(azSpeed, decel) >= remaining)
+			{
+				azSpeed -= decel * Time.deltaTime;
+				if(azSpeed <= 0.0f)
+					azSpeed = 0.0f;
+				
+				azimuthDecelerating = (azSpeed != 0.0f);
+			}
+			azimuthAccelerating = false;
+		}
+	}
+	
+	/// <summary>
+	/// Shift the current elevation speed up or down according to acceleration and deceleration.
+	/// </summary>
+	/// <param name="remaining">The remaining number of degrees to move by for the current movement.</param>
+	private void ShiftElevationSpeed(float remaining)
+	{
+		remaining = Mathf.Abs(remaining);
+		float progress = 1.0f - remaining / Mathf.Abs(command.cachedElData);
+		float maxSpeed = command.elevationSpeed;
+		float accel = command.elevationAcceleration;
+		float decel = command.elevationDeceleration;
+		
+		// Accelerate if we're in the first 50% of a movement.
+		if(progress <= 0.5f)
+		{
+			elSpeed += accel * Time.deltaTime;
+			if(elSpeed >= maxSpeed)
+				elSpeed = maxSpeed;
+			
+			elevationAccelerating = (elSpeed != maxSpeed);
+			elevationDecelerating = false;
+		}
+		// Don't accelerate if we're in the last 50% of a movement.
+		else if(progress > 0.5f)
+		{
+			// Decelerate if the remaining movement is smaller than the stopping distance.
+			if(StoppingDistance(elSpeed, decel) >= remaining)
+			{
+				elSpeed -= decel * Time.deltaTime;
+				if(elSpeed <= 0.0f)
+					elSpeed = 0.0f;
+				
+				elevationDecelerating = (elSpeed != 0.0f);
+			}
+			elevationAccelerating = false;
+		}
+	}
+	
+	/// <summary>
+	/// Determine the distance required to stop if moving at the given speed
+	/// and slowing with the given deceleration.
+	/// </summary>
+	/// <param name="speed">The current rotation speed in degrees per second.</param>
+	/// <param name="decel">The deceleration rate in degrees per second squared.</param>
+	/// <returns>The distance in degrees required to stop.</returns>
+	public float StoppingDistance(float speed, float decel)
+	{
+		// Kinematics!
+		//		dx = change in distance
+		//		v0 = velocity original
+		//		vf = velocity final
+		//		a = acceleration
+		//		t = time
+		
+		// vf = v0 + at
+		// t = (vf - v0) / a
+		// 		v0 = 0, vf = azSpeed, a = accel, t = time to reach 0 velocity.
+		float stoppingTime = speed / decel;
+		
+		// dx = v0t + 0.5at^2
+		//		v0 = azSpeed, t = stopping time, a = accel, dx = distance to reach 0 velocity.
+		return speed * stoppingTime - 0.5f * decel * stoppingTime * stoppingTime;
+	}
+	
 	/// <summary>
 	/// Rotate the azimuth object.
 	/// </summary>
 	/// <param name="current">The current azimuth angle.</param>
 	/// <param name="moveBy">The total degrees to move by before reaching the target azimuth.</param>
-	/// <param name="speed">The max speed speed at which to rotate in degrees per second.</param>
+	/// <param name="speed">The speed at which to rotate in degrees per second.</param>
 	/// <returns>The new azimuth angle.</returns>
-	private float ChangeAzimuth(float current, float moveBy, float speed)
+	private float MoveAzimuth(float current, float moveBy, float speed)
 	{
 		// Alter the movement speed by the time since the last frame. This ensures
 		// a smooth movement regardless of the framerate.
@@ -467,9 +574,9 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	/// <param name="current">The current elevation angle.</param>
 	/// <param name="moveBy">The total degrees to move by before reaching the target elevation.</param>
-	/// <param name="speed">The max speed speed at which to rotate in degrees per second.</param>
+	/// <param name="speed">The speed at which to rotate in degrees per second.</param>
 	/// <returns>The new elevation angle.</returns>
-	private float ChangeElevation(float current, float moveBy, float speed)
+	private float MoveElevation(float current, float moveBy, float speed)
 	{
 		// Alter the movement speed by the time since the last frame. This ensures
 		// a smooth movement regardless of the framerate.

@@ -68,12 +68,18 @@ public class MCUCommand : MonoBehaviour
 		Reset();
 		currentCommand = "simulation initialization";
 		azimuthSpeed = 20.0f;
+		azimuthAcceleration = 0.9f;
+		azimuthDeceleration = 0.9f;
 		elevationSpeed = 20.0f;
+		elevationAcceleration = 0.9f;
+		elevationDeceleration = 0.9f;
 		if(tc.Azimuth() < 180.0f)
 			azimuthData = -tc.Azimuth();
 		else
 			azimuthData = 360.0f - tc.Azimuth();
 		elevationData = -tc.Elevation() + 15.0f;
+		cachedAzData = azimuthData;
+		cachedElData = elevationData;
 		LogMove();
 		Log.Debug("Executing command.\n");
 		ignoreCommand = false;
@@ -87,8 +93,14 @@ public class MCUCommand : MonoBehaviour
 		currentCommand = "simulation test movement";
 		azimuthData = AngleDistance(azimuth, tc.Azimuth());
 		elevationData = AngleDistance(elevation, tc.Elevation());
+		cachedAzData = azimuthData;
+		cachedElData = elevationData;
 		azimuthSpeed = speed;
+		azimuthAcceleration = 0.9f;
+		azimuthDeceleration = 0.9f;
 		elevationSpeed = speed;
+		elevationAcceleration = 0.9f;
+		elevationDeceleration = 0.9f;
 		LogMove();
 		Log.Debug("Executing command.\n");
 		ignoreCommand = false;
