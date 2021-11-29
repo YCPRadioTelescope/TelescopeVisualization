@@ -49,16 +49,9 @@ public class ConsoleLogger : AppenderSkeleton
 public class FileLogger : AppenderSkeleton
 {
 	private string last = "";
-	private string logName = "";
 	
 	protected override void Append(LoggingEvent loggingEvent)
 	{
-		if(logName == "")
-		{
-			string date = DateTime.Now.ToString().Replace("/", "-").Replace(":", ".");
-			logName = "Simulation Log " + date + ".txt"; 
-		}
-		
 		string message = RenderLoggingEvent(loggingEvent);
 		
 		// Don't write duplicate messages.
@@ -66,7 +59,8 @@ public class FileLogger : AppenderSkeleton
 		if(last == truncated)
 			return;
 		
-		using(StreamWriter writer = new StreamWriter(logName, true))
+		string date = DateTime.Now.ToString("yyyy-MM-dd");
+		using(StreamWriter writer = new StreamWriter("Simulation Log " + date + ".txt", true))
 		{
 			writer.Write(message);
 		}

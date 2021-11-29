@@ -58,6 +58,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
+		Log.Debug("NEW SIMULATION INSTANCE");
 		Log.Debug("Initializing simulator.");
 		
 		// Set the current azimuth and elevation degrees to the rotation
@@ -86,6 +87,11 @@ public class TelescopeControllerSim : MonoBehaviour
 		
 		// Update any non-error output.
 		HandleOutput();
+	}
+	
+	void OnApplicationQuit()
+	{
+		Log.Debug("END SIMULATION INSTANCE\n\n\n");
 	}
 	
 	/// <summary>
