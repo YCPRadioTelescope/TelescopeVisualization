@@ -79,6 +79,9 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
+		if(command.ignoreCommand)
+			return;
+		
 		// Determine what the current command is.
 		HandleCommand();
 		
@@ -106,9 +109,6 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public void HandleCommand() 
 	{
-		if(command.ignoreCommand == true) 
-			return;
-		
 		if(command.jog) 
 			HandleJog();
 		
@@ -384,16 +384,19 @@ public class TelescopeControllerSim : MonoBehaviour
 	private void UpdateAzimuth()
 	{
 		ref float moveBy = ref command.azimuthData;
+		
 		// If the amount of azimuth degrees to move by is non-zero, the azimuth must move.
-		if(moveBy != 0.0f)
+		if(moveBy != 0.0f || azSpeed != 0.0f)
+			ShiftAzimuthSpeed(moveBy);
+		
+		if(azSpeed != 0.0f)
 		{
 			// Get the current orientation and movement speed
 			ref float current = ref simTelescopeAzimuthDegrees;
 			float old = current;
-			ShiftAzimuthSpeed(moveBy);
 			
 			// Move the azimuth.
-			current = MoveAzimuth(current, moveBy, moveBy < 0.0f ? -azSpeed : azSpeed);
+			current = MoveAzimuth(current, azSpeed);
 			
 			// Update the MCUCommand by subtracting the angle moved from the remaining degrees to move by.
 			moveBy -= AngleDistance(current, old);
@@ -405,11 +408,9 @@ public class TelescopeControllerSim : MonoBehaviour
 				moveBy = 0.0f;
 			}
 		}
-		else
-			azSpeed = 0.0f;
 		
-		azimuthMoving = (moveBy != 0.0f);
-		azimuthPosMotion = (moveBy > 0.0f);
+		azimuthMoving = (azSpeed != 0.0f);
+		azimuthPosMotion = (azSpeed > 0.0f);
 	}
 	
 	/// <summary>
@@ -418,32 +419,33 @@ public class TelescopeControllerSim : MonoBehaviour
 	private void UpdateElevation()
 	{
 		ref float moveBy = ref command.elevationData;
-		// If the current elevation does not equal the target elevation, move toward the target.
-		if(moveBy != 0.0f)
+		
+		// If the amount of azimuth degrees to move by is non-zero, the azimuth must move.
+		if(moveBy != 0.0f || elSpeed != 0.0f)
+			ShiftElevationSpeed(moveBy);
+		
+		if(elSpeed != 0.0f)
 		{
 			// Get the current orientation and movement speed
 			ref float current = ref simTelescopeElevationDegrees;
 			float old = current;
-			ShiftElevationSpeed(moveBy);
 			
-			// Move the elevation.
-			current = MoveElevation(current, moveBy, moveBy < 0.0f ? -elSpeed : elSpeed);
+			// Move the azimuth.
+			current = MoveElevation(current, elSpeed);
 			
 			// Update the MCUCommand by subtracting the angle moved from the remaining degrees to move by.
 			moveBy -= AngleDistance(current, old);
 			
-			// If the total degrees remaining to move by is less than the epsilon, consider it zero.
+			// If the total degrees remaining to move by is less than the epsilon, consider it on target.
 			if(moveBy != 0.0f && WithinEpsilon(moveBy))
 			{
-				Log.Debug("Threw out the remaining " + moveBy + " degree elevation movement because it was smaller than the accepted epsilon value of " + epsilon + ".");
+				Log.Debug("Threw out the remaining " + moveBy + " degree azimuth movement because it was smaller than the accepted epsilon value of " + epsilon + ".");
 				moveBy = 0.0f;
 			}
 		}
-		else
-			elSpeed = 0.0f;
 		
-		elevationMoving = (moveBy != 0.0f);
-		elevationPosMotion = (moveBy > 0.0f);
+		elevationMoving = (elSpeed != 0.0f);
+		elevationPosMotion = (elSpeed > 0.0f);
 	}
 	
 	/// <summary>
@@ -452,18 +454,27 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <param name="remaining">The remaining number of degrees to move by for the current movement.</param>
 	private void ShiftAzimuthSpeed(float remaining)
 	{
+		float sign = (remaining > 0.0f) ? 1.0f : -1.0f;
 		remaining = Mathf.Abs(remaining);
-		float progress = 1.0f - remaining / Mathf.Abs(command.cachedAzData);
+		float progress = (remaining > 0.0f && command.cachedAzData != 0.0f) ? (1.0f - remaining / Mathf.Abs(command.cachedAzData)) : 1.0f;
+		if(command.jog)
+			progress = 0.0f;
 		float maxSpeed = command.azimuthSpeed;
 		float accel = command.azimuthAcceleration;
 		float decel = command.azimuthDeceleration;
+		if(command.stop)
+		{
+			progress = 1.0f;
+			sign = (azSpeed > 0.0f) ? 1.0f : -1.0f;
+			decel = 0.9f;
+		}
 		
 		// Accelerate if we're in the first 50% of a movement.
 		if(progress <= 0.5f)
 		{
-			azSpeed += accel * Time.deltaTime;
-			if(azSpeed >= maxSpeed)
-				azSpeed = maxSpeed;
+			azSpeed += sign * accel * Time.deltaTime;
+			if(Mathf.Abs(azSpeed) >= Mathf.Abs(maxSpeed))
+				azSpeed = sign * maxSpeed;
 			
 			azimuthAccelerating = (azSpeed != maxSpeed);
 			azimuthDecelerating = false;
@@ -472,11 +483,15 @@ public class TelescopeControllerSim : MonoBehaviour
 		else if(progress > 0.5f)
 		{
 			// Decelerate if the remaining movement is smaller than the stopping distance.
-			if(StoppingDistance(azSpeed, decel) >= remaining)
+			if(progress == 1.0f || StoppingDistance(azSpeed, decel) >= remaining)
 			{
-				azSpeed -= decel * Time.deltaTime;
-				if(azSpeed <= 0.0f)
+				azSpeed -= sign * decel * Time.deltaTime;
+				if((sign == 1.0f && azSpeed <= 0.0f) ||
+					(sign == -1.0f && azSpeed >= 0.0f))
+				{
+					Log.Debug("Speed: " + sign + " " + azSpeed);
 					azSpeed = 0.0f;
+				}
 				
 				azimuthDecelerating = (azSpeed != 0.0f);
 			}
@@ -490,16 +505,25 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <param name="remaining">The remaining number of degrees to move by for the current movement.</param>
 	private void ShiftElevationSpeed(float remaining)
 	{
+		float sign = (remaining > 0.0f) ? 1.0f : -1.0f;
 		remaining = Mathf.Abs(remaining);
-		float progress = 1.0f - remaining / Mathf.Abs(command.cachedElData);
+		float progress = (remaining > 0.0f && command.cachedElData != 0.0f) ? (1.0f - remaining / Mathf.Abs(command.cachedElData)) : 1.0f;
+		if(command.jog)
+			progress = 0.0f;
 		float maxSpeed = command.elevationSpeed;
 		float accel = command.elevationAcceleration;
 		float decel = command.elevationDeceleration;
+		if(command.stop)
+		{
+			progress = 1.0f;
+			sign = (elSpeed > 0.0f) ? 1.0f : -1.0f;
+			decel = 0.9f;
+		}
 		
 		// Accelerate if we're in the first 50% of a movement.
 		if(progress <= 0.5f)
 		{
-			elSpeed += accel * Time.deltaTime;
+			elSpeed += sign * accel * Time.deltaTime;
 			if(elSpeed >= maxSpeed)
 				elSpeed = maxSpeed;
 			
@@ -510,11 +534,15 @@ public class TelescopeControllerSim : MonoBehaviour
 		else if(progress > 0.5f)
 		{
 			// Decelerate if the remaining movement is smaller than the stopping distance.
-			if(StoppingDistance(elSpeed, decel) >= remaining)
+			if(progress == 1.0f || StoppingDistance(elSpeed, decel) >= remaining)
 			{
-				elSpeed -= decel * Time.deltaTime;
-				if(elSpeed <= 0.0f)
+				elSpeed -= sign * decel * Time.deltaTime;
+				if((sign == 1.0f && elSpeed <= 0.0f) ||
+					(sign == -1.0f && elSpeed >= 0.0f))
+				{
+					Log.Debug("Speed: " + sign + " " + elSpeed);
 					elSpeed = 0.0f;
+				}
 				
 				elevationDecelerating = (elSpeed != 0.0f);
 			}
@@ -555,16 +583,18 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <param name="moveBy">The total degrees to move by before reaching the target azimuth.</param>
 	/// <param name="speed">The speed at which to rotate in degrees per second.</param>
 	/// <returns>The new azimuth angle.</returns>
-	private float MoveAzimuth(float current, float moveBy, float speed)
+	private float MoveAzimuth(float current, float speed)
 	{
 		// Alter the movement speed by the time since the last frame. This ensures
 		// a smooth movement regardless of the framerate.
 		speed *= Time.deltaTime;
 		
+		/*
 		// If we're closer to the target than the movement speed, lower the movement
 		// speed so that we don't overshoot it.
 		if(Mathf.Abs(moveBy) < Mathf.Abs(speed)) 
 		 	speed = moveBy;
+		*/
 		
 		// Rotate the azimuth game object by the final speed.
 		azimuth.transform.Rotate(0, speed, 0);
@@ -580,16 +610,18 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <param name="moveBy">The total degrees to move by before reaching the target elevation.</param>
 	/// <param name="speed">The speed at which to rotate in degrees per second.</param>
 	/// <returns>The new elevation angle.</returns>
-	private float MoveElevation(float current, float moveBy, float speed)
+	private float MoveElevation(float current, float speed)
 	{
 		// Alter the movement speed by the time since the last frame. This ensures
 		// a smooth movement regardless of the framerate.
 		speed *= Time.deltaTime;
 		
+		/*
 		// If we're closer to the target than the movement speed, lower the movement
 		// speed so that we don't overshoot it.
 		if(Mathf.Abs(moveBy) < Mathf.Abs(speed))
 			speed = moveBy;
+		*/
 		
 		// If we're closer to the target than the allowed bounds, lower the movement
 		// speed so that we don't go out of bounds.
