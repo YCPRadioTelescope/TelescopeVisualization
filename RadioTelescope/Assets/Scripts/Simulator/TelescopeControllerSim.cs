@@ -487,11 +487,8 @@ public class TelescopeControllerSim : MonoBehaviour
 			{
 				azSpeed -= sign * decel * Time.deltaTime;
 				if((sign == 1.0f && azSpeed <= 0.0f) ||
-					(sign == -1.0f && azSpeed >= 0.0f))
-				{
-					Log.Debug("Speed: " + sign + " " + azSpeed);
+						(sign == -1.0f && azSpeed >= 0.0f))
 					azSpeed = 0.0f;
-				}
 				
 				azimuthDecelerating = (azSpeed != 0.0f);
 			}
@@ -538,11 +535,8 @@ public class TelescopeControllerSim : MonoBehaviour
 			{
 				elSpeed -= sign * decel * Time.deltaTime;
 				if((sign == 1.0f && elSpeed <= 0.0f) ||
-					(sign == -1.0f && elSpeed >= 0.0f))
-				{
-					Log.Debug("Speed: " + sign + " " + elSpeed);
+						(sign == -1.0f && elSpeed >= 0.0f))
 					elSpeed = 0.0f;
-				}
 				
 				elevationDecelerating = (elSpeed != 0.0f);
 			}
