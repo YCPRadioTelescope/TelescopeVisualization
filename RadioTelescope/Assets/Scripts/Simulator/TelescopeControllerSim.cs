@@ -439,7 +439,7 @@ public class TelescopeControllerSim : MonoBehaviour
 			// If the total degrees remaining to move by is less than the epsilon, consider it on target.
 			if(moveBy != 0.0f && WithinEpsilon(moveBy))
 			{
-				Log.Debug("Threw out the remaining " + moveBy + " degree azimuth movement because it was smaller than the accepted epsilon value of " + epsilon + ".");
+				Log.Debug("Threw out the remaining " + moveBy + " degree elevation movement because it was smaller than the accepted epsilon value of " + epsilon + ".");
 				moveBy = 0.0f;
 			}
 		}
