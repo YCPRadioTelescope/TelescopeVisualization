@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 // This script handles UI navigation via the tab key. Pressing tab will move your
 // current UI selection to the next UI element (be that a text box or a button).
-public class UI : MonoBehaviour
+public class Tooltips : MonoBehaviour
 {
 	private EventSystem system;
 	
