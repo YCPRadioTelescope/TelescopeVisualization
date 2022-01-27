@@ -148,7 +148,10 @@ public class MCUCommand : MonoBehaviour
 		Log.Debug("		Elevation Data:        0x" + Convert.ToString(elevationDataBits, 16));
 		Log.Debug("		Elevation Speed:       0x" + Convert.ToString(elevationSpeedBits, 16) + "\n");
 		
-		Log.Debug("		Acceleration:          0x" + Convert.ToString(azimuthAccelerationBits, 16));
+		Log.Debug("		Azimuth Accel:         0x" + Convert.ToString(azimuthAccelerationBits, 16));
+		Log.Debug("		Azimuth Decel:         0x" + Convert.ToString(azimuthDecelerationBits, 16));
+		Log.Debug("		Elevation Accel:       0x" + Convert.ToString(elevationAccelerationBits, 16));
+		Log.Debug("		Elevation Decel:       0x" + Convert.ToString(elevationDecelerationBits, 16));
 		
 		// Determine the incoming command and make any changes to the received information if necessary.
 		bool ignore = false;
