@@ -484,7 +484,7 @@ public class TelescopeControllerSim : MonoBehaviour
 			if(Mathf.Abs(azSpeed) >= Mathf.Abs(maxSpeed))
 				azSpeed = sign * maxSpeed;
 			
-			azimuthAccelerating = (azSpeed != maxSpeed);
+			azimuthAccelerating = (Mathf.Abs(azSpeed) != Mathf.Abs(maxSpeed));
 			azimuthDecelerating = false;
 		}
 		// Don't accelerate if we're in the last 50% of a movement.
@@ -532,7 +532,7 @@ public class TelescopeControllerSim : MonoBehaviour
 			if(Mathf.Abs(elSpeed) >= Mathf.Abs(maxSpeed))
 				elSpeed = sign * maxSpeed;
 			
-			elevationAccelerating = (elSpeed != maxSpeed);
+			elevationAccelerating = (Mathf.Abs(elSpeed) != Mathf.Abs(maxSpeed));
 			elevationDecelerating = false;
 		}
 		// Don't accelerate if we're in the last 50% of a movement.
