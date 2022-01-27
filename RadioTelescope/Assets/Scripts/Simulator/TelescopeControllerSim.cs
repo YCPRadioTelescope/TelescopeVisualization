@@ -421,7 +421,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	{
 		ref float moveBy = ref command.elevationData;
 		
-		// If the amount of azimuth degrees to move by is non-zero, the azimuth must move.
+		// If the amount of elevation degrees to move by is non-zero, the elevation must move.
 		if(moveBy != 0.0f || elSpeed != 0.0f)
 			ShiftElevationSpeed(moveBy);
 		
@@ -431,11 +431,18 @@ public class TelescopeControllerSim : MonoBehaviour
 			ref float current = ref simTelescopeElevationDegrees;
 			float old = current;
 			
-			// Move the azimuth.
+			// Move the elevation.
 			current = MoveElevation(current, elSpeed);
 			
 			// Update the MCUCommand by subtracting the angle moved from the remaining degrees to move by.
-			moveBy -= AngleDistance(current, old);
+			float moved = AngleDistance(current, old);
+			moveBy -= moved;
+			// If the elevation didn't move despite elSpeed being non-zero, that means we've hit
+			// one of the limit switches and therefore should drop the speed to 0.
+			if(moved == 0.0f && (
+				(WithinEpsilon(AngleDistance(current, maxEl), epsilon) && elSpeed > 0.0f) ||
+				(WithinEpsilon(AngleDistance(current, minEl), epsilon) && elSpeed < 0.0f)))
+				elSpeed = 0.0f;
 			
 			// If the total degrees remaining to move by is less than the epsilon, consider it on target.
 			if(moveBy != 0.0f && WithinEpsilon(moveBy, epsilon))
@@ -558,13 +565,6 @@ public class TelescopeControllerSim : MonoBehaviour
 		// a smooth movement regardless of the framerate.
 		speed *= Time.deltaTime;
 		
-		/*
-		// If we're closer to the target than the movement speed, lower the movement
-		// speed so that we don't overshoot it.
-		if(Mathf.Abs(moveBy) < Mathf.Abs(speed)) 
-		 	speed = moveBy;
-		*/
-		
 		// Rotate the azimuth game object by the final speed.
 		azimuth.transform.Rotate(0, speed, 0);
 		
@@ -584,13 +584,6 @@ public class TelescopeControllerSim : MonoBehaviour
 		// Alter the movement speed by the time since the last frame. This ensures
 		// a smooth movement regardless of the framerate.
 		speed *= Time.deltaTime;
-		
-		/*
-		// If we're closer to the target than the movement speed, lower the movement
-		// speed so that we don't overshoot it.
-		if(Mathf.Abs(moveBy) < Mathf.Abs(speed))
-			speed = moveBy;
-		*/
 		
 		// If we're closer to the target than the allowed bounds, lower the movement
 		// speed so that we don't go out of bounds.
