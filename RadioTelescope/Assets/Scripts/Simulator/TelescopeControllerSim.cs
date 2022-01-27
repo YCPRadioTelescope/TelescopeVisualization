@@ -529,8 +529,8 @@ public class TelescopeControllerSim : MonoBehaviour
 		if(progress <= 0.5f)
 		{
 			elSpeed += sign * accel * Time.deltaTime;
-			if(elSpeed >= maxSpeed)
-				elSpeed = maxSpeed;
+			if(Mathf.Abs(elSpeed) >= Mathf.Abs(maxSpeed))
+				elSpeed = sign * maxSpeed;
 			
 			elevationAccelerating = (elSpeed != maxSpeed);
 			elevationDecelerating = false;
