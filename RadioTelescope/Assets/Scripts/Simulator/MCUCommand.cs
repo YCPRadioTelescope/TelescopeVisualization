@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using log4net;
+using static Utilities;
 
 // master list of known register data
 // https://docs.google.com/spreadsheets/d/1vBKsnV7Xso0u19ZyhtVimiCXpZjc007usVjvAsxHJNU/edit#gid=0
@@ -356,35 +357,16 @@ public class MCUCommand : MonoBehaviour
 		return time;
 	}
 	
-	private float StoppingDistance(float speed, float decel)
-	{
-		// Kinematics!
-		//		dx = change in distance
-		//		v0 = velocity original
-		//		vf = velocity final
-		//		a = acceleration
-		//		t = time
-		
-		// vf = v0 + at
-		// t = (vf - v0) / a
-		// 		v0 = 0, vf = azSpeed, a = accel, t = time to reach 0 velocity.
-		float stoppingTime = speed / decel;
-		
-		// dx = v0t + 0.5at^2
-		//		v0 = azSpeed, t = stopping time, a = accel, dx = distance to reach 0 velocity.
-		return speed * stoppingTime - 0.5f * decel * stoppingTime * stoppingTime;
-	}
-	
 	/// <summary>
 	/// Helper method used to convert raw hex register values to floats used by the controller.
 	/// </summary>
 	private void ConvertToDegrees() 
 	{
 		// Convert all step values to floats in degrees.
-		azimuthData = ConvertStepsToDegrees(azimuthDataBits, AZIMUTH_GEARING_RATIO);
-		elevationData = ConvertStepsToDegrees(elevationDataBits, ELEVATION_GEARING_RATIO);
-		azimuthSpeed = ConvertStepsToDegrees(azimuthSpeedBits, AZIMUTH_GEARING_RATIO);
-		elevationSpeed = ConvertStepsToDegrees(elevationSpeedBits, ELEVATION_GEARING_RATIO);
+		azimuthData = StepsToDegrees(azimuthDataBits, AZIMUTH_GEARING_RATIO);
+		elevationData = StepsToDegrees(elevationDataBits, ELEVATION_GEARING_RATIO);
+		azimuthSpeed = StepsToDegrees(azimuthSpeedBits, AZIMUTH_GEARING_RATIO);
+		elevationSpeed = StepsToDegrees(elevationSpeedBits, ELEVATION_GEARING_RATIO);
 		
 		// The azimuth and elevation data fields get modified as the simulation telescope moves.
 		// Cache the number of steps to determine the initial input values of the command.
@@ -399,29 +381,9 @@ public class MCUCommand : MonoBehaviour
 		}
 		
 		// The acceleration that is received already has the gearing ratios applied, hence the gearing ratio of 1.
-		azimuthAcceleration = ConvertStepsToDegrees(azimuthAccelerationBits, 1);
-		elevationAcceleration = ConvertStepsToDegrees(elevationAccelerationBits, 1);
-		azimuthDeceleration = ConvertStepsToDegrees(azimuthDecelerationBits, 1);
-		elevationDeceleration = ConvertStepsToDegrees(elevationDecelerationBits, 1);
-	}
-	
-	/// <summary>
-	/// Helper method used to convert steps to degrees - this is taken from <c>ConversionHelper.cs</c> on the control room
-	/// </summary>
-	/// <param name="steps"> steps passed from the control room (or wherever)</param>
-	/// <param name="gearingRatio"> the constant ratio associated with the type of movement. For us, this will be azimuth or elevation gearing </param>
-	/// <returns> a float "degree" value from the information passed </returns>
-	private float ConvertStepsToDegrees(int steps, float gearingRatio)
-	{
-		return steps * 360.0f / (STEPS_PER_REVOLUTION * gearingRatio);
-	}
-	
-	/// <summary>
-	/// Class helper method to compute the distance between two angles on a circle.
-	/// </summary>
-	private float AngleDistance(float a, float b)
-	{
-		// Mathf.Repeat is functionally similar to the modulus operator, but works with floats.
-		return Mathf.Repeat((a - b + 180.0f), 360.0f) - 180.0f;
+		azimuthAcceleration = StepsToDegrees(azimuthAccelerationBits, 1);
+		elevationAcceleration = StepsToDegrees(elevationAccelerationBits, 1);
+		azimuthDeceleration = StepsToDegrees(azimuthDecelerationBits, 1);
+		elevationDeceleration = StepsToDegrees(elevationDecelerationBits, 1);
 	}
 }

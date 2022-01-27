@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using log4net;
 using UnityEngine;
+using static Utilities;
 
 // This script controls the telescope according to the inputs from
 // the control room as received by the MCUCommand updated by SimServer.
@@ -402,7 +403,7 @@ public class TelescopeControllerSim : MonoBehaviour
 			moveBy -= AngleDistance(current, old);
 			
 			// If the total degrees remaining to move by is less than the epsilon, consider it on target.
-			if(moveBy != 0.0f && WithinEpsilon(moveBy))
+			if(moveBy != 0.0f && WithinEpsilon(moveBy, epsilon))
 			{
 				Log.Debug("Threw out the remaining " + moveBy + " degree azimuth movement because it was smaller than the accepted epsilon value of " + epsilon + ".");
 				moveBy = 0.0f;
@@ -437,7 +438,7 @@ public class TelescopeControllerSim : MonoBehaviour
 			moveBy -= AngleDistance(current, old);
 			
 			// If the total degrees remaining to move by is less than the epsilon, consider it on target.
-			if(moveBy != 0.0f && WithinEpsilon(moveBy))
+			if(moveBy != 0.0f && WithinEpsilon(moveBy, epsilon))
 			{
 				Log.Debug("Threw out the remaining " + moveBy + " degree elevation movement because it was smaller than the accepted epsilon value of " + epsilon + ".");
 				moveBy = 0.0f;
@@ -545,32 +546,6 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Determine the distance required to stop if moving at the given speed
-	/// and slowing with the given deceleration.
-	/// </summary>
-	/// <param name="speed">The current rotation speed in degrees per second.</param>
-	/// <param name="decel">The deceleration rate in degrees per second squared.</param>
-	/// <returns>The distance in degrees required to stop.</returns>
-	private float StoppingDistance(float speed, float decel)
-	{
-		// Kinematics!
-		//		dx = change in distance
-		//		v0 = velocity original
-		//		vf = velocity final
-		//		a = acceleration
-		//		t = time
-		
-		// vf = v0 + at
-		// t = (vf - v0) / a
-		// 		v0 = 0, vf = azSpeed, a = accel, t = time to reach 0 velocity.
-		float stoppingTime = speed / decel;
-		
-		// dx = v0t + 0.5at^2
-		//		v0 = azSpeed, t = stopping time, a = accel, dx = distance to reach 0 velocity.
-		return speed * stoppingTime - 0.5f * decel * stoppingTime * stoppingTime;
-	}
-	
-	/// <summary>
 	/// Rotate the azimuth object.
 	/// </summary>
 	/// <param name="current">The current azimuth angle.</param>
@@ -619,7 +594,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		
 		// If we're closer to the target than the allowed bounds, lower the movement
 		// speed so that we don't go out of bounds.
-		float bounded = BoundElevation(elevation.transform.eulerAngles.z + speed);
+		float bounded = BoundElevation(elevation.transform.eulerAngles.z + speed, minEl, maxEl);
 		if(bounded == minEl || bounded == maxEl)
 			speed = bounded - current;
 		
@@ -627,53 +602,6 @@ public class TelescopeControllerSim : MonoBehaviour
 		elevation.transform.Rotate(0, 0, speed);
 		
 		// Return the new elevation orientation, bounded within the range [minEl, maxEl].
-		return BoundElevation(current + speed);
-	}
-	
-	/// <summary>
-	/// Class helper method to handle rotating across 0 azimuth.
-	/// </summary>
-	private float BoundAzimuth(float az)
-	{
-		// All values that this function might encounter should be within the range
-		// [-360,720). If it's outside this range then we could use while loops instead
-		// of if statements to catch them, but if anything is outside that range then
-		// something bad has happened and we want to know about that.
-		if(az < 0.0f)
-			az += 360.0f;
-		if(az >= 360.0f)
-			az -= 360.0f;
-		return az;
-	}
-	
-	/// <summary>
-	/// Class helper method for bounding elevation within the limit switches.
-	/// </summary>
-	private float BoundElevation(float el)
-	{
-		if(el < minEl)
-			return minEl;
-		if(el > maxEl)
-			return maxEl;
-		return el;
-	}
-	
-	
-	/// <summary>
-	/// Class helper method to determine if the magnitidue of the given angle is within
-	/// the epsilon distance.
-	/// </summary>
-	private bool WithinEpsilon(float angle)
-	{
-		return Mathf.Abs(angle) < epsilon;
-	}
-	
-	/// <summary>
-	/// Class helper method to compute the distance between two angles on a circle.
-	/// </summary>
-	private float AngleDistance(float a, float b)
-	{
-		// Mathf.Repeat is functionally similar to the modulus operator, but works with floats.
-		return Mathf.Repeat((a - b + 180.0f), 360.0f) - 180.0f;
+		return BoundElevation(current + speed, minEl, maxEl);
 	}
 }

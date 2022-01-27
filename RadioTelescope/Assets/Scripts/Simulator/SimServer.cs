@@ -9,6 +9,7 @@ using UnityEngine;
 using Modbus.Data;
 using Modbus.Device;
 using log4net;
+using static Utilities;
 
 // This script is what communicates with the control room, receiving commands through the
 // modbus registers and updating the the MCUCommand object that the TelescopeController uses
@@ -52,8 +53,6 @@ public class SimServer : MonoBehaviour
 	/// </summary>
 	private const int AZIMUTH_GEARING_RATIO = 500;
 	private const int ELEVATION_GEARING_RATIO = 50;
-	private const int STEPS_PER_REVOLUTION = 20000;
-	private const int ENCODER_COUNTS_PER_REVOLUTION_BEFORE_GEARING = 8000;
 	
 	private const int INCOMING_REGISTERS_SIZE = 20;
 	private const int OUTGOING_REGISTERS_SIZE = 13;
@@ -441,22 +440,6 @@ public class SimServer : MonoBehaviour
 		SetRegister((int)OutgoingRegIndex.secondWordAzimuthEncoder, (ushort)(azEncoder & 0xffff));
 		SetRegister((int)OutgoingRegIndex.firstWordElevationEncoder, (ushort)(elEncoder >> 16));
 		SetRegister((int)OutgoingRegIndex.secondWordElevationEncoder, (ushort)(elEncoder & 0xffff));
-	}
-	
-	/// <summary>
-	/// Helper method to convert degrees into encoder values.
-	/// </summary>
-	private int DegreesToEncoder(float degrees, int gearingRatio)
-	{
-		return (int)(degrees * ENCODER_COUNTS_PER_REVOLUTION_BEFORE_GEARING * gearingRatio / 360.0);
-	}
-	
-	/// <summary>
-	/// Helper method to convert degrees into steps.
-	/// </summary>
-	private int DegreesToSteps(float degrees, int gearingRatio)
-	{
-		return (int)(degrees * STEPS_PER_REVOLUTION * gearingRatio / 360.0);
 	}
 	
 	/// <summary>
