@@ -388,7 +388,11 @@ public class TelescopeControllerSim : MonoBehaviour
 		
 		// If the amount of azimuth degrees to move by is non-zero, the azimuth must move.
 		if(moveBy != 0.0f || azSpeed != 0.0f)
-			ShiftAzimuthSpeed(moveBy);
+		{
+			float progress = (moveBy != 0.0f && command.cachedAzData != 0.0f) ? (1.0f - Mathf.Abs(moveBy) / Mathf.Abs(command.cachedAzData)) : 1.0f;
+			ShiftSpeed(ref azSpeed, ref azimuthAccelerating, ref azimuthDecelerating,
+				moveBy, progress, command.azimuthSpeed, command.azimuthAcceleration, command.azimuthDeceleration);
+		}
 		
 		if(azSpeed != 0.0f)
 		{
@@ -423,7 +427,11 @@ public class TelescopeControllerSim : MonoBehaviour
 		
 		// If the amount of elevation degrees to move by is non-zero, the elevation must move.
 		if(moveBy != 0.0f || elSpeed != 0.0f)
-			ShiftElevationSpeed(moveBy);
+		{
+			float progress = (moveBy != 0.0f && command.cachedElData != 0.0f) ? (1.0f - Mathf.Abs(moveBy) / Mathf.Abs(command.cachedElData)) : 1.0f;
+			ShiftSpeed(ref elSpeed, ref elevationAccelerating, ref elevationDecelerating,
+				moveBy, progress, command.elevationSpeed, command.elevationAcceleration, command.elevationDeceleration);
+		}
 		
 		if(elSpeed != 0.0f)
 		{
@@ -457,98 +465,59 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Shift the current azimuth speed up or down according to acceleration and deceleration.
+	/// Shift the given speed up or down according to acceleration and deceleration values.
+	/// Changes the given accelerating and decelerating booleans.
 	/// </summary>
+	/// <param name="speed">A reference to the azimuth or elevation speed.</param>
+	/// <param name="accelerating">A reference to the azimuth or elevation accelerating bool.</param>
+	/// <param name="decelerating">A reference to the azimuth or elevation decelerating bool.</param>
 	/// <param name="remaining">The remaining number of degrees to move by for the current movement.</param>
-	private void ShiftAzimuthSpeed(float remaining)
+	/// <param name="progress">A value from 0 to 1 denoting the % of the current movement that has been completed.</param>
+	/// <param name="maxSpeed">The maximum allowed speed for the current movement.</param>
+	/// <param name="accel">The acceleration rate of the speed.</param>
+	/// <param name="decel">The deceleration rate of the speed.</param>
+	private void ShiftSpeed(ref float speed, ref bool accelerating, ref bool decelerating,
+		float remaining, float progress, float maxSpeed, float accel, float decel)
 	{
+		// Get the sign of the remaining movement then change the remaining movement to positive.
 		float sign = (remaining > 0.0f) ? 1.0f : -1.0f;
 		remaining = Mathf.Abs(remaining);
-		float progress = (remaining > 0.0f && command.cachedAzData != 0.0f) ? (1.0f - remaining / Mathf.Abs(command.cachedAzData)) : 1.0f;
+		
+		// If we are jogging, always accelerate if able to. This is done by setting the progress to 0.
 		if(command.jog)
 			progress = 0.0f;
-		float maxSpeed = command.azimuthSpeed;
-		float accel = command.azimuthAcceleration;
-		float decel = command.azimuthDeceleration;
+		// If we are stopping, always decelerate to zero. This is done by setting the progress to 1.
 		if(command.stop)
 		{
 			progress = 1.0f;
-			sign = (azSpeed > 0.0f) ? 1.0f : -1.0f;
+			sign = (speed > 0.0f) ? 1.0f : -1.0f;
 			decel = 0.9f;
 		}
 		
 		// Accelerate if we're in the first 50% of a movement.
 		if(progress <= 0.5f)
 		{
-			azSpeed += sign * accel * Time.deltaTime;
-			if(Mathf.Abs(azSpeed) >= Mathf.Abs(maxSpeed))
-				azSpeed = sign * maxSpeed;
+			speed += sign * accel * Time.deltaTime;
+			if(Mathf.Abs(speed) >= Mathf.Abs(maxSpeed))
+				speed = sign * maxSpeed;
 			
-			azimuthAccelerating = (Mathf.Abs(azSpeed) != Mathf.Abs(maxSpeed));
-			azimuthDecelerating = false;
+			accelerating = (Mathf.Abs(speed) != Mathf.Abs(maxSpeed));
+			decelerating = false;
 		}
 		// Don't accelerate if we're in the last 50% of a movement.
 		else if(progress > 0.5f)
 		{
 			// Decelerate if the remaining movement is smaller than the stopping distance.
-			if(progress == 1.0f || StoppingDistance(azSpeed, decel) >= remaining)
+			if(progress == 1.0f || StoppingDistance(speed, decel) >= remaining)
 			{
-				azSpeed -= sign * decel * Time.deltaTime;
-				if((sign == 1.0f && azSpeed <= 0.0f) ||
-						(sign == -1.0f && azSpeed >= 0.0f))
-					azSpeed = 0.0f;
+				speed -= sign * decel * Time.deltaTime;
+				if((sign == 1.0f && speed <= 0.0f) ||
+						(sign == -1.0f && speed >= 0.0f))
+					speed = 0.0f;
 				
-				azimuthDecelerating = (azSpeed != 0.0f);
+				decelerating = (speed != 0.0f);
 			}
-			azimuthAccelerating = false;
-		}
-	}
-	
-	/// <summary>
-	/// Shift the current elevation speed up or down according to acceleration and deceleration.
-	/// </summary>
-	/// <param name="remaining">The remaining number of degrees to move by for the current movement.</param>
-	private void ShiftElevationSpeed(float remaining)
-	{
-		float sign = (remaining > 0.0f) ? 1.0f : -1.0f;
-		remaining = Mathf.Abs(remaining);
-		float progress = (remaining > 0.0f && command.cachedElData != 0.0f) ? (1.0f - remaining / Mathf.Abs(command.cachedElData)) : 1.0f;
-		if(command.jog)
-			progress = 0.0f;
-		float maxSpeed = command.elevationSpeed;
-		float accel = command.elevationAcceleration;
-		float decel = command.elevationDeceleration;
-		if(command.stop)
-		{
-			progress = 1.0f;
-			sign = (elSpeed > 0.0f) ? 1.0f : -1.0f;
-			decel = 0.9f;
-		}
-		
-		// Accelerate if we're in the first 50% of a movement.
-		if(progress <= 0.5f)
-		{
-			elSpeed += sign * accel * Time.deltaTime;
-			if(Mathf.Abs(elSpeed) >= Mathf.Abs(maxSpeed))
-				elSpeed = sign * maxSpeed;
-			
-			elevationAccelerating = (Mathf.Abs(elSpeed) != Mathf.Abs(maxSpeed));
-			elevationDecelerating = false;
-		}
-		// Don't accelerate if we're in the last 50% of a movement.
-		else if(progress > 0.5f)
-		{
-			// Decelerate if the remaining movement is smaller than the stopping distance.
-			if(progress == 1.0f || StoppingDistance(elSpeed, decel) >= remaining)
-			{
-				elSpeed -= sign * decel * Time.deltaTime;
-				if((sign == 1.0f && elSpeed <= 0.0f) ||
-						(sign == -1.0f && elSpeed >= 0.0f))
-					elSpeed = 0.0f;
-				
-				elevationDecelerating = (elSpeed != 0.0f);
-			}
-			elevationAccelerating = false;
+			accelerating = false;
 		}
 	}
 	
