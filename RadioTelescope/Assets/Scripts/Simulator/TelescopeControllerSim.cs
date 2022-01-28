@@ -490,7 +490,11 @@ public class TelescopeControllerSim : MonoBehaviour
 		if(command.stop)
 		{
 			progress = 1.0f;
+			// Stop commands have no remaining movement distance, so get the sign from the
+			// current speed.
 			sign = (speed > 0.0f) ? 1.0f : -1.0f;
+			// Stop commands don't send a deceleration value, so just use the value
+			// we normally receive.
 			decel = 0.9f;
 		}
 		
