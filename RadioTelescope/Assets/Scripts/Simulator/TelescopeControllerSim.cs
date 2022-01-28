@@ -13,8 +13,8 @@ public class TelescopeControllerSim : MonoBehaviour
 	private static readonly ILog Log = LogManager.GetLogger(typeof(TelescopeControllerSim));
 	
 	// The game objects that get rotated by a movement command.
-	public GameObject azimuth;
-	public GameObject elevation;
+	public GameObject azimuthObject;
+	public GameObject elevationObject;
 	
 	// The command that determines the telescope's movement.
 	public MCUCommand command;
@@ -22,30 +22,9 @@ public class TelescopeControllerSim : MonoBehaviour
 	// The object that updates the UI with the state of variables.
 	public UIHandler ui;
 	
-	// The current values of the azimuth and elevation in degrees.
-	private float simTelescopeAzimuthDegrees;
-	private float simTelescopeElevationDegrees;
-	
-	// The current azimuth and elevation speeds in degrees per second.
-	private float azSpeed = 0.0f;
-	private float elSpeed = 0.0f;
-	
-	// Whether the azimuth or elevation motors are moving,
-	// the direction of travel (true = positive, false = negative),
-	// and the acceleration direction.
-	// Always check the moving bool before checking the motion or accelerating
-	// bools.
-	private bool azimuthMoving = false;
-	private bool azimuthPosMotion = false;
-	private bool azimuthAccelerating = false;
-	private bool azimuthDecelerating = false;
-	private bool azimuthHomed = false;
-	
-	private bool elevationMoving = false;
-	private bool elevationPosMotion = false;
-	private bool elevationAccelerating = false;
-	private bool elevationDecelerating = false;
-	private bool elevationHomed = false;
+	// Objects representing the state of each axis.
+	private Axis azimuth;
+	private Axis elevation;
 	
 	private bool executingRelativeMove = false;
 	
@@ -66,10 +45,10 @@ public class TelescopeControllerSim : MonoBehaviour
 		Log.Debug("NEW SIMULATION INSTANCE");
 		Log.Debug("Initializing simulator.");
 		
-		// Set the current azimuth and elevation degrees to the rotation
-		// of the game objects.
-		simTelescopeAzimuthDegrees = azimuth.transform.eulerAngles.y;
-		simTelescopeElevationDegrees = elevation.transform.eulerAngles.z;
+		// Create the azimuth and elevation Axis objects, which hold information
+		// about the state of each axis.
+		azimuth = new Axis(true, azimuthObject.transform.eulerAngles.y, command);
+		elevation = new Axis(false, elevationObject.transform.eulerAngles.z, command);
 		
 		// Initialize the MCUCommand.
 		command.InitSim();
@@ -91,14 +70,8 @@ public class TelescopeControllerSim : MonoBehaviour
 		// given that moving the azimuth or elevation is just a difference of the variables to use.
 		// Could perhaps cut down on the number of parameters being passed by creating an object
 		// that contains all the axis information. Create an "Axis" object?
-		UpdateAxis(MoveAzimuth, ref simTelescopeAzimuthDegrees, ref command.azimuthData,
-			ref azSpeed, ref azimuthAccelerating, ref azimuthDecelerating, command.cachedAzData,
-			command.azimuthSpeed, command.azimuthAcceleration, command.azimuthDeceleration,
-			ref azimuthMoving, ref azimuthPosMotion, "azimuth");
-		UpdateAxis(MoveElevation, ref simTelescopeElevationDegrees, ref command.elevationData,
-			ref elSpeed, ref elevationAccelerating, ref elevationDecelerating, command.cachedElData,
-			command.elevationSpeed, command.elevationAcceleration, command.elevationDeceleration,
-			ref elevationMoving, ref elevationPosMotion, "elevation");
+		UpdateAxis(MoveAzimuth, azimuth, ref command.azimuthData);
+		UpdateAxis(MoveElevation, elevation, ref command.elevationData);
 		
 		// Determine if any errors have occurred.
 		HandleErrors();
@@ -159,20 +132,20 @@ public class TelescopeControllerSim : MonoBehaviour
 		if(command.home && !AzimuthMoving())
 		{
 			command.invalidAzimuthPosition = false;
-			azimuthHomed = true;
+			azimuth.homed = true;
 		}
 		// If the current command is not a home command and it moves this axis, 
 		// then this axis is not homed.
 		else if(!command.home && AzimuthMoving())
-			azimuthHomed = false;
+			azimuth.homed = false;
 		
 		if(command.home && !ElevationMoving())
 		{
 			command.invalidElevationPosition = false;
-			elevationHomed = true;
+			elevation.homed = true;
 		}
 		else if(!command.home && ElevationMoving())
-			elevationHomed = false;
+			elevation.homed = false;
 		
 	}
 	
@@ -183,7 +156,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public bool LimitSwitchHit()
 	{
-		float current = simTelescopeElevationDegrees;
+		float current = elevation.degrees;
 		float target = current + command.elevationData;
 		return (current > maxEl || (current == maxEl && target > maxEl))
 			|| (current < minEl || (current == minEl && target < minEl));
@@ -202,7 +175,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public float Azimuth()
 	{
-		return simTelescopeAzimuthDegrees;
+		return azimuth.degrees;
 	}
 	
 	/// <summary>
@@ -210,7 +183,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public bool AzimuthMoving()
 	{
-		return azimuthMoving;
+		return azimuth.moving;
 	}
 	
 	/// <summary>
@@ -220,7 +193,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public bool AzimuthPosMotion()
 	{
-		return azimuthPosMotion;
+		return azimuth.posMotion;
 	}
 	
 	/// <summary>
@@ -230,7 +203,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public bool AzimuthAccelerating()
 	{
-		return azimuthAccelerating;
+		return azimuth.accelerating;
 	}
 	
 	/// <summary>
@@ -239,7 +212,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public bool AzimuthDecelerating()
 	{
-		return azimuthDecelerating;
+		return azimuth.decelerating;
 	}
 	
 	/// <summary>
@@ -247,7 +220,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public bool AzimuthHomed()
 	{
-		return azimuthHomed;
+		return azimuth.homed;
 	}
 	
 	/// <summary>
@@ -255,7 +228,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public float Elevation()
 	{
-		return simTelescopeElevationDegrees;
+		return elevation.degrees;
 	}
 	
 	/// <summary>
@@ -263,7 +236,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public bool ElevationMoving()
 	{
-		return elevationMoving;
+		return elevation.moving;
 	}
 	
 	/// <summary>
@@ -273,7 +246,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public bool ElevationPosMotion()
 	{
-		return elevationPosMotion;
+		return elevation.posMotion;
 	}
 	
 	/// <summary>
@@ -282,7 +255,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public bool ElevationAccelerating()
 	{
-		return elevationAccelerating;
+		return elevation.accelerating;
 	}
 	
 	/// <summary>
@@ -291,7 +264,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public bool ElevationDecelerating()
 	{
-		return elevationDecelerating;
+		return elevation.decelerating;
 	}
 	
 	/// <summary>
@@ -299,7 +272,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public bool ElevationHomed()
 	{
-		return elevationHomed;
+		return elevation.homed;
 	}
 	
 	/// <summary>
@@ -308,7 +281,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public double UnityAzimuth()
 	{
-		return System.Math.Round(azimuth.transform.eulerAngles.y, 1);
+		return System.Math.Round(azimuthObject.transform.eulerAngles.y, 1);
 	}
 	
 	/// <summary>
@@ -317,7 +290,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public double UnityElevation()
 	{
-		return System.Math.Round(elevation.transform.eulerAngles.z, 1);
+		return System.Math.Round(elevationObject.transform.eulerAngles.z, 1);
 	}
 	
 	/// <summary>
@@ -326,7 +299,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public double SimAzimuth()
 	{
-		return System.Math.Round(simTelescopeAzimuthDegrees, 1);
+		return System.Math.Round(azimuth.degrees, 1);
 	}
 	
 	/// <summary>
@@ -335,7 +308,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public double SimElevation()
 	{
-		return System.Math.Round((simTelescopeElevationDegrees - 15.0f), 1);
+		return System.Math.Round(elevation.degrees - 15.0f, 1);
 	}
 	
 	/// <summary>
@@ -344,7 +317,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public double TargetAzimuth()
 	{
-		return System.Math.Round(simTelescopeAzimuthDegrees + command.azimuthData, 1);
+		return System.Math.Round(azimuth.degrees + command.azimuthData, 1);
 	}
 	
 	/// <summary>
@@ -353,7 +326,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public double TargetElevation()
 	{
-		return System.Math.Round(simTelescopeElevationDegrees + command.elevationData - 15.0f, 1);
+		return System.Math.Round(elevation.degrees + command.elevationData - 15.0f, 1);
 	}
 	
 	/// <summary>
@@ -362,7 +335,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public double AzimuthSpeed()
 	{
-		return System.Math.Round(azSpeed, 2);
+		return System.Math.Round(azimuth.speed, 2);
 	}
 	
 	/// <summary>
@@ -371,7 +344,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	public double ElevationSpeed()
 	{
-		return System.Math.Round(elSpeed, 2);
+		return System.Math.Round(elevation.speed, 2);
 	}
 	
 	/// <summary>
@@ -392,83 +365,67 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// <summary>
 	/// Update the given telescope axis.
 	/// <summary>
-	/// <param name="Move">The function that determines which axis gets moved.</param>
-	/// <param name="current">A reference to the current axis orientation.</param>
+	/// <param name="Move">The function that determines which axis GameObject moves.</param>
+	/// <param name="axis">The current axis being acted upon.</param>
 	/// <param name="moveBy">A reference to the current number of degrees to move by.</param>
-	/// <param name="speed">A reference to the current axis speed.</param>
-	/// <param name="accelerating">A reference to the azimuth or elevation accelerating bool.</param>
-	/// <param name="decelerating">A reference to the azimuth or elevation decelerating bool.</param>
-	/// <param name="cached">The cached axis movement distance.</param>
-	/// <param name="maxSpeed">The maximum allowed speed for the current movement.</param>
-	/// <param name="accel">The acceleration rate of the speed.</param>
-	/// <param name="decel">The deceleration rate of the speed.</param>
-	/// <param name="moving">A reference to the azimuth or elevation moving bool.</param>
-	/// <param name="posMotion">A reference to the azimuth or elevation posMotion bool.</param>
-	/// <param name="axis">A string of the name of the axis being moved.</param>
-	private void UpdateAxis(Func<float, float, float> Move, ref float current, ref float moveBy, ref float speed,
-		ref bool accelerating, ref bool decelerating, float cached, float maxSpeed, float acceleration, float deceleration,
-		ref bool moving, ref bool posMotion, string axis)
+	private void UpdateAxis(Func<float, float, float> Move, Axis axis, ref float moveBy)
 	{
 		// If a movement has been received then shift the current axis speed.
 		// Also shift the current axis speed if we don't have a movement but
 		// there is still some remaining speed.
-		if(moveBy != 0.0f || speed != 0.0f)
+		if(moveBy != 0.0f || axis.speed != 0.0f)
 		{
-			float progress = (moveBy != 0.0f && cached != 0.0f) ? (1.0f - Mathf.Abs(moveBy) / Mathf.Abs(cached)) : 1.0f;
-			ShiftSpeed(ref speed, ref accelerating, ref decelerating,
-				moveBy, progress, maxSpeed, acceleration, deceleration);
+			float progress = (moveBy != 0.0f && axis.Cached() != 0.0f) ? (1.0f - Mathf.Abs(moveBy) / Mathf.Abs(axis.Cached())) : 1.0f;
+			ShiftSpeed(axis, moveBy, progress, axis.MaxSpeed(), axis.Acceleration(), axis.Deceleration());
 		}
 		
 		// If the axis has momentum, move it.
-		if(speed != 0.0f)
+		if(axis.speed != 0.0f)
 		{
 			// Get the current orientation.
-			float old = current;
+			float old = axis.degrees;
 			
 			// Move the axis.
-			current = Move(current, speed);
+			axis.degrees = Move(axis.degrees, axis.speed);
 			
 			// Update the MCUCommand by subtracting the angle moved from the remaining degrees to move by.
-			float moved = AngleDistance(current, old);
+			float moved = AngleDistance(axis.degrees, old);
 			moveBy -= moved;
 			// If this axis is the elevation and it didn't move despite the speed being non-zero,
 			// that means that we've hit a limit switch and therefore should drop the speed to 0.
-			if(axis == "elevation" && moved == 0.0f && (
-				(WithinEpsilon(AngleDistance(current, maxEl), epsilon) && speed > 0.0f) ||
-				(WithinEpsilon(AngleDistance(current, minEl), epsilon) && speed < 0.0f)))
+			if(axis.name == "elevation" && moved == 0.0f && (
+				(WithinEpsilon(AngleDistance(axis.degrees, maxEl), epsilon) && axis.speed > 0.0f) ||
+				(WithinEpsilon(AngleDistance(axis.degrees, minEl), epsilon) && axis.speed < 0.0f)))
 			{
-				speed = 0.0f;
+				axis.speed = 0.0f;
 				moveBy = 0.0f;
 			}
 			
 			// If the total degrees remaining to move by is less than the epsilon, consider it on target.
 			if(moveBy != 0.0f && WithinEpsilon(moveBy, epsilon))
 			{
-				Log.Debug("Threw out the remaining " + moveBy + " degree " + axis + " movement because it was smaller than the accepted epsilon value of " + epsilon + ".");
+				Log.Debug("Threw out the remaining " + moveBy + " degree " + axis.name + " movement because it was smaller than the accepted epsilon value of " + epsilon + ".");
 				moveBy = 0.0f;
 			}
 		}
 		
 		// Update whether this axis is moving and its direction
 		// of movement.
-		moving = (speed != 0.0f);
-		posMotion = (speed > 0.0f);
+		axis.moving = (axis.speed != 0.0f);
+		axis.posMotion = (axis.speed > 0.0f);
 	}
 	
 	/// <summary>
 	/// Shift the given speed up or down according to acceleration and deceleration values.
 	/// Changes the given accelerating and decelerating booleans.
 	/// </summary>
-	/// <param name="speed">A reference to the azimuth or elevation speed.</param>
-	/// <param name="accelerating">A reference to the azimuth or elevation accelerating bool.</param>
-	/// <param name="decelerating">A reference to the azimuth or elevation decelerating bool.</param>
+	/// <param name="axis">The current axis being acted upon.</param>
 	/// <param name="remaining">The remaining number of degrees to move by for the current movement.</param>
 	/// <param name="progress">A value from 0 to 1 denoting the % of the current movement that has been completed.</param>
 	/// <param name="maxSpeed">The maximum allowed speed for the current movement.</param>
 	/// <param name="accel">The acceleration rate of the speed.</param>
 	/// <param name="decel">The deceleration rate of the speed.</param>
-	private void ShiftSpeed(ref float speed, ref bool accelerating, ref bool decelerating,
-		float remaining, float progress, float maxSpeed, float accel, float decel)
+	private void ShiftSpeed(Axis axis, float remaining, float progress, float maxSpeed, float accel, float decel)
 	{
 		// Get the sign of the remaining movement then change the remaining movement to positive.
 		float sign = (remaining > 0.0f) ? 1.0f : -1.0f;
@@ -483,7 +440,7 @@ public class TelescopeControllerSim : MonoBehaviour
 			progress = 1.0f;
 			// Stop commands have no remaining movement distance, so get the sign from the
 			// current speed.
-			sign = (speed > 0.0f) ? 1.0f : -1.0f;
+			sign = (axis.speed > 0.0f) ? 1.0f : -1.0f;
 			// Stop commands don't send a deceleration value, so just use the value
 			// we normally receive.
 			decel = 0.9f;
@@ -492,27 +449,27 @@ public class TelescopeControllerSim : MonoBehaviour
 		// Accelerate if we're in the first 50% of a movement.
 		if(progress <= 0.5f)
 		{
-			speed += sign * accel * Time.deltaTime;
-			if(Mathf.Abs(speed) >= Mathf.Abs(maxSpeed))
-				speed = sign * maxSpeed;
+			axis.speed += sign * accel * Time.deltaTime;
+			if(Mathf.Abs(axis.speed) >= Mathf.Abs(maxSpeed))
+				axis.speed = sign * maxSpeed;
 			
-			accelerating = (Mathf.Abs(speed) != Mathf.Abs(maxSpeed));
-			decelerating = false;
+			axis.accelerating = (Mathf.Abs(axis.speed) != Mathf.Abs(maxSpeed));
+			axis.decelerating = false;
 		}
 		// Don't accelerate if we're in the last 50% of a movement.
 		else if(progress > 0.5f)
 		{
 			// Decelerate if the remaining movement is smaller than the stopping distance.
-			if(progress == 1.0f || StoppingDistance(speed, decel) >= remaining)
+			if(progress == 1.0f || StoppingDistance(axis.speed, decel) >= remaining)
 			{
-				speed -= sign * decel * Time.deltaTime;
-				if((sign == 1.0f && speed <= 0.0f) ||
-						(sign == -1.0f && speed >= 0.0f))
-					speed = 0.0f;
+				axis.speed -= sign * decel * Time.deltaTime;
+				if((sign == 1.0f && axis.speed <= 0.0f) ||
+						(sign == -1.0f && axis.speed >= 0.0f))
+					axis.speed = 0.0f;
 				
-				decelerating = (speed != 0.0f);
+				axis.decelerating = (axis.speed != 0.0f);
 			}
-			accelerating = false;
+			axis.accelerating = false;
 		}
 	}
 	
@@ -530,7 +487,7 @@ public class TelescopeControllerSim : MonoBehaviour
 		speed *= Time.deltaTime;
 		
 		// Rotate the azimuth game object by the final speed.
-		azimuth.transform.Rotate(0, speed, 0);
+		azimuthObject.transform.Rotate(0, speed, 0);
 		
 		// Return the new azimuth orientation, bounded within the range [0, 360).
 		return BoundAzimuth(current + speed);
@@ -551,12 +508,12 @@ public class TelescopeControllerSim : MonoBehaviour
 		
 		// If we're closer to the target than the allowed bounds, lower the movement
 		// speed so that we don't go out of bounds.
-		float bounded = BoundElevation(elevation.transform.eulerAngles.z + speed, minEl, maxEl);
+		float bounded = BoundElevation(elevationObject.transform.eulerAngles.z + speed, minEl, maxEl);
 		if(bounded == minEl || bounded == maxEl)
 			speed = bounded - current;
 		
 		// Rotate the elevation game object by the final speed.
-		elevation.transform.Rotate(0, 0, speed);
+		elevationObject.transform.Rotate(0, 0, speed);
 		
 		// Return the new elevation orientation, bounded within the range [minEl, maxEl].
 		return BoundElevation(current + speed, minEl, maxEl);
