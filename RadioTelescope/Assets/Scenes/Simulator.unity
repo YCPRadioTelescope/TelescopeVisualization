@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.20491564, g: 0.31548065, b: 0.56648743, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -11620,8 +11620,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f6409fddc3585144824113a53a3d03b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  azimuth: {fileID: 2105826425}
-  elevation: {fileID: 879300291}
+  azimuthObject: {fileID: 2105826425}
+  elevationObject: {fileID: 879300291}
   command: {fileID: 2120281190}
   ui: {fileID: 2120281187}
 --- !u!1 &1390523543
