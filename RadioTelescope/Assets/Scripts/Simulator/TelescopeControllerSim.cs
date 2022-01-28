@@ -87,8 +87,18 @@ public class TelescopeControllerSim : MonoBehaviour
 		HandleCommand();
 		
 		// Update the azimuth and elevation positions.
-		UpdateAzimuth();
-		UpdateElevation();
+		// This is a mess of parameters being passed, but it cuts down on a lot of code duplications
+		// given that moving the azimuth or elevation is just a difference of the variables to use.
+		// Could perhaps cut down on the number of parameters being passed by creating an object
+		// that contains all the axis information. Create an "Axis" object?
+		UpdateAxis(MoveAzimuth, ref simTelescopeAzimuthDegrees, ref command.azimuthData,
+			ref azSpeed, ref azimuthAccelerating, ref azimuthDecelerating, command.cachedAzData,
+			command.azimuthSpeed, command.azimuthAcceleration, command.azimuthDeceleration,
+			ref azimuthMoving, ref azimuthPosMotion, "azimuth");
+		UpdateAxis(MoveElevation, ref simTelescopeElevationDegrees, ref command.elevationData,
+			ref elSpeed, ref elevationAccelerating, ref elevationDecelerating, command.cachedElData,
+			command.elevationSpeed, command.elevationAcceleration, command.elevationDeceleration,
+			ref elevationMoving, ref elevationPosMotion, "elevation");
 		
 		// Determine if any errors have occurred.
 		HandleErrors();
@@ -380,88 +390,69 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Update the telescope azimuth.
+	/// Update the given telescope axis.
 	/// <summary>
-	private void UpdateAzimuth()
+	/// <param name="Move">The function that determines which axis gets moved.</param>
+	/// <param name="current">A reference to the current axis orientation.</param>
+	/// <param name="moveBy">A reference to the current number of degrees to move by.</param>
+	/// <param name="speed">A reference to the current axis speed.</param>
+	/// <param name="accelerating">A reference to the azimuth or elevation accelerating bool.</param>
+	/// <param name="decelerating">A reference to the azimuth or elevation decelerating bool.</param>
+	/// <param name="cached">The cached axis movement distance.</param>
+	/// <param name="maxSpeed">The maximum allowed speed for the current movement.</param>
+	/// <param name="accel">The acceleration rate of the speed.</param>
+	/// <param name="decel">The deceleration rate of the speed.</param>
+	/// <param name="moving">A reference to the azimuth or elevation moving bool.</param>
+	/// <param name="posMotion">A reference to the azimuth or elevation posMotion bool.</param>
+	/// <param name="axis">A string of the name of the axis being moved.</param>
+	private void UpdateAxis(Func<float, float, float> Move, ref float current, ref float moveBy, ref float speed,
+		ref bool accelerating, ref bool decelerating, float cached, float maxSpeed, float acceleration, float deceleration,
+		ref bool moving, ref bool posMotion, string axis)
 	{
-		ref float moveBy = ref command.azimuthData;
-		
-		// If the amount of azimuth degrees to move by is non-zero, the azimuth must move.
-		if(moveBy != 0.0f || azSpeed != 0.0f)
+		// If a movement has been received then shift the current axis speed.
+		// Also shift the current axis speed if we don't have a movement but
+		// there is still some remaining speed.
+		if(moveBy != 0.0f || speed != 0.0f)
 		{
-			float progress = (moveBy != 0.0f && command.cachedAzData != 0.0f) ? (1.0f - Mathf.Abs(moveBy) / Mathf.Abs(command.cachedAzData)) : 1.0f;
-			ShiftSpeed(ref azSpeed, ref azimuthAccelerating, ref azimuthDecelerating,
-				moveBy, progress, command.azimuthSpeed, command.azimuthAcceleration, command.azimuthDeceleration);
+			float progress = (moveBy != 0.0f && cached != 0.0f) ? (1.0f - Mathf.Abs(moveBy) / Mathf.Abs(cached)) : 1.0f;
+			ShiftSpeed(ref speed, ref accelerating, ref decelerating,
+				moveBy, progress, maxSpeed, acceleration, deceleration);
 		}
 		
-		if(azSpeed != 0.0f)
+		// If the axis has momentum, move it.
+		if(speed != 0.0f)
 		{
-			// Get the current orientation and movement speed
-			ref float current = ref simTelescopeAzimuthDegrees;
+			// Get the current orientation.
 			float old = current;
 			
-			// Move the azimuth.
-			current = MoveAzimuth(current, azSpeed);
-			
-			// Update the MCUCommand by subtracting the angle moved from the remaining degrees to move by.
-			moveBy -= AngleDistance(current, old);
-			
-			// If the total degrees remaining to move by is less than the epsilon, consider it on target.
-			if(moveBy != 0.0f && WithinEpsilon(moveBy, epsilon))
-			{
-				Log.Debug("Threw out the remaining " + moveBy + " degree azimuth movement because it was smaller than the accepted epsilon value of " + epsilon + ".");
-				moveBy = 0.0f;
-			}
-		}
-		
-		azimuthMoving = (azSpeed != 0.0f);
-		azimuthPosMotion = (azSpeed > 0.0f);
-	}
-	
-	/// <summary>
-	/// Update the telescope elevation.
-	/// <summary>
-	private void UpdateElevation()
-	{
-		ref float moveBy = ref command.elevationData;
-		
-		// If the amount of elevation degrees to move by is non-zero, the elevation must move.
-		if(moveBy != 0.0f || elSpeed != 0.0f)
-		{
-			float progress = (moveBy != 0.0f && command.cachedElData != 0.0f) ? (1.0f - Mathf.Abs(moveBy) / Mathf.Abs(command.cachedElData)) : 1.0f;
-			ShiftSpeed(ref elSpeed, ref elevationAccelerating, ref elevationDecelerating,
-				moveBy, progress, command.elevationSpeed, command.elevationAcceleration, command.elevationDeceleration);
-		}
-		
-		if(elSpeed != 0.0f)
-		{
-			// Get the current orientation and movement speed
-			ref float current = ref simTelescopeElevationDegrees;
-			float old = current;
-			
-			// Move the elevation.
-			current = MoveElevation(current, elSpeed);
+			// Move the axis.
+			current = Move(current, speed);
 			
 			// Update the MCUCommand by subtracting the angle moved from the remaining degrees to move by.
 			float moved = AngleDistance(current, old);
 			moveBy -= moved;
-			// If the elevation didn't move despite elSpeed being non-zero, that means we've hit
-			// one of the limit switches and therefore should drop the speed to 0.
-			if(moved == 0.0f && (
-				(WithinEpsilon(AngleDistance(current, maxEl), epsilon) && elSpeed > 0.0f) ||
-				(WithinEpsilon(AngleDistance(current, minEl), epsilon) && elSpeed < 0.0f)))
-				elSpeed = 0.0f;
+			// If this axis is the elevation and it didn't move despite the speed being non-zero,
+			// that means that we've hit a limit switch and therefore should drop the speed to 0.
+			if(axis == "elevation" && moved == 0.0f && (
+				(WithinEpsilon(AngleDistance(current, maxEl), epsilon) && speed > 0.0f) ||
+				(WithinEpsilon(AngleDistance(current, minEl), epsilon) && speed < 0.0f)))
+			{
+				speed = 0.0f;
+				moveBy = 0.0f;
+			}
 			
 			// If the total degrees remaining to move by is less than the epsilon, consider it on target.
 			if(moveBy != 0.0f && WithinEpsilon(moveBy, epsilon))
 			{
-				Log.Debug("Threw out the remaining " + moveBy + " degree elevation movement because it was smaller than the accepted epsilon value of " + epsilon + ".");
+				Log.Debug("Threw out the remaining " + moveBy + " degree " + axis + " movement because it was smaller than the accepted epsilon value of " + epsilon + ".");
 				moveBy = 0.0f;
 			}
 		}
 		
-		elevationMoving = (elSpeed != 0.0f);
-		elevationPosMotion = (elSpeed > 0.0f);
+		// Update whether this axis is moving and its direction
+		// of movement.
+		moving = (speed != 0.0f);
+		posMotion = (speed > 0.0f);
 	}
 	
 	/// <summary>
