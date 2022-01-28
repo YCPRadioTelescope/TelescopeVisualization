@@ -4,7 +4,7 @@ using UnityEngine;
 
 // A collection of static helper methods. Some are used by multiple classes
 // and defined here to reduce duplication of code.
-public class Utilities : MonoBehaviour
+public class Utilities
 {
 	private const int STEPS_PER_REVOLUTION = 20000;
 	private const int ENCODER_COUNTS_PER_REVOLUTION_BEFORE_GEARING = 8000;
