@@ -133,24 +133,24 @@ public class TelescopeControllerSim : MonoBehaviour
 		else if(!command.stop)
 			executingRelativeMove = false;
 		
-		// If the current command is a home command and the axis has stopped moving,
-		// then this axis is homed.
-		if(command.home && !AzimuthMoving())
+		// If the current command is a home command and the axis has completed
+		// its movement, then this axis is homed.
+		if(command.home && command.azimuthData == 0.0f)
 		{
 			command.invalidAzimuthPosition = false;
 			azimuth.homed = true;
 		}
 		// If the current command is not a home command and it moves this axis, 
 		// then this axis is not homed.
-		else if(!command.home && AzimuthMoving())
+		else if(!command.home && command.azimuthData != 0.0f)
 			azimuth.homed = false;
 		
-		if(command.home && !ElevationMoving())
+		if(command.home && command.elevationData == 0.0f)
 		{
 			command.invalidElevationPosition = false;
 			elevation.homed = true;
 		}
-		else if(!command.home && ElevationMoving())
+		else if(!command.home && command.elevationData != 0.0f)
 			elevation.homed = false;
 		
 	}

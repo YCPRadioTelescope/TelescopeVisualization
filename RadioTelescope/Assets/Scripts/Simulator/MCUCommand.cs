@@ -217,6 +217,8 @@ public class MCUCommand : MonoBehaviour
 			else
 				azimuthData = 360.0f - tc.Azimuth();
 			elevationData = -tc.Elevation() + 15.0f;
+			cachedAzData = azimuthData;
+			cachedElData = elevationData;
 			Log.Debug("	Home.");
 			LogMove(2);
 		}
