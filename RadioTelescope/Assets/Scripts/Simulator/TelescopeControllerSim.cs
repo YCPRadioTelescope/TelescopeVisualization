@@ -88,87 +88,6 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Determine if the current command requires any special handling
-	/// and pass information about this command to the UI.
-	/// </summary>
-	private void HandleCommand() 
-	{
-		// Handle a jog command by setting the target orientation 1 degree ahead
-		// of the current orientation relative to the direction of the jog.
-		// This causes the telescope to continually move in the direction
-		// of the jog for as long as a jog command is received since
-		// HandleCommand is called every frame.
-		if(command.jog)
-		{
-			float azJog = command.azJog ? 1.0f : 0.0f;
-			float elJog = command.azJog ? 0.0f : 1.0f;
-			float target = command.posJog ? 1.0f : -1.0f;
-			
-			command.azimuthData = target * azJog;
-			command.elevationData = target * elJog;
-		}
-		
-		// Update the UI with the input azimuth and elevation.
-		ui.InputAzimuth(command.azimuthData);
-		ui.InputElevation(command.elevationData);
-	}
-	
-	/// <summary>
-	/// Determine if any special output needs tracked and update the necessary boolean
-	/// values so that the SimServer can set the correct status or error bits.
-	/// </summary>
-	private void HandleOutput()
-	{
-		// Check if a limit switch has been hit. Log a warning if so.
-		command.invalidInput = LimitSwitchHit();
-		if(command.invalidInput)
-			Log.Warn("A limit switch has been hit.");
-		
-		// If the current command is a relative move, record that so that the
-		// move complete bit can be set.
-		if(command.relativeMove)
-			executingRelativeMove = true;
-		// If the current command is not a relative move or a stop command, then
-		// the move complete bit shouldn't be set.
-		else if(!command.stop)
-			executingRelativeMove = false;
-		
-		// If the current command is a home command and the axis has completed
-		// its movement, then this axis is homed.
-		if(command.home && command.azimuthData == 0.0f)
-		{
-			command.invalidAzimuthPosition = false;
-			azimuth.homed = true;
-		}
-		// If the current command is not a home command and it moves this axis, 
-		// then this axis is not homed.
-		else if(!command.home && command.azimuthData != 0.0f)
-			azimuth.homed = false;
-		
-		if(command.home && command.elevationData == 0.0f)
-		{
-			command.invalidElevationPosition = false;
-			elevation.homed = true;
-		}
-		else if(!command.home && command.elevationData != 0.0f)
-			elevation.homed = false;
-		
-	}
-	
-	/// <summary>
-	/// Return true if the telescope elevation has hit a limit switch. This is true if the
-	/// current elevation is beyond a limit value or at a limit value and it has a target
-	/// to go even further beyond that.
-	/// </summary>
-	private bool LimitSwitchHit()
-	{
-		float current = elevation.degrees;
-		float target = current + command.elevationData;
-		return (current > maxEl || (current == maxEl && target > maxEl))
-			|| (current < minEl || (current == minEl && target < minEl));
-	}
-	
-	/// <summary>
 	/// Return true if a relative move was received.
 	/// </summary>
 	public bool RelativeMove()
@@ -351,6 +270,87 @@ public class TelescopeControllerSim : MonoBehaviour
 	public double ElevationSpeed()
 	{
 		return System.Math.Round(elevation.speed, 2);
+	}
+	
+	/// <summary>
+	/// Determine if the current command requires any special handling
+	/// and pass information about this command to the UI.
+	/// </summary>
+	private void HandleCommand() 
+	{
+		// Handle a jog command by setting the target orientation 1 degree ahead
+		// of the current orientation relative to the direction of the jog.
+		// This causes the telescope to continually move in the direction
+		// of the jog for as long as a jog command is received since
+		// HandleCommand is called every frame.
+		if(command.jog)
+		{
+			float azJog = command.azJog ? 1.0f : 0.0f;
+			float elJog = command.azJog ? 0.0f : 1.0f;
+			float target = command.posJog ? 1.0f : -1.0f;
+			
+			command.azimuthData = target * azJog;
+			command.elevationData = target * elJog;
+		}
+		
+		// Update the UI with the input azimuth and elevation.
+		ui.InputAzimuth(command.azimuthData);
+		ui.InputElevation(command.elevationData);
+	}
+	
+	/// <summary>
+	/// Determine if any special output needs tracked and update the necessary boolean
+	/// values so that the SimServer can set the correct status or error bits.
+	/// </summary>
+	private void HandleOutput()
+	{
+		// Check if a limit switch has been hit. Log a warning if so.
+		command.invalidInput = LimitSwitchHit();
+		if(command.invalidInput)
+			Log.Warn("A limit switch has been hit.");
+		
+		// If the current command is a relative move, record that so that the
+		// move complete bit can be set.
+		if(command.relativeMove)
+			executingRelativeMove = true;
+		// If the current command is not a relative move or a stop command, then
+		// the move complete bit shouldn't be set.
+		else if(!command.stop)
+			executingRelativeMove = false;
+		
+		// If the current command is a home command and the axis has completed
+		// its movement, then this axis is homed.
+		if(command.home && command.azimuthData == 0.0f)
+		{
+			command.invalidAzimuthPosition = false;
+			azimuth.homed = true;
+		}
+		// If the current command is not a home command and it moves this axis, 
+		// then this axis is not homed.
+		else if(!command.home && command.azimuthData != 0.0f)
+			azimuth.homed = false;
+		
+		if(command.home && command.elevationData == 0.0f)
+		{
+			command.invalidElevationPosition = false;
+			elevation.homed = true;
+		}
+		else if(!command.home && command.elevationData != 0.0f)
+			elevation.homed = false;
+		
+	}
+	
+	/// <summary>
+	/// Return true if the telescope elevation has hit a limit switch. This is true if the
+	/// current elevation is beyond a limit value or at a limit value and it has a target
+	/// to go even further beyond that.
+	/// </summary>
+	private bool LimitSwitchHit()
+	{
+		float current = elevation.degrees;
+		float target = current + command.elevationData;
+		return (current > maxEl || (current == maxEl && target > maxEl))
+			|| (current < minEl || (current == minEl && target < minEl));
 	}
 	
 	/// <summary>
