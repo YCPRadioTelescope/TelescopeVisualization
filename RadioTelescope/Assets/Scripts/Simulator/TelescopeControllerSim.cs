@@ -59,29 +59,28 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
+		// If this command should be ignored, do nothing. This can be
+		// because the current command isn't handled by the simulation,
+		// or because the MCUCommand is busy parsing a command and
+		// we want to avoid executing partially parsed data.
 		if(command.ignoreCommand)
 			return;
 		
-		// Determine what the current command is.
+		// Determine if the current command requires any special handling
+		// and pass information about this command to the UI.
 		HandleCommand();
 		
 		// Update the azimuth and elevation positions.
-		// This is a mess of parameters being passed, but it cuts down on a lot of code duplications
-		// given that moving the azimuth or elevation is just a difference of the variables to use.
-		// Could perhaps cut down on the number of parameters being passed by creating an object
-		// that contains all the axis information. Create an "Axis" object?
 		UpdateAxis(MoveAzimuth, azimuth, ref command.azimuthData);
 		UpdateAxis(MoveElevation, elevation, ref command.elevationData);
 		
-		// Determine if any errors have occurred.
-		HandleErrors();
-		
-		// Update any non-error output.
+		// Update various booleans so that the SimServer knows which status
+		// or error bits to set.
 		HandleOutput();
 	}
 	
 	/// <summary>
-	/// Update is called when the scene ends.
+	/// Destroy is called when the scene ends (i.e. when the application is closed).
 	/// </summary>
 	void OnDestroy()
 	{
@@ -89,12 +88,25 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Determine what the current command is and update necessary variables.
+	/// Determine if the current command requires any special handling
+	/// and pass information about this command to the UI.
 	/// </summary>
-	public void HandleCommand() 
+	private void HandleCommand() 
 	{
-		if(command.jog) 
-			HandleJog();
+		// Handle a jog command by setting the target orientation 1 degree ahead
+		// of the current orientation relative to the direction of the jog.
+		// This causes the telescope to continually move in the direction
+		// of the jog for as long as a jog command is received since
+		// HandleCommand is called every frame.
+		if(command.jog)
+		{
+			float azJog = command.azJog ? 1.0f : 0.0f;
+			float elJog = command.azJog ? 0.0f : 1.0f;
+			float target = command.posJog ? 1.0f : -1.0f;
+			
+			command.azimuthData = target * azJog;
+			command.elevationData = target * elJog;
+		}
 		
 		// Update the UI with the input azimuth and elevation.
 		ui.InputAzimuth(command.azimuthData);
@@ -102,22 +114,16 @@ public class TelescopeControllerSim : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Determine if any errors have occurred and update the necessary boolean values
-	/// so that the SimServer can set the correct error bits.
+	/// Determine if any special output needs tracked and update the necessary boolean
+	/// values so that the SimServer can set the correct status or error bits.
 	/// </summary>
-	public void HandleErrors()
+	private void HandleOutput()
 	{
+		// Check if a limit switch has been hit. Log a warning if so.
 		command.invalidInput = LimitSwitchHit();
 		if(command.invalidInput)
 			Log.Warn("A limit switch has been hit.");
-	}
-	
-	/// <summary>
-	/// Determine if any special output needs tracked and update the necessary boolean
-	/// values so that the SimServer can set the correct error bits.
-	/// </summary>
-	public void HandleOutput()
-	{
+		
 		// If the current command is a relative move, record that so that the
 		// move complete bit can be set.
 		if(command.relativeMove)
@@ -154,7 +160,7 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// current elevation is beyond a limit value or at a limit value and it has a target
 	/// to go even further beyond that.
 	/// </summary>
-	public bool LimitSwitchHit()
+	private bool LimitSwitchHit()
 	{
 		float current = elevation.degrees;
 		float target = current + command.elevationData;
@@ -345,21 +351,6 @@ public class TelescopeControllerSim : MonoBehaviour
 	public double ElevationSpeed()
 	{
 		return System.Math.Round(elevation.speed, 2);
-	}
-	
-	/// <summary>
-	/// Handle a jog command by setting the target orientation 1 degree ahead of the current orientation,
-	/// relative to the direction of the jog. This causes the telescope to continually move in the direction
-	/// of the jog, since HandleJog is called every frame during a jog.
-	/// </summary>
-	private void HandleJog()
-	{
-		float azJog = command.azJog ? 1.0f : 0.0f;
-		float elJog = command.azJog ? 0.0f : 1.0f;
-		float target = command.posJog ? 1.0f : -1.0f;
-		
-		command.azimuthData = target * azJog;
-		command.elevationData = target * elJog;
 	}
 	
 	/// <summary>

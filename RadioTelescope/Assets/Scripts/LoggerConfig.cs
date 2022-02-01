@@ -34,6 +34,7 @@ public static class LoggerConfig
 public class ConsoleLogger : AppenderSkeleton
 {
 	private string last = "";
+	
 	protected override void Append(LoggingEvent loggingEvent)
 	{
 		string message = RenderLoggingEvent(loggingEvent);
