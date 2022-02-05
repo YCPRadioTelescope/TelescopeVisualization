@@ -4,7 +4,7 @@ using UnityEngine;
 
 // This script controls the player body based off of the movement of the mouse,
 // which in turn controls the camera orientation.
-public class MouseLook : MonoBehaviour
+public class mouseLook : MonoBehaviour
 {
 	public Transform playerBody;
 	public float mouseSensitivity = 100f;
