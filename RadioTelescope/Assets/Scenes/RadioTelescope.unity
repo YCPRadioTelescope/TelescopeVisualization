@@ -18094,7 +18094,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1346025721
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29568,7 +29568,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1908533017
 Transform:
   m_ObjectHideFlags: 0
@@ -29599,6 +29599,7 @@ MonoBehaviour:
   maxParticles: 5000
   particleSystem: {fileID: 1908533020}
   starCSV: {fileID: 4900000, guid: fcc30760538c5b34ba622b82a0c8bd0c, type: 3}
+  isReadCSV: 0
 --- !u!199 &1908533019
 ParticleSystemRenderer:
   serializedVersion: 6
