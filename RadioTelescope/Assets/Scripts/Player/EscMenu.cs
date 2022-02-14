@@ -10,7 +10,7 @@ public class EscMenu : MonoBehaviour
 	public GameObject pauseMenu;
 	public Button resumeButton;
 	public Button exitButton;
-	public MouseLook mouseLook;
+	public mouseLook mouseLook;
 	
 	// Update is called once per frame.
 	void Update()

@@ -11,6 +11,7 @@ public class Starfield : MonoBehaviour
 	public int maxParticles;
 	public ParticleSystem particleSystem;
 	public TextAsset starCSV;
+	public bool isReadCSV = false;
 	
 	private Vector3 rotationalAxis;
 	
@@ -53,36 +54,46 @@ public class Starfield : MonoBehaviour
 	{
 		return 360.0f / (24.0f / hours) / seconds * Time.deltaTime;
 	}
-	
-	// LastUpdate is called once per frame after every Update function has been called.
-	// This is what creates the stars.
-	void LateUpdate()
-	{
+
+	//read CSV only works on late update, not sure why
+    private void LateUpdate()
+    {
+		//checks if the stars have been read by the csv, if not, readCSV is called
+		if (!isReadCSV)
+		{
+			isReadCSV = true;
+			read_CSV();
+		}
+	}
+
+    //Reads the CSV file and inputs the star information into the particle system, this should only be called once
+    public void read_CSV()
+    {
 		// Split the starCSV file into each line.
 		string[] lines = starCSV.text.Split('\n');
 		// Create maxParticles particles and initalize them.
 		ParticleSystem.Particle[] particleStars = new ParticleSystem.Particle[maxParticles];
 		particleSystem.GetParticles(particleStars);
-		for(int i = 0; i < maxParticles; i++)
+		for (int i = 0; i < maxParticles; i++)
 		{
 			// Split each line by the commas.
 			string[] components = lines[i].Split(',');
-			
+
 			// The first component of each line is the magnitude.
 			float mag = float.Parse(components[0]);
-			
+
 			// Change the alpha value of this star given its magnitude.
 			int mode = 0;
-			if(mode == 0)
+			if (mode == 0)
 			{
 				// Static 5 bucket brightness with log base 2 scaling.
-				if(mag < 1.5)
+				if (mag < 1.5)
 					particleStars[i].startColor = new Color32(255, 255, 255, 255);
-				else if(mag < 2.5)
+				else if (mag < 2.5)
 					particleStars[i].startColor = new Color32(255, 255, 255, 128);
-				else if(mag < 3.5)
+				else if (mag < 3.5)
 					particleStars[i].startColor = new Color32(255, 255, 255, 64);
-				else if(mag < 4.5)
+				else if (mag < 4.5)
 					particleStars[i].startColor = new Color32(255, 255, 255, 32);
 				else
 					particleStars[i].startColor = new Color32(255, 255, 255, 16);
@@ -90,23 +101,21 @@ public class Starfield : MonoBehaviour
 			else
 			{
 				// Dynamic brightness with log base 2 scaling.
-				if(mag < 0)
+				if (mag < 0)
 					mag = 0;
 				mag = (float)Math.Pow(2, mag);
 				particleStars[i].startColor = new Color(1, 1, 1, 1 / mag);
 			}
 			// Create a vector using the X, Y, and Z coordinates of the star.
 			// Compontents 2 and 3 are intentionally switched.
-			Vector3 starPosition = new Vector3( float.Parse(components[1]),
+			Vector3 starPosition = new Vector3(float.Parse(components[1]),
 												float.Parse(components[3]),
 												float.Parse(components[2]));
-			
+
 			// Normalize the vector to a length of one, then move it out to
 			// 900 units from the particle system. This puts the stars just
 			// before the far clipping plane of the camera, which is at 1000.
 			particleStars[i].position = Vector3.Normalize(starPosition) * 900;
-			// Particles only exist for one frame before a new one is created.
-			particleStars[i].remainingLifetime = 1;
 		}
 		particleSystem.SetParticles(particleStars, maxParticles);
 	}
