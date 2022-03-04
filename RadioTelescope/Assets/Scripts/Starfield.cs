@@ -7,7 +7,10 @@ using UnityEngine;
 public class Starfield : MonoBehaviour
 {
 	public GameObject telescope;
-	
+
+
+	public float number_hours = 3f;
+	public float number_minutes = 60f;
 	public int maxParticles;
 	public ParticleSystem particleSystem;
 	public TextAsset starCSV;
@@ -45,7 +48,7 @@ public class Starfield : MonoBehaviour
 	{
 		// Rotate the sky about the Earth's axis at the given rotational speed.
 		// This rotates the particleSystem relative to itself.
-		particleSystem.transform.Rotate(rotationalAxis, RotationalSpeed(3.0f, 60.0f), Space.Self);
+		particleSystem.transform.Rotate(rotationalAxis, RotationalSpeed(number_hours, number_minutes), Space.Self);
 	}
 	
 	// A function to compute the angle per frame necessary to cause the

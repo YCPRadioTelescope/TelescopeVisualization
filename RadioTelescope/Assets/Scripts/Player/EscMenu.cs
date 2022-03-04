@@ -11,9 +11,15 @@ public class EscMenu : MonoBehaviour
 	public Button resumeButton;
 	public Button exitButton;
 	public mouseLook mouseLook;
-	
-	// Update is called once per frame.
-	void Update()
+
+    private void Start()
+    {
+		//start the game in a unpaused state
+		pause = false;
+    }
+
+    // Update is called once per frame.
+    void Update()
 	{
 		// If escape is pressed, the pause menu is active.
 		if(Input.GetButtonDown("Cancel"))

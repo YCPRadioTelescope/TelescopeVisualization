@@ -11,10 +11,10 @@ public class MoveTelescope : MonoBehaviour
 	void Update()
 	{
 		if(Input.GetKey("up"))
-			tc.ChangeElevation(0.5f);
+			tc.ChangeElevation(-0.5f);
 		
 		if(Input.GetKey("down"))
-			tc.ChangeElevation(-0.5f);
+			tc.ChangeElevation(0.5f);
 		
 		if(Input.GetKey("right"))
 			tc.ChangeAzimuth(0.5f);
