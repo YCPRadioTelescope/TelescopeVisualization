@@ -74,7 +74,6 @@ public class HighlightTarget : MonoBehaviour
 				return;
 			}
 			delayTimer--;
-			
 			// If shift wasn't held down and we hit something that isn't a telescope part,
 			// reset any previously highlighted part and return.
 			if(!hitInfo.transform.GetComponent<TelescopePartInfo>())

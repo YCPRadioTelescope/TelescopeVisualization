@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.20503764, g: 0.3156592, b: 0.5668305, a: 1}
+  m_IndirectSpecularColor: {r: 0.09616223, g: 0.27846596, b: 0.602138, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -382,7 +382,7 @@ Camera:
   field of view: 60
   orthographic: 0
   orthographic size: 5
-  m_Depth: -1
+  m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -13103,7 +13103,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   azimuth: {fileID: 1525520883}
   elevation: {fileID: 879300291}
-  speed: 1
   unityAzimuthText: {fileID: 186378141}
   unityElevationText: {fileID: 1970712149}
   azimuthText: {fileID: 31453317}
@@ -16408,10 +16407,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isGlobal: 1
-  priority: 0
+  priority: 1
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: 915903e9c0e814b4cb2748ca65552e60, type: 2}
+  sharedProfile: {fileID: 11400000, guid: e16d22f2ddfe36c42ac41e93ea0ced57, type: 2}
 --- !u!4 &1747931117
 Transform:
   m_ObjectHideFlags: 0
@@ -19169,7 +19168,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tc: {fileID: 1370658910}
   currentCommand: {fileID: 0}
-  speed: 0.5
   mcuIP: {fileID: 1438597001}
   mcuPort: {fileID: 327385366}
   startButton: {fileID: 1168945101}

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Telescope
   - ShowOnPause
+  - sky
   layers:
   - Default
   - TransparentFX
