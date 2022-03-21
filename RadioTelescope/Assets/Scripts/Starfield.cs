@@ -111,14 +111,14 @@ public class Starfield : MonoBehaviour
 			}
 			// Create a vector using the X, Y, and Z coordinates of the star.
 			// Compontents 2 and 3 are intentionally switched.
-			Vector3 starPosition = new Vector3(float.Parse(components[1]),
-												float.Parse(components[3]),
-												float.Parse(components[2]));
+			Vector3 starPosition = new Vector3(float.Parse(components[1]), float.Parse(components[3]), float.Parse(components[2]));
 
 			// Normalize the vector to a length of one, then move it out to
 			// 900 units from the particle system. This puts the stars just
 			// before the far clipping plane of the camera, which is at 1000.
+			Debug.Log("Star vlaue before: " + starPosition);
 			particleStars[i].position = Vector3.Normalize(starPosition) * 900;
+			Debug.Log("Star Values" + particleStars[i].position);
 		}
 		particleSystem.SetParticles(particleStars, maxParticles);
 	}
