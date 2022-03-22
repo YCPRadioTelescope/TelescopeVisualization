@@ -116,9 +116,7 @@ public class Starfield : MonoBehaviour
 			// Normalize the vector to a length of one, then move it out to
 			// 900 units from the particle system. This puts the stars just
 			// before the far clipping plane of the camera, which is at 1000.
-			Debug.Log("Star vlaue before: " + starPosition);
 			particleStars[i].position = Vector3.Normalize(starPosition) * 900;
-			Debug.Log("Star Values" + particleStars[i].position);
 		}
 		particleSystem.SetParticles(particleStars, maxParticles);
 	}
