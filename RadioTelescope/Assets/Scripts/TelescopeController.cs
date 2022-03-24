@@ -23,14 +23,16 @@ public class TelescopeController : MonoBehaviour
 	{
 		if(!exploding.IsMoving())
 		{
-			// Elevation must be clamped to a value between -80 and 20 degrees
-			// This allows -15 degrees of movement below the horizon and 94 degrees above.
+			// Elevation must be clamped to a value between -8 and 92 degrees 
+			// This allows -8 degrees of movement below the horizon and 92 degrees above.
 			// Angle of elevation is converted to negative values when greater than 180
 			float elevationChange = elevation.transform.eulerAngles.z;
 			float angle = elevationChange;
 			angle = (angle > 180) ? angle - 360 : angle;
-			Debug.Log(angle);
-			if (angle+speed >= -84 && angle+speed <= 20)
+			angle = (angle * -1) + 8;  //the telescope is offset by 8 degrees and must be converted from negatives
+			float next_angle = Mathf.Round((angle - speed) * 10.0f) * 0.1f;
+
+			if (next_angle >= -8f && next_angle <= 92)  //these are the bounds ie: -8 degrees below horizon and 92 degrees above
 			{
 				elevationChange += speed;
 				elevation.transform.localRotation = Quaternion.Euler(0, 0, elevationChange);

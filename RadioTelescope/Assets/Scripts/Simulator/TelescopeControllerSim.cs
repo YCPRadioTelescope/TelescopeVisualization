@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Experimental;
-using UnityStandardAssets.Vehicles.Car;
 using static MCUCommand;
 
 // This script controls the telescope according to the inputs from
