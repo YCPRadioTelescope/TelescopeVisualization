@@ -37,7 +37,7 @@ public class HighlightTarget : MonoBehaviour
 	private Renderer rend = null;
 
 	// A line that gets drawn when this script is active. Only drawn if in VR.
-	private LineRenderer lr;
+	public LineRenderer lr;
 	public bool vrActive;
 	
 	// Start is called before the first frame update.
