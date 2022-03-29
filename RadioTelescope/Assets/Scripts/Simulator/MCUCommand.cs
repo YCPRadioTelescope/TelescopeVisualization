@@ -39,6 +39,7 @@ public class MCUCommand : MonoBehaviour
 	public bool azJog = false;
 	public bool home = false;
 	public bool stop = false;
+	public bool immediateStop = false;
 	
 	// All commands are ignored until we can confirm that they're valid.
 	public bool ignoreCommand = true;
@@ -248,6 +249,7 @@ public class MCUCommand : MonoBehaviour
 		{
 			currentCommand = "immediate stop";
 			stop = true;
+			immediateStop = true;
 			Log.Debug("	Immediate stop.");
 		}
 		else if(secondCommandElevation == (ushort)CommandType.CANCEL_MOVE)
@@ -293,6 +295,7 @@ public class MCUCommand : MonoBehaviour
 		azJog = false;
 		home = false;
 		stop = false;
+		immediateStop = false;
 		
 		ignoreCommand = true;
 		

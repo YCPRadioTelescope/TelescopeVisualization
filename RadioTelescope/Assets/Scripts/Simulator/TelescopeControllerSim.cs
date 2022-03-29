@@ -278,6 +278,12 @@ public class TelescopeControllerSim : MonoBehaviour
 	/// </summary>
 	private void HandleCommand() 
 	{
+		// Handle an immediate stop command by setting the axis speeds to 0.
+		if(command.immediateStop)
+		{
+			azimuth.speed = 0.0f;
+			elevation.speed = 0.0f;
+		}
 		// Handle a jog command by setting the target orientation 1 degree ahead
 		// of the current orientation relative to the direction of the jog.
 		// This causes the telescope to continually move in the direction
