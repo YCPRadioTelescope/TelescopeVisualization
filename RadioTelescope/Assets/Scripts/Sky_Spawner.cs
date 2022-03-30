@@ -35,8 +35,8 @@ public class Sky_Spawner : MonoBehaviour
 				Dist = 500f;
             }
 			string label = components[3];
-			string image = components[4];
-			Debug.Log("Have just read data from " + label);
+			string desc = components[4];
+			string image = components[5];
 
 			Vector3 position = PolarToCartesian(RA, DEC, Dist);
 			position = Vector3.Normalize(position) * 900;
@@ -45,8 +45,8 @@ public class Sky_Spawner : MonoBehaviour
 
 			string filepath = "Sky_Interaction_Data/" + image;
 			Texture2D tex = Resources.Load(filepath) as Texture2D;
-			Debug.Log("Loaded texture: " + tex);
 
+			Debug.Log("Data from" + label + "RA:" + RA + ", DEC:" + DEC + ", Dist:" + Dist + ", Desc:" + desc + ", ImageK:" + image);
 		}
 	}
 	Vector3 PolarToCartesian(float RA, float DEC, float D)
