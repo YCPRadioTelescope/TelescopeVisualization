@@ -1,19 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class Sky_Spawner : MonoBehaviour
 {
     public GameObject sky_interaction_object;
     public GameObject star_system;
-	public TextAsset Sky_Data;
-
-
+	string FileContent = File.ReadAllText(Application.streamingAssetsPath + "/Sky_Interaction_Data/Sky_Data.csv");
+	TextAsset Sky_Data;
 	private void Start()
     {
+		Sky_Data = new TextAsset(FileContent);
+		Debug.Log(FileContent);
 		//Run the CSV only once at the start of the program, this creates all the interactable objects from the program
 		read_CSV();
-    }
+	}
 
 	public void read_CSV()
 	{

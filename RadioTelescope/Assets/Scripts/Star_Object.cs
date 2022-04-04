@@ -68,7 +68,7 @@ public class Star_Object : MonoBehaviour
     {
         Debug.Log("Set");
         Transform label = Canvus_Object.transform.Find("Label");
-        Transform desc = Canvus_Object.transform.Find("Descriptions");
+        Transform desc = Canvus_Object.transform.Find("Description");
 
         label.GetComponent<Text>().text = Label;
         desc.GetComponent<Text>().text = description;
