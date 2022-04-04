@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Star_Object : MonoBehaviour
 {
@@ -17,6 +18,14 @@ public class Star_Object : MonoBehaviour
     private RaycastHit hitInfo;
     private LineRenderer lr;
     public bool vrActive;
+
+    //Variables for UI 
+    public string description;
+    public string RA;
+    public string DEC;
+    public string Label;
+    public GameObject Canvus_Object;
+
     private void Start()
     {
         if (playerMK.activeSelf)
@@ -46,6 +55,7 @@ public class Star_Object : MonoBehaviour
             if(Input.GetMouseButtonDown(0))
             {
                 animator.SetTrigger("clicked");
+                SetTextandImage();
             }
         }
         else
@@ -53,4 +63,16 @@ public class Star_Object : MonoBehaviour
             animator.SetBool("is_selected", false);
         }
     }
+
+    public void SetTextandImage()
+    {
+        Debug.Log("Set");
+        Transform label = Canvus_Object.transform.Find("Label");
+        Transform desc = Canvus_Object.transform.Find("Descriptions");
+
+        label.GetComponent<Text>().text = Label;
+        desc.GetComponent<Text>().text = description;
+    }
 }
+
+

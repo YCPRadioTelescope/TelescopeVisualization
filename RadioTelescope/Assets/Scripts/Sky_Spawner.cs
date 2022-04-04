@@ -42,6 +42,8 @@ public class Sky_Spawner : MonoBehaviour
 			position = Vector3.Normalize(position) * 900;
 			GameObject sky_interaction_clone = Instantiate(sky_interaction_object, position, Quaternion.identity);
 			sky_interaction_clone.gameObject.transform.SetParent(star_system.transform);
+			Fill_Data(sky_interaction_clone, RA.ToString(), DEC.ToString(), label, desc);
+
 
 			string filepath = "Sky_Interaction_Data/" + image;
 			Texture2D tex = Resources.Load(filepath) as Texture2D;
@@ -61,4 +63,12 @@ public class Sky_Spawner : MonoBehaviour
 
         return new Vector3(x, y, z);
     }
+
+    public void Fill_Data(GameObject star_interaction, string RA, string DEC, string label, string desc)
+    {
+		star_interaction.gameObject.GetComponent<Star_Object>().RA = RA;
+		star_interaction.gameObject.GetComponent<Star_Object>().DEC = DEC;
+		star_interaction.gameObject.GetComponent<Star_Object>().Label = label;
+		star_interaction.gameObject.GetComponent<Star_Object>().description = desc;
+	}
 }
