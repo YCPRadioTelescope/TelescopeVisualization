@@ -8,7 +8,9 @@ public class Sky_Spawner : MonoBehaviour
     public GameObject sky_interaction_object;
     public GameObject star_system;
 	string FileContent = File.ReadAllText(Application.streamingAssetsPath + "/Sky_Interaction_Data/Sky_Data.csv");
+	string imageFilepath = "";
 	TextAsset Sky_Data;
+
 	private void Start()
     {
 		Sky_Data = new TextAsset(FileContent);
@@ -24,33 +26,37 @@ public class Sky_Spawner : MonoBehaviour
 		// For each Line, create the interactable objects(Triangles)
 		for (int i = 0; i < lines.Length; i++)
 		{
+			Debug.Log("LOOP");
 			// Split each line by the commas.
-			string[] components = lines[i].Split(',');
+			string[] components = lines[i].Split(';');
 
 			//Get the RA, DEC, Dist, and Label from the CSV for each line
 			float RA = float.Parse(components[0]);
 			float DEC = float.Parse(components[1]);
 			float Dist = float.Parse(components[2]);
 			//If the Distance is entered as 0, set to default of 500
-			if(Dist == 0)
+			if (Dist == 0)
             {
 				Dist = 500f;
             }
 			string label = components[3];
 			string desc = components[4];
-			string image = components[5];
+			string image_name = components[5];
+			Debug.Log(components[5]);
 
 			Vector3 position = PolarToCartesian(RA, DEC, Dist);
 			position = Vector3.Normalize(position) * 900;
 			GameObject sky_interaction_clone = Instantiate(sky_interaction_object, position, Quaternion.identity);
 			sky_interaction_clone.gameObject.transform.SetParent(star_system.transform);
-			Fill_Data(sky_interaction_clone, RA.ToString(), DEC.ToString(), label, desc);
+
+			imageFilepath = Application.streamingAssetsPath + "/Sky_Interaction_Data/" + image_name + ".jpg";
+			Debug.Log(imageFilepath);
+			byte[] pngBytes = System.IO.File.ReadAllBytes(imageFilepath);
+			Texture2D new_tex = new Texture2D(128, 128);
+			new_tex.LoadImage(pngBytes);
 
 
-			string filepath = "Sky_Interaction_Data/" + image;
-			Texture2D tex = Resources.Load(filepath) as Texture2D;
-
-			Debug.Log("Data from" + label + "RA:" + RA + ", DEC:" + DEC + ", Dist:" + Dist + ", Desc:" + desc + ", ImageK:" + image);
+			Fill_Data(sky_interaction_clone, RA.ToString(), DEC.ToString(), label, desc, new_tex);
 		}
 	}
 	Vector3 PolarToCartesian(float RA, float DEC, float D)
@@ -66,11 +72,12 @@ public class Sky_Spawner : MonoBehaviour
         return new Vector3(x, y, z);
     }
 
-    public void Fill_Data(GameObject star_interaction, string RA, string DEC, string label, string desc)
+    public void Fill_Data(GameObject star_interaction, string RA, string DEC, string label, string desc, Texture2D tex)
     {
 		star_interaction.gameObject.GetComponent<Star_Object>().RA = RA;
 		star_interaction.gameObject.GetComponent<Star_Object>().DEC = DEC;
 		star_interaction.gameObject.GetComponent<Star_Object>().Label = label;
 		star_interaction.gameObject.GetComponent<Star_Object>().description = desc;
+		star_interaction.gameObject.GetComponent<Star_Object>().image = tex;
 	}
 }

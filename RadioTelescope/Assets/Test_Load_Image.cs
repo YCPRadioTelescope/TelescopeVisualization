@@ -9,7 +9,6 @@ public class Test_Load_Image : MonoBehaviour
     private void Start()
     {
         byte[] pngBytes = System.IO.File.ReadAllBytes(Application.streamingAssetsPath + "/Sky_Interaction_Data/Skrek.jpg");
-        Debug.Log(pngBytes);
         new_tex = new Texture2D(128, 128);
         new_tex.LoadImage(pngBytes);
         transform.GetComponent<RawImage>().texture = new_tex;

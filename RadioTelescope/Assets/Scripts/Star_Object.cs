@@ -24,6 +24,7 @@ public class Star_Object : MonoBehaviour
     public string RA;
     public string DEC;
     public string Label;
+    public Texture2D image;
     public GameObject Canvus_Object;
 
     private void Start()
@@ -66,12 +67,13 @@ public class Star_Object : MonoBehaviour
 
     public void SetTextandImage()
     {
-        Debug.Log("Set");
         Transform label = Canvus_Object.transform.Find("Label");
         Transform desc = Canvus_Object.transform.Find("Description");
+        Transform tex = Canvus_Object.transform.Find("Image");
 
         label.GetComponent<Text>().text = Label;
         desc.GetComponent<Text>().text = description;
+        tex.GetComponent<RawImage>().texture = image;
     }
 }
 
