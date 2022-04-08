@@ -13,6 +13,8 @@ public class Sky_ray : MonoBehaviour
     public GameObject end;
     public GameObject currObj;
 
+    public GameObject StarCanvus;
+
     bool ishit = false;
 
     private void Start()
@@ -40,6 +42,10 @@ public class Sky_ray : MonoBehaviour
                 ishit = true;
                 currObj = hitInfo.transform.gameObject;
                 currObj.GetComponent<Star_Object>().is_hovered = true;
+                if (Input.GetMouseButtonDown(0))
+                {
+                    StarCanvus.active = true;
+                }
             }
             else
             {
@@ -47,6 +53,10 @@ public class Sky_ray : MonoBehaviour
                 {
                     ishit = false;
                     currObj.GetComponent<Star_Object>().is_hovered = false;
+                }
+                if (Input.GetMouseButtonDown(0))
+                {
+                    StarCanvus.active = false;
                 }
             }
         }
@@ -56,6 +66,10 @@ public class Sky_ray : MonoBehaviour
             {
                 ishit = false;
                 currObj.GetComponent<Star_Object>().is_hovered = false;
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                StarCanvus.active = false;
             }
         }
     }

@@ -61,7 +61,7 @@ public class Star_Object : MonoBehaviour
         }
         else
         {
-            animator.SetBool("is_selected", false);
+                animator.SetBool("is_selected", false);
         }
     }
 
@@ -70,10 +70,14 @@ public class Star_Object : MonoBehaviour
         Transform label = Canvus_Object.transform.Find("Label");
         Transform desc = Canvus_Object.transform.Find("Description");
         Transform tex = Canvus_Object.transform.Find("Image");
+        Transform ra = Canvus_Object.transform.Find("RA");
+        Transform dec = Canvus_Object.transform.Find("DEC");
 
         label.GetComponent<Text>().text = Label;
         desc.GetComponent<Text>().text = description;
         tex.GetComponent<RawImage>().texture = image;
+        ra.GetComponent<Text>().text = "RA: " + RA;
+        dec.GetComponent<Text>().text= "DEC: " + DEC;
     }
 }
 
