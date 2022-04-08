@@ -28,7 +28,7 @@ public class Sky_Spawner : MonoBehaviour
 		{
 			Debug.Log("LOOP");
 			// Split each line by the commas.
-			string[] components = lines[i].Split(';');
+			string[] components = lines[i].Split(',');
 
 			//Get the RA, DEC, Dist, and Label from the CSV for each line
 			float RA = float.Parse(components[0]);
