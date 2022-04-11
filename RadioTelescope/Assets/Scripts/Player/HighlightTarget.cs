@@ -66,8 +66,9 @@ public class HighlightTarget : MonoBehaviour
 		// is hit, hitInfo is changed.
 		if(Physics.Raycast(start.transform.position, dir, out hitInfo, Vector3.Distance(start.transform.position, end.transform.position)))
 		{
+
 			// If shift is held down, then the player is attempting to teleport. Move the player to the point that was hit.
-			if(player && Input.GetKey(KeyCode.LeftShift) && delayTimer <= 0)
+			if (player && Input.GetKey(KeyCode.LeftShift) && delayTimer <= 0)
 			{
 				delayTimer = 10;
 				player.transform.position = hitInfo.point;
