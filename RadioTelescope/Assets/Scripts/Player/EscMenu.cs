@@ -16,7 +16,8 @@ public class EscMenu : MonoBehaviour
     {
 		//start the game in a unpaused state
 		pause = false;
-    }
+		Cursor.lockState = CursorLockMode.Locked;
+	}
 
     // Update is called once per frame.
     void Update()

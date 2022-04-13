@@ -37,7 +37,6 @@ public class Sky_Ray_VR : MonoBehaviour
         // is hit, hitInfo is changed.
         if (Physics.Raycast(start.transform.position, dir, out hitInfo, Vector3.Distance(start.transform.position, end.transform.position)))
         {
-            Debug.Log(hitInfo.transform.name);
             if (hitInfo.transform.tag == "sky")
             {
                 ishit = true;

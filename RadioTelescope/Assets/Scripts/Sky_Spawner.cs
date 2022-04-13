@@ -26,7 +26,6 @@ public class Sky_Spawner : MonoBehaviour
 		// For each Line, create the interactable objects(Triangles)
 		for (int i = 0; i < lines.Length; i++)
 		{
-			Debug.Log("LOOP");
 			// Split each line by the commas.
 			string[] components = lines[i].Split(',');
 
@@ -42,15 +41,12 @@ public class Sky_Spawner : MonoBehaviour
 			string label = components[3];
 			string desc = components[4];
 			string image_name = components[5];
-			Debug.Log(components[5]);
-
 			Vector3 position = PolarToCartesian(RA, DEC, Dist);
 			position = Vector3.Normalize(position) * 900;
 			GameObject sky_interaction_clone = Instantiate(sky_interaction_object, position, Quaternion.identity);
 			sky_interaction_clone.gameObject.transform.SetParent(star_system.transform);
 
 			imageFilepath = Application.streamingAssetsPath + "/Sky_Interaction_Data/" + image_name + ".jpg";
-			Debug.Log(imageFilepath);
 			byte[] pngBytes = System.IO.File.ReadAllBytes(imageFilepath);
 			Texture2D new_tex = new Texture2D(128, 128);
 			new_tex.LoadImage(pngBytes);
