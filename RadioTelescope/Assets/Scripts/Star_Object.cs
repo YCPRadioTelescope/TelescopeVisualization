@@ -57,7 +57,7 @@ public class Star_Object : MonoBehaviour
         if (is_hovered)
         {
             animator.SetBool("is_selected", true);
-            if(Input.GetMouseButtonDown(0) || rightTrigger.Value > 0.2f)
+            if(Input.GetMouseButtonDown(0) || rightTrigger.IsActivated)
             {
                 animator.SetTrigger("clicked");
                 SetTextandImage(Canvus_Object);

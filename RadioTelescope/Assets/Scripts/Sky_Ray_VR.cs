@@ -17,21 +17,32 @@ public class Sky_Ray_VR : MonoBehaviour
 
     public GameObject StarCanvus;
 
+    bool activated = false;
+
     bool ishit = false;
+
 
     private void Update()
     {
+        if (rightTrigger.IsActivated)
+        {
+            if (activated == false)
+            {
+                TriggerPressed();
+            }
+            activated = true;
+        }
+
+        if (activated == true)
+        {
+            if (!rightTrigger.IsActivated)
+            {
+                activated = false;
+            }
+        }
+
         var dir = start.transform.forward * -10000;
 
-
-        // If this script has vrActive set to true, a line is drawn between the start
-        // and end positions.
-        if (vrActive)
-        {
-            dir *= -1;
-            lr.SetPosition(0, start.transform.position);
-            lr.SetPosition(1, end.transform.position);
-        }
 
         // Cast a ray between the start object and end object. If a part of the telescope
         // is hit, hitInfo is changed.
@@ -42,10 +53,6 @@ public class Sky_Ray_VR : MonoBehaviour
                 ishit = true;
                 currObj = hitInfo.transform.gameObject;
                 currObj.GetComponent<Star_Object>().is_hovered = true;
-                if (rightTrigger.Value > 0.2f)
-                {
-                    StarCanvus.active = true;
-                }
             }
             else
             {
@@ -53,10 +60,6 @@ public class Sky_Ray_VR : MonoBehaviour
                 {
                     ishit = false;
                     currObj.GetComponent<Star_Object>().is_hovered = false;
-                }
-                if (rightTrigger.Value > 0.2f)
-                {
-                    StarCanvus.active = false;
                 }
             }
         }
@@ -67,10 +70,29 @@ public class Sky_Ray_VR : MonoBehaviour
                 ishit = false;
                 currObj.GetComponent<Star_Object>().is_hovered = false;
             }
-            if (rightTrigger.Value > 0.2f)
+        }
+    }
+    private void TriggerPressed()
+    {
+        var dir = start.transform.forward * -10000;
+
+
+        // Cast a ray between the start object and end object. If a part of the telescope
+        // is hit, hitInfo is changed.
+        if (Physics.Raycast(start.transform.position, dir, out hitInfo, Vector3.Distance(start.transform.position, end.transform.position)))
+        {
+            if (hitInfo.transform.tag == "sky")
+            {
+                StarCanvus.active = true;
+            }
+            else
             {
                 StarCanvus.active = false;
             }
+        }
+        else
+        {
+            StarCanvus.active = false;
         }
     }
 }

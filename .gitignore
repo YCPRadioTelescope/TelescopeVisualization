@@ -147,6 +147,13 @@ sysinfo.txt
 
 # Crashlytics generated file
 
+# Lightmaps
+*.exr
+*.exr.meta
+LightmapSnapshot.asset
+LightmapSnapshot.asset.meta
+LightingData.asset
+LightingData.asset.meta
 
 # End of https://www.gitignore.io/api/rider,unity
 RadioTelescope2019/Assets/Asset Store.meta
