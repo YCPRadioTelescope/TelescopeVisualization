@@ -1173,26 +1173,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 2c6d23c72305ecc40b0b61be69cfe1cc,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 2c6d23c72305ecc40b0b61be69cfe1cc,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 2c6d23c72305ecc40b0b61be69cfe1cc,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 2c6d23c72305ecc40b0b61be69cfe1cc,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 2c6d23c72305ecc40b0b61be69cfe1cc,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2001,7 +1981,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 75726690}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: group
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2191,26 +2171,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 971089086bc070043a191909d6e347c6,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 971089086bc070043a191909d6e347c6,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 971089086bc070043a191909d6e347c6,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 971089086bc070043a191909d6e347c6,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 971089086bc070043a191909d6e347c6,
         type: 3}
@@ -4209,9 +4169,9 @@ GameObject:
   - component: {fileID: 186518529}
   - component: {fileID: 186518528}
   - component: {fileID: 186518531}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Cylinder (1)
-  m_TagString: Telescope
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4426,20 +4386,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 8086552470c2f5d4487c83c4e871e878,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 8086552470c2f5d4487c83c4e871e878,
         type: 3}
       propertyPath: m_Name
       value: FennerDrive
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 8086552470c2f5d4487c83c4e871e878,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 8086552470c2f5d4487c83c4e871e878,
         type: 3}
@@ -5327,7 +5277,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 269293737}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: group (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5478,13 +5428,13 @@ Light:
   serializedVersion: 9
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 15
+  m_Intensity: 10
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -5521,7 +5471,7 @@ Light:
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 12020
+  m_ColorTemperature: 10455
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -5604,7 +5554,7 @@ MonoBehaviour:
   luxAtDistance: 1
   m_InnerSpotPercent: 0
   lightDimmer: 1
-  m_VolumetricDimmer: 0.73
+  m_VolumetricDimmer: 0.678
   lightUnit: 2
   fadeDistance: 10000
   affectDiffuse: 1
@@ -5619,10 +5569,10 @@ MonoBehaviour:
   maxSmoothness: 0.99
   applyRangeAttenuation: 1
   useOldInspector: 0
-  useVolumetric: 1
+  useVolumetric: 0
   featuresFoldout: 1
   showAdditionalSettings: 0
-  displayLightIntensity: 15
+  displayLightIntensity: 10
   displayAreaLightEmissiveMesh: 0
   areaLightCookie: {fileID: 0}
   areaLightShadowCone: 120
@@ -5764,30 +5714,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 958f164369049e14fb8c1a57926d5416,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 958f164369049e14fb8c1a57926d5416,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 958f164369049e14fb8c1a57926d5416,
         type: 3}
       propertyPath: m_Name
       value: Counterweights
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 958f164369049e14fb8c1a57926d5416,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 958f164369049e14fb8c1a57926d5416,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 958f164369049e14fb8c1a57926d5416,
         type: 3}
@@ -7089,30 +7019,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 7482e3431e8a92f4f911ecbc86224565,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 7482e3431e8a92f4f911ecbc86224565,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 7482e3431e8a92f4f911ecbc86224565,
         type: 3}
       propertyPath: m_Name
       value: DriveAxle
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 7482e3431e8a92f4f911ecbc86224565,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 7482e3431e8a92f4f911ecbc86224565,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 7482e3431e8a92f4f911ecbc86224565,
         type: 3}
@@ -7191,12 +7101,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: b716dd8150a91d343be1891e45504396,
         type: 3}
       propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: b716dd8150a91d343be1891e45504396,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: b716dd8150a91d343be1891e45504396,
         type: 3}
@@ -7211,7 +7116,7 @@ PrefabInstance:
     - target: {fileID: 2534866581884222612, guid: b716dd8150a91d343be1891e45504396,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: b716dd8150a91d343be1891e45504396,
         type: 3}
@@ -7734,6 +7639,98 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f74bc57132f22794f9548186d0855362, type: 3}
+--- !u!1 &387003121
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 387003122}
+  - component: {fileID: 387003125}
+  - component: {fileID: 387003124}
+  - component: {fileID: 387003123}
+  m_Layer: 0
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &387003122
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387003121}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.4, y: 0, z: 3.26}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 984553558}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &387003123
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387003121}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &387003124
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387003121}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &387003125
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387003121}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!43 &387595109
 Mesh:
   m_ObjectHideFlags: 0
@@ -9009,7 +9006,7 @@ Transform:
   - {fileID: 1096702127}
   - {fileID: 2131570517}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &442069742
 PrefabInstance:
@@ -9410,12 +9407,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 661405e28fcba7d4d9b0d6e84d01c781,
         type: 3}
       propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 661405e28fcba7d4d9b0d6e84d01c781,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 661405e28fcba7d4d9b0d6e84d01c781,
         type: 3}
@@ -9430,7 +9422,7 @@ PrefabInstance:
     - target: {fileID: 2534866581884222612, guid: 661405e28fcba7d4d9b0d6e84d01c781,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 661405e28fcba7d4d9b0d6e84d01c781,
         type: 3}
@@ -9793,30 +9785,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TopTriangleSupports
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: cfc035b03a634e34892f3a9732ce272d,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: cfc035b03a634e34892f3a9732ce272d,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: cfc035b03a634e34892f3a9732ce272d,
         type: 3}
       propertyPath: m_Name
       value: TopTriangleSupports
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: cfc035b03a634e34892f3a9732ce272d,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: cfc035b03a634e34892f3a9732ce272d,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: cfc035b03a634e34892f3a9732ce272d,
         type: 3}
@@ -10194,7 +10166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 508402513}
   - component: {fileID: 508402514}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Topsection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10338,15 +10310,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10417,20 +10389,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 6a7ba3c2e6202bf4c897ebf7a367fa2d,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 6a7ba3c2e6202bf4c897ebf7a367fa2d,
         type: 3}
       propertyPath: m_Name
       value: Retractor
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 6a7ba3c2e6202bf4c897ebf7a367fa2d,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 6a7ba3c2e6202bf4c897ebf7a367fa2d,
         type: 3}
@@ -10651,20 +10613,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 765220964d3e9844096ae5d2ae1229e2,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 765220964d3e9844096ae5d2ae1229e2,
         type: 3}
       propertyPath: m_Name
       value: BasePlate
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 765220964d3e9844096ae5d2ae1229e2,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 765220964d3e9844096ae5d2ae1229e2,
         type: 3}
@@ -11314,20 +11266,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 0f712b9976b28c04fa54a5d1e498787d,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 0f712b9976b28c04fa54a5d1e498787d,
         type: 3}
       propertyPath: m_Name
       value: GearBoxStand
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 0f712b9976b28c04fa54a5d1e498787d,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 0f712b9976b28c04fa54a5d1e498787d,
         type: 3}
@@ -13539,30 +13481,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BottomTriangleSupports
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 7802f9346c8e1444aabd903611ebac9c,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 7802f9346c8e1444aabd903611ebac9c,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 7802f9346c8e1444aabd903611ebac9c,
         type: 3}
       propertyPath: m_Name
       value: BottomTriangleSupports
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 7802f9346c8e1444aabd903611ebac9c,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 7802f9346c8e1444aabd903611ebac9c,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 7802f9346c8e1444aabd903611ebac9c,
         type: 3}
@@ -13958,20 +13880,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 911c5b7dd3f6f244480773bdf19df943,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 911c5b7dd3f6f244480773bdf19df943,
         type: 3}
       propertyPath: m_Name
       value: LowerGearbox
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 911c5b7dd3f6f244480773bdf19df943,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 911c5b7dd3f6f244480773bdf19df943,
         type: 3}
@@ -14187,9 +14099,9 @@ GameObject:
   - component: {fileID: 745247460}
   - component: {fileID: 745247459}
   - component: {fileID: 745247458}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Feed Horn Supports
-  m_TagString: Telescope
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14428,25 +14340,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: b9eb0d07ac9c32048a82d8d688d5326f,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: b9eb0d07ac9c32048a82d8d688d5326f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: b9eb0d07ac9c32048a82d8d688d5326f,
         type: 3}
       propertyPath: m_Name
       value: DishSupports2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: b9eb0d07ac9c32048a82d8d688d5326f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: b9eb0d07ac9c32048a82d8d688d5326f,
         type: 3}
@@ -14930,7 +14827,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 760654022}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: RadioTelescope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15197,7 +15094,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 771244865}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: offset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16706,15 +16603,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -16818,25 +16715,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 592c9ec46d817064c907dcf7d4ad5b29,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 592c9ec46d817064c907dcf7d4ad5b29,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 592c9ec46d817064c907dcf7d4ad5b29,
         type: 3}
       propertyPath: m_Name
       value: Mainframe
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 592c9ec46d817064c907dcf7d4ad5b29,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 592c9ec46d817064c907dcf7d4ad5b29,
         type: 3}
@@ -16987,15 +16869,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -17154,6 +17036,200 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 861736142}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &863382791
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 863382792}
+  - component: {fileID: 863382795}
+  - component: {fileID: 863382794}
+  - component: {fileID: 863382793}
+  m_Layer: 0
+  m_Name: Point Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &863382792
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863382791}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0.02, y: 0.53, z: -0.12}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3923807988359717147}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &863382793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863382791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6c2871f720b2af4e9210febdac74517, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  shadowResolution: 512
+  shadowDimmer: 1
+  volumetricShadowDimmer: 1
+  shadowFadeDistance: 10000
+  contactShadows: 0
+  shadowTint: {r: 0, g: 0, b: 0, a: 1}
+  viewBiasMin: 0.2
+  viewBiasMax: 100
+  viewBiasScale: 1
+  normalBiasMin: 0.5
+  normalBiasMax: 0.5
+  normalBiasScale: 1
+  sampleBiasScale: 0
+  edgeLeakFixup: 0
+  edgeToleranceNormal: 1
+  edgeTolerance: 1
+  shadowCascadeCount: 4
+  shadowCascadeRatios:
+  - 0.05
+  - 0.2
+  - 0.3
+  shadowCascadeBorders:
+  - 0.2
+  - 0.2
+  - 0.2
+  - 0.2
+  shadowAlgorithm: 0
+  shadowVariant: 0
+  shadowPrecision: 0
+--- !u!114 &863382794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863382791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5
+  m_Version: 5
+  directionalIntensity: 3.1415927
+  punctualIntensity: 600
+  areaIntensity: 200
+  enableSpotReflector: 0
+  luxAtDistance: 1
+  m_InnerSpotPercent: 0
+  lightDimmer: 1
+  m_VolumetricDimmer: 1
+  lightUnit: 0
+  fadeDistance: 10000
+  affectDiffuse: 1
+  affectSpecular: 1
+  nonLightmappedOnly: 0
+  lightTypeExtent: 0
+  m_SpotLightShape: 0
+  shapeWidth: 0.5
+  shapeHeight: 0.5
+  aspectRatio: 1
+  shapeRadius: 0
+  maxSmoothness: 0.99
+  applyRangeAttenuation: 1
+  useOldInspector: 0
+  useVolumetric: 1
+  featuresFoldout: 1
+  showAdditionalSettings: 0
+  displayLightIntensity: 600
+  displayAreaLightEmissiveMesh: 0
+  areaLightCookie: {fileID: 0}
+  areaLightShadowCone: 120
+  useScreenSpaceShadows: 0
+  evsmExponent: 15
+  evsmLightLeakBias: 0
+  evsmVarianceBias: 0.00001
+  evsmBlurPasses: 0
+  lightLayers: 1
+  lightlayersMask: 1
+  linkShadowLayers: 1
+  shadowNearPlane: 0.1
+  shadowSoftness: 0.5
+  blockerSampleCount: 24
+  filterSampleCount: 16
+  minFilterSize: 0.00001
+  kernelSize: 5
+  lightAngle: 1
+  maxDepthBias: 0.001
+--- !u!108 &863382795
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863382791}
+  m_Enabled: 1
+  serializedVersion: 9
+  m_Type: 2
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 47.746483
+  m_Range: 10
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 2
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
 --- !u!1001 &865050556
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17166,30 +17242,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Post
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 3b68e75df959cb74a87141a63091c7a0,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 3b68e75df959cb74a87141a63091c7a0,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 3b68e75df959cb74a87141a63091c7a0,
         type: 3}
       propertyPath: m_Name
       value: Post
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 3b68e75df959cb74a87141a63091c7a0,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 3b68e75df959cb74a87141a63091c7a0,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 3b68e75df959cb74a87141a63091c7a0,
         type: 3}
@@ -18052,15 +18108,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -18319,16 +18375,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Big_Embedded_System_Box
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 4e94b20f9f1e5134f937eed1ff578e86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 4e94b20f9f1e5134f937eed1ff578e86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 4e94b20f9f1e5134f937eed1ff578e86,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -18507,6 +18553,38 @@ MonoBehaviour:
     the azimuth and the base of the elevation frame.
   yOffset: -1.7
   xOffset: 0
+--- !u!1 &984553557
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 984553558}
+  m_Layer: 0
+  m_Name: StarInteractionSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &984553558
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984553557}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -25.94, y: 0.01, z: -25.86}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 3923807988359717147}
+  - {fileID: 387003122}
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &984805287
 GameObject:
   m_ObjectHideFlags: 0
@@ -18770,7 +18848,7 @@ GameObject:
   - component: {fileID: 1009876143}
   - component: {fileID: 1009876142}
   - component: {fileID: 1009876145}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: FeedHorn
   m_TagString: Telescope
   m_Icon: {fileID: 0}
@@ -19072,15 +19150,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -19925,20 +20003,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 8b925716db4f0014b935ff153fb05f6e,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 8b925716db4f0014b935ff153fb05f6e,
         type: 3}
       propertyPath: m_Name
       value: Kaydon
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 8b925716db4f0014b935ff153fb05f6e,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 8b925716db4f0014b935ff153fb05f6e,
         type: 3}
@@ -20226,11 +20294,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 35cb250849700f544a529e470c5b11c2,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 35cb250849700f544a529e470c5b11c2,
         type: 3}
       propertyPath: m_Name
@@ -20240,11 +20303,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 35cb250849700f544a529e470c5b11c2,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 35cb250849700f544a529e470c5b11c2,
         type: 3}
@@ -20588,9 +20646,9 @@ GameObject:
   - component: {fileID: 1147548855}
   - component: {fileID: 1147548854}
   - component: {fileID: 1147548853}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Cube (1)
-  m_TagString: Telescope
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21337,9 +21395,9 @@ GameObject:
   - component: {fileID: 1169986573}
   - component: {fileID: 1169986572}
   - component: {fileID: 1169986575}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Cylinder (2)
-  m_TagString: Telescope
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21743,26 +21801,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: b912291d8b6e12a43a839538cc33ec19,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: b912291d8b6e12a43a839538cc33ec19,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: b912291d8b6e12a43a839538cc33ec19,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: b912291d8b6e12a43a839538cc33ec19,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: b912291d8b6e12a43a839538cc33ec19,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -22144,20 +22182,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 198c0059e28693c478b36eeb48277c4c,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 198c0059e28693c478b36eeb48277c4c,
         type: 3}
       propertyPath: m_Name
       value: GearBoxAssembly
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 198c0059e28693c478b36eeb48277c4c,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 198c0059e28693c478b36eeb48277c4c,
         type: 3}
@@ -22679,30 +22707,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: b48516238204fc64095822c243b287b2,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: b48516238204fc64095822c243b287b2,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: b48516238204fc64095822c243b287b2,
         type: 3}
       propertyPath: m_Name
       value: DriveGearbox
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: b48516238204fc64095822c243b287b2,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: b48516238204fc64095822c243b287b2,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: b48516238204fc64095822c243b287b2,
         type: 3}
@@ -22929,25 +22937,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: cf0baec30f5a7e644aaebe13c1c957e7,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: cf0baec30f5a7e644aaebe13c1c957e7,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: cf0baec30f5a7e644aaebe13c1c957e7,
         type: 3}
       propertyPath: m_Name
       value: MainDishSupport
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: cf0baec30f5a7e644aaebe13c1c957e7,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: cf0baec30f5a7e644aaebe13c1c957e7,
         type: 3}
@@ -23111,13 +23104,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1243798941}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -20.88, y: 1.87, z: -33.51}
-  m_LocalScale: {x: 0.094677925, y: 0.094677925, z: 0.094677925}
+  m_LocalRotation: {x: 0.7333952, y: -0.18095604, z: 0.15217409, w: 0.6373613}
+  m_LocalPosition: {x: -19.35, y: 6.14, z: -35.01}
+  m_LocalScale: {x: 0.47410366, y: 0.47410366, z: 0.47410366}
   m_Children: []
   m_Father: {fileID: 408825389}
   m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 81.87, y: 183.02399, z: 210.34299}
 --- !u!64 &1243798943
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -23362,7 +23355,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   volumeAnchorOverride: {fileID: 0}
-  antialiasing: 1
+  antialiasing: 0
   SMAAQuality: 2
   dithering: 0
   stopNaNs: 0
@@ -23690,26 +23683,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Funnel_Pipe_Assembly
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 5420dca373ce0294db6c8bf8d284376b,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 5420dca373ce0294db6c8bf8d284376b,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 5420dca373ce0294db6c8bf8d284376b,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 5420dca373ce0294db6c8bf8d284376b,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 5420dca373ce0294db6c8bf8d284376b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -23872,7 +23845,7 @@ GameObject:
   - component: {fileID: 1296651330}
   - component: {fileID: 1296651332}
   - component: {fileID: 1296651333}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: RealTelescope
   m_TagString: Telescope
   m_Icon: {fileID: 0}
@@ -23950,15 +23923,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -24028,26 +24001,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: d37bd1cf15a86ee40998d0ee2f678ee0,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: d37bd1cf15a86ee40998d0ee2f678ee0,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: d37bd1cf15a86ee40998d0ee2f678ee0,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: d37bd1cf15a86ee40998d0ee2f678ee0,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: d37bd1cf15a86ee40998d0ee2f678ee0,
         type: 3}
@@ -24443,7 +24396,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1313179831}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: group (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24978,20 +24931,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: ada13d9c9227ea24ab743728e64229b7,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: ada13d9c9227ea24ab743728e64229b7,
         type: 3}
       propertyPath: m_Name
       value: RigidConnector
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: ada13d9c9227ea24ab743728e64229b7,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ada13d9c9227ea24ab743728e64229b7,
         type: 3}
@@ -25336,20 +25279,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: af8078e5a645beb488a85e05e812cb89,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: af8078e5a645beb488a85e05e812cb89,
         type: 3}
       propertyPath: m_Name
       value: McMaster
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: af8078e5a645beb488a85e05e812cb89,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: af8078e5a645beb488a85e05e812cb89,
         type: 3}
@@ -28567,26 +28500,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: electrical_cabinet
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: a63c29742c2b93e4cb4576b73b017c3c,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: a63c29742c2b93e4cb4576b73b017c3c,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: a63c29742c2b93e4cb4576b73b017c3c,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: a63c29742c2b93e4cb4576b73b017c3c,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: a63c29742c2b93e4cb4576b73b017c3c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -28782,9 +28695,9 @@ GameObject:
   - component: {fileID: 1393513225}
   - component: {fileID: 1393513224}
   - component: {fileID: 1393513223}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Cube (2)
-  m_TagString: Telescope
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30414,9 +30327,9 @@ GameObject:
   - component: {fileID: 1441851165}
   - component: {fileID: 1441851164}
   - component: {fileID: 1441851163}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Cube
-  m_TagString: Telescope
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30715,11 +30628,11 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 3
+  m_Height: 2
   m_Radius: 0.7
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.09
+  m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1452428804
@@ -32039,12 +31952,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 7fe3a57e108a4794abd1de7e26a79a15,
         type: 3}
       propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 7fe3a57e108a4794abd1de7e26a79a15,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 7fe3a57e108a4794abd1de7e26a79a15,
         type: 3}
@@ -32059,7 +31967,7 @@ PrefabInstance:
     - target: {fileID: 2534866581884222612, guid: 7fe3a57e108a4794abd1de7e26a79a15,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 7fe3a57e108a4794abd1de7e26a79a15,
         type: 3}
@@ -32163,7 +32071,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1499556766}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: group (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32412,7 +32320,7 @@ Transform:
   - {fileID: 1081063018}
   - {fileID: 2009435005}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1526611562
 GameObject:
@@ -32607,30 +32515,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 42ddc47b762411343b25bdfeaa27f3b7,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 42ddc47b762411343b25bdfeaa27f3b7,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 42ddc47b762411343b25bdfeaa27f3b7,
         type: 3}
       propertyPath: m_Name
       value: TopFlange
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 42ddc47b762411343b25bdfeaa27f3b7,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 42ddc47b762411343b25bdfeaa27f3b7,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 42ddc47b762411343b25bdfeaa27f3b7,
         type: 3}
@@ -33489,12 +33377,12 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 63bd38b87493f6b4cb7d80b61df718dd,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 63bd38b87493f6b4cb7d80b61df718dd,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 63bd38b87493f6b4cb7d80b61df718dd,
         type: 3}
@@ -34324,12 +34212,12 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 7fe3a57e108a4794abd1de7e26a79a15,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 7fe3a57e108a4794abd1de7e26a79a15,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 7fe3a57e108a4794abd1de7e26a79a15,
         type: 3}
@@ -34724,7 +34612,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 59d11a29ed531044fbe8f24d3fc183d6, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 59d11a29ed531044fbe8f24d3fc183d6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -35157,7 +35045,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1628560510}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -37.281807, y: -10.1, z: -56.20296}
+  m_LocalPosition: {x: -37.281807, y: -10.597623, z: -56.20296}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1452428802}
@@ -35182,26 +35070,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 7128cbdcceb4fbf49af4fd34b4366fab,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 7128cbdcceb4fbf49af4fd34b4366fab,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 7128cbdcceb4fbf49af4fd34b4366fab,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 7128cbdcceb4fbf49af4fd34b4366fab,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 7128cbdcceb4fbf49af4fd34b4366fab,
         type: 3}
@@ -37869,15 +37737,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -38328,30 +38196,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MountPlate
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 2685272d38c59164da7757909a98741c,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 2685272d38c59164da7757909a98741c,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 2685272d38c59164da7757909a98741c,
         type: 3}
       propertyPath: m_Name
       value: MountPlate
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 2685272d38c59164da7757909a98741c,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 2685272d38c59164da7757909a98741c,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -5975033157549033438, guid: 2685272d38c59164da7757909a98741c,
         type: 3}
@@ -38433,15 +38281,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -38914,7 +38762,7 @@ Transform:
   - {fileID: 503790409}
   - {fileID: 661523506}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!135 &1791192193
 SphereCollider:
@@ -38962,7 +38810,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   start: {fileID: 1831893543}
   end: {fileID: 1840738559}
-  playerMK: {fileID: 760654021}
+  playerMK: {fileID: 387003121}
   playerVR: {fileID: 200267175}
   animator: {fileID: 0}
   is_hovered: 0
@@ -39209,25 +39057,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: a13de0d40d1639a4a9813acf234ef74b,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: a13de0d40d1639a4a9813acf234ef74b,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: a13de0d40d1639a4a9813acf234ef74b,
         type: 3}
       propertyPath: m_Name
       value: Dish
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: a13de0d40d1639a4a9813acf234ef74b,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: a13de0d40d1639a4a9813acf234ef74b,
         type: 3}
@@ -39408,20 +39241,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 05fced0d96a1ea04eb4316d99047e4ef,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 05fced0d96a1ea04eb4316d99047e4ef,
         type: 3}
       propertyPath: m_Name
       value: StopBlock
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 05fced0d96a1ea04eb4316d99047e4ef,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 05fced0d96a1ea04eb4316d99047e4ef,
         type: 3}
@@ -40479,9 +40302,9 @@ GameObject:
   - component: {fileID: 1829624363}
   - component: {fileID: 1829624362}
   - component: {fileID: 1829624365}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Cylinder
-  m_TagString: Telescope
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -40860,15 +40683,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -41488,7 +41311,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1894339294}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Fence
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41799,15 +41622,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -46956,25 +46779,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 8cb9bd4fef3f18349ac3758f367a0432,
-        type: 3}
-      propertyPath: m_TagString
-      value: Telescope
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 8cb9bd4fef3f18349ac3758f367a0432,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: 8cb9bd4fef3f18349ac3758f367a0432,
         type: 3}
       propertyPath: m_Name
       value: DishSupports
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: 8cb9bd4fef3f18349ac3758f367a0432,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 8cb9bd4fef3f18349ac3758f367a0432,
         type: 3}
@@ -47578,8 +47386,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 129.70001, y: 74.60303}
-  m_SizeDelta: {x: 259.4, y: -149.5}
+  m_AnchoredPosition: {x: -350, y: 70}
+  m_SizeDelta: {x: 355.3, y: 446.91}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1959646547
 MonoBehaviour:
@@ -47605,7 +47413,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 16
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 1
     m_MaxSize: 40
     m_Alignment: 0
@@ -47614,12 +47422,12 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Fullscreen:                F11\n\nMove forward: \tw\r\nMove backwards:
-    \ts\r\nStrafe left: \t\ta\r\nStrafe right: \t\td\r\n\r\nTurn left:\t\tj\r\nTurn
-    right:\t\tl\r\nLook up:\t\ti\r\nLook down:\t\tk\r\n\r\nTurn telescope left: \tleft
-    arrow\nTurn telescope right: \tright arrow\nTurn telescope up: \tup arrow\nTurn
-    telescope down: down arrow\n\r\nPause menu:\t\tesc\n\nToggle Exploded View:\tr\nToggle
-    Cinematic View:\tt\n\nToggle Flying:\tq\nFly Up:\tspace\nFly Down:\te"
+  m_Text: "Move forward: \tw\r\nMove backwards: \ts\r\nStrafe left: \t\ta\r\nStrafe
+    right: \t\td\r\n\r\nTurn left:\t\tj\r\nTurn right:\t\tl\r\nLook up:\t\ti\r\nLook
+    down:\t\tk\r\n\r\nTurn telescope left: \tleft arrow key\r\nTurn telescope right:
+    \tright arrow key\r\nTurn telescope up: \tup arrow key\r\nTurn telescope down:
+    down arrow key\r\n\r\nPause menu:\t\tesc\n\nToggle Exploded View:\tr\nToggle Cinematic
+    View:\tt\n\nToggle Flying:\tq\nFly Up:\tspace\nFly Down:\te"
 --- !u!222 &1959646548
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -48208,15 +48016,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -50596,15 +50404,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -51072,6 +50880,84 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ae0332a1eea44df4ca54bb67f6645dd8, type: 3}
+--- !u!1 &13356091720307464
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3923807988359717147}
+  - component: {fileID: 13356091720307465}
+  - component: {fileID: 13356091720307466}
+  - component: {fileID: 13356091720307467}
+  m_Layer: 0
+  m_Name: Sky_Interaction
+  m_TagString: sky
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &13356091720307465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13356091720307464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fa106469e80a0e4f8a09fa4c0b821b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  start: {fileID: 1831893543}
+  end: {fileID: 1840738559}
+  playerMK: {fileID: 387003121}
+  playerVR: {fileID: 200267175}
+  animator: {fileID: 0}
+  is_hovered: 0
+  vrActive: 0
+  description: 
+  RA: 
+  DEC: 
+  Label: 
+  image: {fileID: 0}
+  Canvus_Object: {fileID: 0}
+  Canvus_Object_VR: {fileID: 0}
+  rightTrigger: {fileID: 0}
+--- !u!95 &13356091720307466
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13356091720307464}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cec8b6a048283874eb4955d37160ea9f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!135 &13356091720307467
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13356091720307464}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.213009
+  m_Center: {x: 0, y: -0.16685402, z: 0}
 --- !u!114 &34037787628121507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58475,6 +58361,24 @@ MonoBehaviour:
       Zinnia.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   receiveValidity:
     field: {fileID: 0}
+--- !u!1 &2417547189857910469
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3437679065552992883}
+  - component: {fileID: 2735328118336253600}
+  - component: {fileID: 6689944032993116752}
+  m_Layer: 0
+  m_Name: bottom
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!114 &2434048449003079864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58558,7 +58462,7 @@ GameObject:
   - component: {fileID: 6806638069533544728}
   - component: {fileID: 1281735419}
   - component: {fileID: 2534866581172219278}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58883,6 +58787,14 @@ MonoBehaviour:
   secondaryAction: {fileID: 1019366705903088301}
   grabReceiver: {fileID: 4876848659514196025}
   grabProvider: {fileID: 8705456191514319592}
+--- !u!33 &2735328118336253600
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2417547189857910469}
+  m_Mesh: {fileID: -2432090755550338912, guid: 532a177f7ce91dd43aff62ce075ec815, type: 3}
 --- !u!4 &2748258339366975209
 Transform:
   m_ObjectHideFlags: 0
@@ -59628,6 +59540,44 @@ Transform:
   m_Father: {fileID: 1497917452}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &3276534891069475328
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5774522802235995797}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: fb75d009ac1c225498a58a0d8386e6d9, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
 --- !u!114 &3288276797747189926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59913,6 +59863,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!4 &3437679065552992883
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2417547189857910469}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.32, z: -0.09}
+  m_LocalScale: {x: 1.3689, y: 1.3689, z: 1.3689}
+  m_Children: []
+  m_Father: {fileID: 3923807988359717147}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &3441703376454038491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61770,6 +61734,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &3923807988359717147
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13356091720307464}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -2.39, y: 2.822, z: 2.43}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 6781001969068093987}
+  - {fileID: 3437679065552992883}
+  - {fileID: 863382792}
+  m_Father: {fileID: 984553558}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!4 &3979815836456448717
 Transform:
   m_ObjectHideFlags: 0
@@ -64092,6 +64073,24 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: Zinnia.Tracking.Follow.ObjectFollower+FollowEvent, Zinnia.Runtime,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+--- !u!1 &5774522802235995797
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6781001969068093987}
+  - component: {fileID: 6078229844423075568}
+  - component: {fileID: 3276534891069475328}
+  m_Layer: 0
+  m_Name: top
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &5799787572915714093
 Transform:
   m_ObjectHideFlags: 0
@@ -64586,6 +64585,14 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: Zinnia.Data.Operation.Extraction.GameObjectExtractor+UnityEvent, Zinnia.Runtime,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+--- !u!33 &6078229844423075568
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5774522802235995797}
+  m_Mesh: {fileID: -2432090755550338912, guid: 532a177f7ce91dd43aff62ce075ec815, type: 3}
 --- !u!114 &6083838723337859191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65258,6 +65265,44 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!23 &6689944032993116752
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2417547189857910469}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: fb75d009ac1c225498a58a0d8386e6d9, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
 --- !u!4 &6706402791084601684
 Transform:
   m_ObjectHideFlags: 0
@@ -65519,6 +65564,20 @@ Transform:
   m_Father: {fileID: 4963957278810961373}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &6781001969068093987
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5774522802235995797}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.189, z: 0.085}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3923807988359717147}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!23 &6806638069533544728
 MeshRenderer:
   m_ObjectHideFlags: 0

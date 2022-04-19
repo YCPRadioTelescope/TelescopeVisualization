@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 	public CharacterController controller;
-	
+
 	public Vector3 velocity;
 	public float speed = 12f;
 	public float gravity = -9.81f;
@@ -19,27 +19,27 @@ public class PlayerMovement : MonoBehaviour
 	public LayerMask groundMask;
 	public float groundDistance = 0.4f;
 
-	
+
 	// Update is called once per frame
 	void Update()
 	{
 		// Toggle flight if Q is pressed.
-		if(Input.GetButtonDown("Toggle Fly"))
+		if (Input.GetButtonDown("Toggle Fly"))
 			fly = !fly;
-		
+
 		// Get the status of the WASD keys and move the player's X and Z location according to that.
 		float x = Input.GetAxis("Horizontal");
 		float z = Input.GetAxis("Vertical");
 		Vector3 move = transform.right * x + transform.forward * z;
 		controller.Move(move * speed * Time.deltaTime);
 
-		if(fly)
+		if (fly)
 		{
 			// If the player is in flight mode, Space and E simply move the player up and down.
 			// When neither is pressed, no gravity is applied.
-			if(Input.GetButton("Jump"))
+			if (Input.GetButton("Jump"))
 				velocity.y = flySpeedVertical;
-			else if(Input.GetButton("Fly Down"))
+			else if (Input.GetButton("Fly Down"))
 				velocity.y = -flySpeedVertical;
 			else
 				velocity.y = 0;
@@ -47,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
 		else
 		{
 			// If the player is not in flight mode, they can only jump while grounded.
-			if(Input.GetButtonDown("Jump") && Physics.CheckSphere(groundCheck.position, groundDistance, groundMask))
+			if (Input.GetButtonDown("Jump") && Physics.CheckSphere(groundCheck.position, groundDistance, groundMask))
 				velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
 			else
 				// Gravity is only applied if the player isn't grounded.
