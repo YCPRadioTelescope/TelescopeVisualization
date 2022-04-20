@@ -84,6 +84,7 @@ public class HighlightTarget : MonoBehaviour
     }
     void TriggerPressed()
 	{
+		Debug.Log("BAlls");
 		// The direction of the ray cast is forward the direction of the start object.
 		var dir = start.transform.forward * 10000;
 
