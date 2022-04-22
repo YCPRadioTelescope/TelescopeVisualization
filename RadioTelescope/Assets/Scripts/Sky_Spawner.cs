@@ -41,6 +41,7 @@ public class Sky_Spawner : MonoBehaviour
 			string label = components[3];
 			string desc = components[4];
 			string image_name = components[5];
+			image_name = image_name.Replace("\n", "").Replace("\r", "");
 			Vector3 position = PolarToCartesian(RA, DEC, Dist);
 			position = Vector3.Normalize(position) * 900;
 			GameObject sky_interaction_clone = Instantiate(sky_interaction_object, position, Quaternion.identity);
