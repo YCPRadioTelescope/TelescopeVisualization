@@ -8,7 +8,7 @@ public class MoveTelescope : MonoBehaviour
 	public TelescopeController tc;
 
 	// Update is called once per frame
-	void Update()
+	void FixedUpdate()
 	{
 		if(Input.GetKey("up"))
 			tc.ChangeElevation(-0.25f);
