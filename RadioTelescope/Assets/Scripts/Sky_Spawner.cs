@@ -14,7 +14,6 @@ public class Sky_Spawner : MonoBehaviour
 	private void Start()
     {
 		Sky_Data = new TextAsset(FileContent);
-		Debug.Log(FileContent);
 		//Run the CSV only once at the start of the program, this creates all the interactable objects from the program
 		read_CSV();
 	}
