@@ -20779,7 +20779,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   childMeshRenderers: []
-  explosionSpeed: 0.05
+  explosionSpeed: 0.1
   leftTrigger: {fileID: 1113077147}
 --- !u!114 &1296651333
 MonoBehaviour:

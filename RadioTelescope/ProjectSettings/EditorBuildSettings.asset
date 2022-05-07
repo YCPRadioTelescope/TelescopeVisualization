@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/MK-HIGHINTRO.unity
     guid: 20b90270f966b754ba86166d3e498cae
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/MK-HIGH.unity
     guid: 5abde33a144e7d84c8f77c96412e3600
   - enabled: 0
@@ -20,10 +20,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/VR.unity
     guid: 856c8e127ffc7f9438c7971a11efd9e7
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MK-LOWINTRO.unity
     guid: 10961406c8fe7e749a76b66fadcbd715
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MK-LOW.unity
     guid: 93aec059c14e4204ebdc26fb239271af
   m_configObjects:
