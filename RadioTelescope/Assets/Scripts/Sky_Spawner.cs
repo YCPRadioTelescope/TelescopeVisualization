@@ -29,17 +29,19 @@ public class Sky_Spawner : MonoBehaviour
 			string[] components = lines[i].Split(',');
 
 			//Get the RA, DEC, Dist, and Label from the CSV for each line
-			float RA = float.Parse(components[0]);
-			float DEC = float.Parse(components[1]);
-			float Dist = float.Parse(components[2]);
+			float RA_Hours = float.Parse(components[0]);
+			float RA_Minutes = float.Parse(components[1]);
+			float RA = RATimeToDegrees(RA_Hours, RA_Minutes);
+			float DEC = float.Parse(components[2]);
+			float Dist = float.Parse(components[3]);
 			//If the Distance is entered as 0, set to default of 500
 			if (Dist == 0)
             {
 				Dist = 500f;
             }
-			string label = components[3];
-			string desc = components[4];
-			string image_name = components[5];
+			string label = components[4];
+			string desc = components[5];
+			string image_name = components[6];
 			image_name = image_name.Replace("\n", "").Replace("\r", "");
 			Vector3 position = PolarToCartesian(RA, DEC, Dist);
 			position = Vector3.Normalize(position) * 900;
@@ -66,6 +68,13 @@ public class Sky_Spawner : MonoBehaviour
         var z = D * Mathf.Cos(DEC) * Mathf.Sin(RA);
 
         return new Vector3(x, y, z);
+    }
+
+	float RATimeToDegrees(float RA_Hours, float RA_Minutes)
+    {
+		float RA;
+		RA = (RA_Hours + (RA_Minutes / 60)) * 15;
+		return RA;
     }
 
     public void Fill_Data(GameObject star_interaction, string RA, string DEC, string label, string desc, Texture2D tex)
