@@ -5,7 +5,7 @@
       "app_key": "application.generated.unity.radiotelescope2019.exe",
       "launch_type": "url",
       "url": "steam://launch/",
-      "action_manifest_path": "C:\\Users\\DanRob\\Desktop\\Visualization Repo\\TelescopeVisualization\\RadioTelescope\\actions.json",
+      "action_manifest_path": "C:\\Users\\derek\\Documents\\GitHub\\TelescopeVisualization\\RadioTelescope\\actions.json",
       "strings": {
         "en_us": {
           "name": "RadioTelescope2019 [Testing]"

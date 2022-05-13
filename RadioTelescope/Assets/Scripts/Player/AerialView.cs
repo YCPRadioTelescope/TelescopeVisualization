@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 // A script attached to a secondary camera that causes it to rotate about the radio
 // telescope. Disables the player when active, disallowing the player from moving
@@ -36,8 +37,8 @@ public class AerialView : MonoBehaviour
 	// Update is called once per frame.
 	void Update()
 	{
-		// When T is pressed, toggle the aerial camera's activity.
-		if(Input.GetKeyDown(KeyCode.T))
+		// When T is pressed, toggle the aerial camera's activity. Check if scene is not the menu scene.
+		if(Input.GetKeyDown(KeyCode.T) && SceneManager.GetActiveScene().name != "MK-HIGHINTRO")
 		{
 			active = !active;
 			aerialCam.enabled = active;
@@ -47,9 +48,9 @@ public class AerialView : MonoBehaviour
 		if(active)
 		{
 			// Track how much time has elapsed. If focusTimer seconds have elapsed,
-			// change the focus.
+			// change the focus. Don't do this in the menu scene.
 			elapsedTime += Time.deltaTime;
-			if(elapsedTime > focusTimer)
+			if(elapsedTime > focusTimer && SceneManager.GetActiveScene().name != "MK-HIGHINTRO")
 			{
 				elapsedTime -= focusTimer;
 				focus = !focus;

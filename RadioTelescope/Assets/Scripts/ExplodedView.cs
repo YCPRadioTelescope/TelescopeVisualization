@@ -55,8 +55,41 @@ public class ExplodedView : MonoBehaviour
 		}
 	}
 
-	// Update is called once per frame.
-	private void Update()
+    // Update is called once per frame.
+
+    private void FixedUpdate()
+    {
+		if (isMoving)
+		{
+			if (isInExplodedView)
+			{
+				// Move all objects to their exploded position.
+				foreach (var item in childMeshRenderers)
+				{
+					item.meshRenderer.transform.position = Vector3.Lerp(item.meshRenderer.transform.position, item.explodedPosition, explosionSpeed);
+					// Once any one part of the telescope comes within .0001 units distance of its exploded position, stop everything.
+					// All parts should reach their exploded positions at roughly the same time, so we don't need everything perfectly where it should be.
+					if (Vector3.Distance(item.meshRenderer.transform.position, item.explodedPosition) < 0.0001f)
+						isMoving = false;
+				}
+			}
+			else
+			{
+				// Move all objects back to their original position.
+				foreach (var item in childMeshRenderers)
+				{
+					item.meshRenderer.transform.localPosition = Vector3.Lerp(item.meshRenderer.transform.localPosition, item.originalPosition, explosionSpeed);
+					// Once any one part of the telescope comes within .001 units distance of its original position, stop everything.
+					// The tolerance is less for returning to the original position on purpose, as the higher tolerance for the exploded position results in
+					// a smoother animation, while only a lower tolerance is necessary for everything appearing correct when being put back together.
+					if (Vector3.Distance(item.meshRenderer.transform.localPosition, item.originalPosition) < 0.001f)
+						isMoving = false;
+				}
+			}
+		}
+	}
+
+    private void Update()
 	{
 		// Both R and the left trigger can activate the exploded view.
 		if(delay <= 0 && (Input.GetButtonDown("Toggle Exploded View") || leftTrigger.Value > 0.2f))
@@ -72,35 +105,6 @@ public class ExplodedView : MonoBehaviour
 		}
 		if(delay > 0)
 			delay -= Time.deltaTime;
-
-		if(isMoving)
-		{
-			if(isInExplodedView)
-			{
-				// Move all objects to their exploded position.
-				foreach(var item in childMeshRenderers)
-				{
-					item.meshRenderer.transform.position = Vector3.Lerp(item.meshRenderer.transform.position, item.explodedPosition, explosionSpeed);
-					// Once any one part of the telescope comes within .0001 units distance of its exploded position, stop everything.
-					// All parts should reach their exploded positions at roughly the same time, so we don't need everything perfectly where it should be.
-					if(Vector3.Distance(item.meshRenderer.transform.position, item.explodedPosition) < 0.0001f)
-						isMoving = false;
-				}
-			}
-			else
-			{
-				// Move all objects back to their original position.
-				foreach(var item in childMeshRenderers)
-				{
-					item.meshRenderer.transform.localPosition = Vector3.Lerp(item.meshRenderer.transform.localPosition, item.originalPosition, explosionSpeed);
-					// Once any one part of the telescope comes within .001 units distance of its original position, stop everything.
-					// The tolerance is less for returning to the original position on purpose, as the higher tolerance for the exploded position results in
-					// a smoother animation, while only a lower tolerance is necessary for everything appearing correct when being put back together.
-					if(Vector3.Distance(item.meshRenderer.transform.localPosition, item.originalPosition) < 0.001f)
-						isMoving = false;
-				}
-			}
-		}
 	}
 	#endregion
 

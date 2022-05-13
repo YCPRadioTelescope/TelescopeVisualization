@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using VRTK.Prefabs.CameraRig.UnityXRCameraRig.Input;
 using UnityEngine.UI;
 
 // This script casts a ray when activated. Should this ray touch a part
@@ -11,6 +12,7 @@ using UnityEngine.UI;
 // the player.
 public class HighlightTarget : MonoBehaviour
 {
+	public UnityAxis1DAction rightTrigger;
 	// Start and end are two invisible cubes, one on top of the player
 	// and one off in the distance, between which the ray is cast.
 	public GameObject start;
@@ -37,88 +39,115 @@ public class HighlightTarget : MonoBehaviour
 	private Renderer rend = null;
 
 	// A line that gets drawn when this script is active. Only drawn if in VR.
-	private LineRenderer lr;
+	public LineRenderer lr;
 	public bool vrActive;
-	
+
+	bool activated = false;
+
 	// Start is called before the first frame update.
 	void Start()
 	{
 		if(vrActive)
 			lr = this.transform.GetComponent<LineRenderer>();
 	}
-	
-	// Update is called once per frame
-	void Update()
-	{
+
+	private void Update()
+    {
 		// The direction of the ray cast is forward the direction of the start object.
 		var dir = start.transform.forward * 10000;
-		
+
 		// If this script has vrActive set to true, a line is drawn between the start
 		// and end positions.
-		if(vrActive)
-		{
-			dir *= -1;
-			lr.SetPosition(0, start.transform.position);
-			lr.SetPosition(1, end.transform.position);
-		}
-		
+		//if(vrActive)
+		//{
+		dir *= -1;
+		lr.SetPosition(0, start.transform.position);
+		lr.SetPosition(1, end.transform.position);
+		//}
+
+		if (rightTrigger.IsActivated)
+        {
+			if(activated == false)
+            {
+				TriggerPressed();
+			}
+			activated = true;
+        }
+
+		if(activated == true)
+        {
+			if (!rightTrigger.IsActivated)
+            {
+				activated = false;
+            }
+        }
+    }
+    void TriggerPressed()
+	{
+		Debug.Log("BAlls");
+		// The direction of the ray cast is forward the direction of the start object.
+		var dir = start.transform.forward * 10000;
+
+		// If this script has vrActive set to true, a line is drawn between the start
+		// and end positions.
+		//if(vrActive)
+		//{
+		dir *= -1;
 		// Cast a ray between the start object and end object. If a part of the telescope
 		// is hit, hitInfo is changed.
-		if(Physics.Raycast(start.transform.position, dir, out hitInfo, Vector3.Distance(start.transform.position, end.transform.position)))
-		{
-			// If shift is held down, then the player is attempting to teleport. Move the player to the point that was hit.
-			if(player && Input.GetKey(KeyCode.LeftShift) && delayTimer <= 0)
+		if (Physics.Raycast(start.transform.position, dir, out hitInfo, Vector3.Distance(start.transform.position, end.transform.position)))
 			{
-				delayTimer = 10;
-				player.transform.position = hitInfo.point;
-				return;
+					// If shift is held down, then the player is attempting to teleport. Move the player to the point that was hit.
+					if (player && Input.GetKey(KeyCode.LeftShift) && delayTimer <= 0)
+					{
+						delayTimer = 10;
+						player.transform.position = hitInfo.point;
+						return;
+					}
+					delayTimer--;
+					// If shift wasn't held down and we hit something that isn't a telescope part,
+					// reset any previously highlighted part and return.
+					if (!hitInfo.transform.GetComponent<TelescopePartInfo>())
+					{
+						Reset();
+						return;
+					}
+
+					// Get the renderer object of the impacted game object.
+					currRend = hitInfo.collider.gameObject.GetComponent<Renderer>();
+
+					// If we already hit this object last frame, don't change anything.
+					if (currRend == rend)
+						return;
+
+					// Get the name and description from the part that was hit.
+					text.text = hitInfo.transform.GetComponent<TelescopePartInfo>().Name + ": " + hitInfo.transform.GetComponent<TelescopePartInfo>().Description;
+					if (background)
+						background.SetActive(true);
+
+					// If we've hit a different object, reset the old object to its original material.
+					if (rend)
+						rend.sharedMaterial = origMat;
+
+					// Save the original material of the impacted object and change its material to the
+					// highlighted texture.
+					rend = currRend;
+					origMat = rend.sharedMaterial;
+					tempMat = new Material(origMat);
+					rend.material = tempMat;
+					rend.material.shader = shader;
 			}
-			delayTimer--;
-			// If shift wasn't held down and we hit something that isn't a telescope part,
-			// reset any previously highlighted part and return.
-			if(!hitInfo.transform.GetComponent<TelescopePartInfo>())
-			{
+			// If nothing was hit but something had previously been hit, reset the material of that object.
+			else if (rend)
 				Reset();
-				return;
-			}
-			
-			// Get the renderer object of the impacted game object.
-			currRend = hitInfo.collider.gameObject.GetComponent<Renderer>();
-			
-			// If we already hit this object last frame, don't change anything.
-			if(currRend == rend)
-				return;
-			
-			// Get the name and description from the part that was hit.
-			text.text = hitInfo.transform.GetComponent<TelescopePartInfo>().Name + ": " + hitInfo.transform.GetComponent<TelescopePartInfo>().Description;
-			if(background)
-				background.SetActive(true);
-			
-			// If we've hit a different object, reset the old object to its original material.
-			if(rend)
-				rend.sharedMaterial = origMat;
-			
-			// Save the original material of the impacted object and change its material to the
-			// highlighted texture.
-			rend = currRend;
-			origMat = rend.sharedMaterial;
-			tempMat = new Material(origMat);
-			rend.material = tempMat;
-			rend.material.shader = shader;
-		}
-		// If nothing was hit but something had previously been hit, reset the material of that object.
-		else if(rend)
-			Reset();
 	}
 	
 	// Runs when the user presses the highlight control.
 	void OnEnable()
 	{
-		if(vrActive)
-		{
 			lr.SetPosition(0, start.transform.position);
 			lr.SetPosition(1, end.transform.position);
-		}
+			//}
 	}
 	
 	// Resets the state of the last highlighted part, if any, and the description text GUI.

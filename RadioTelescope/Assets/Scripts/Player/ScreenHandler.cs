@@ -7,15 +7,6 @@ using UnityEngine;
 // to enter fullscreen mode.
 public class ScreenHandler : MonoBehaviour
 {
-	public GameObject VR;
-	
-	// Awake is called on the initalization of all game objects.
-	void Awake()
-	{
-		// The screen starts in windowed mode if this isn't a VR program.
-		Screen.fullScreen = VR.activeInHierarchy;
-	}
-	
 	// Update is called once per frame
 	void Update()
 	{

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using VRTK.Prefabs.CameraRig.UnityXRCameraRig.Input;
 
 public class Star_Object : MonoBehaviour
 {
@@ -17,6 +19,18 @@ public class Star_Object : MonoBehaviour
     private RaycastHit hitInfo;
     private LineRenderer lr;
     public bool vrActive;
+
+    //Variables for UI 
+    public string description;
+    public string RA;
+    public string DEC;
+    public string Label;
+    public Texture2D image;
+    public GameObject Canvus_Object;
+    public GameObject Canvus_Object_VR;
+
+    public UnityAxis1DAction rightTrigger;
+
     private void Start()
     {
         if (playerMK.activeSelf)
@@ -43,14 +57,33 @@ public class Star_Object : MonoBehaviour
         if (is_hovered)
         {
             animator.SetBool("is_selected", true);
-            if(Input.GetMouseButtonDown(0))
+            if(Input.GetMouseButtonDown(0) || rightTrigger.IsActivated)
             {
                 animator.SetTrigger("clicked");
+                SetTextandImage(Canvus_Object);
+                SetTextandImage(Canvus_Object_VR);
             }
         }
         else
         {
-            animator.SetBool("is_selected", false);
+                animator.SetBool("is_selected", false);
         }
     }
+
+    public void SetTextandImage(GameObject Canvus_Object)
+    {
+        Transform label = Canvus_Object.transform.Find("Label");
+        Transform desc = Canvus_Object.transform.Find("Description");
+        Transform tex = Canvus_Object.transform.Find("Image");
+        Transform ra = Canvus_Object.transform.Find("RA");
+        Transform dec = Canvus_Object.transform.Find("DEC");
+
+        label.GetComponent<Text>().text = Label;
+        desc.GetComponent<Text>().text = description;
+        tex.GetComponent<RawImage>().texture = image;
+        ra.GetComponent<Text>().text = "RA: " + RA;
+        dec.GetComponent<Text>().text= "DEC: " + DEC;
+    }
 }
+
+
