@@ -4099,7 +4099,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &570329949
 Transform:
   m_ObjectHideFlags: 0
@@ -16785,7 +16785,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   telescope: {fileID: 1296651328}
   number_hours: 3
-  number_minutes: 60
+  number_seconds: 60
   maxParticles: 5000
   particleSystem: {fileID: 1908533020}
   starCSV: {fileID: 4900000, guid: fcc30760538c5b34ba622b82a0c8bd0c, type: 3}
