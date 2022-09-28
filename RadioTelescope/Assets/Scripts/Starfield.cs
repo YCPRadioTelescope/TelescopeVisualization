@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 // This script controls the creation and movement of the stars in the sky.
@@ -8,6 +9,12 @@ public class Starfield : MonoBehaviour
 {
 	public GameObject telescope;
 
+	public int day;
+	public int month;
+	public int year;
+	public int hours;
+	public int minutes;
+	public int seconds;
 
 	public float number_hours = 3f;
 	public float number_seconds = 60f;
@@ -41,6 +48,9 @@ public class Starfield : MonoBehaviour
 		TelescopeInfo ti = telescope.GetComponent<TelescopeInfo>();
 		particleSystem.transform.Rotate(90.0f - ti.latitude, 0.0f, 0.0f, Space.World);
 		rotationalAxis = new Vector3(0.0f, 1.0f, 0.0f);
+
+		//call position to set stars based on sidereal time
+		set_star_position_from_date(day, month, year, hours, minutes, seconds);
 	}
 	
 	// Update is called once per frame.
@@ -52,10 +62,10 @@ public class Starfield : MonoBehaviour
 	}
 	
 	// A function to compute the angle per frame necessary to cause the
-	// given number of hours to elapse in the given number of seconds.
+	// given number of hours to elapse in the given number of seconds. *Changed 360 to 356 due to sidereal time.
 	float RotationalSpeed(float hours, float seconds)
 	{
-		return 360.0f / (24.0f / hours) / seconds * Time.deltaTime;
+		return 356.0f / (24.0f / hours) / seconds * Time.deltaTime;
 	}
 
 	//read CSV only works on late update, not sure why
@@ -119,5 +129,25 @@ public class Starfield : MonoBehaviour
 			particleStars[i].position = Vector3.Normalize(starPosition) * 900;
 		}
 		particleSystem.SetParticles(particleStars, maxParticles);
+	}
+
+	public void set_star_position_from_date(int day, int month, int year, int hours, int minutes, int seconds)
+    {
+		DateTime equinox = new DateTime(2022, 3, 20, 15, 33, 00, DateTimeKind.Utc);
+		DateTime newDate = new DateTime(year, month, day, hours, minutes, seconds, DateTimeKind.Utc);
+		Quaternion rotate = Quaternion.Euler(-25.789f, 113.939f, 44.416f);
+		particleSystem.transform.rotation = rotate;
+		float minuteDifference = (float)(newDate - equinox).TotalMinutes;
+		Debug.Log(equinox);
+		Debug.Log(minuteDifference);
+		//3.831
+		float angleDifference = (float)minuteDifference / 3.98f; //this equals the angles of change
+		Debug.Log(newDate + " is minute difference: " + minuteDifference + " Angle: " + angleDifference);
+
+
+		//Distance between player and merak at vernal equinox of 2022 is 921 units. New rotation for starsystem is (-25.789, 113.939, 44.416)
+		//A degree change for the solar system is every 3.98 minutes, find minute distance, then change the angle from that. 
+
+		particleSystem.transform.Rotate(rotationalAxis, (float)angleDifference, Space.Self);
 	}
 }
