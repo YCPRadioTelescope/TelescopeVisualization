@@ -4639,7 +4639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d9039b224e784a41a1dfe35da570318, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  Starfield: {fileID: 1908533016}
 --- !u!65 &224018342
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -26951,6 +26951,7 @@ GameObject:
   - component: {fileID: 1436024171}
   - component: {fileID: 1436024174}
   - component: {fileID: 1436024173}
+  - component: {fileID: 1436024175}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -27059,6 +27060,18 @@ MonoBehaviour:
   highlight: {fileID: 1434264596}
   vrHighlight: {fileID: 1423774306}
   rightTrigger: {fileID: 1228576311}
+--- !u!114 &1436024175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436024167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccf0074753340d446b8e3738f1e2b051, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1437236982
 GameObject:
   m_ObjectHideFlags: 0
