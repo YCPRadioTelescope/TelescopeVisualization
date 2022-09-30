@@ -19,10 +19,9 @@ public class DegreeMeasure : MonoBehaviour
             yield return new WaitForSeconds(1);
             foreach (Transform child in Starfield.transform)
             {
-                Debug.Log("CHILD: " + child.name);
                 if (child.GetComponent<Star_Object>() != null)
                 {
-                    if (child.GetComponent<Star_Object>().Label.Contains("Merak")) ;
+                    if (child.GetComponent<Star_Object>().Label.Contains("Merak"))
                     {
                         target = child.gameObject;
                         set = true;
@@ -33,7 +32,8 @@ public class DegreeMeasure : MonoBehaviour
             {
                 Debug.Log("No object was found for the measure cube");
             }
-
+            transform.LookAt(target.transform, Vector3.up);
+            Debug.Log("Angle of measure: " + target.transform.localEulerAngles.x);
         }
     }
     void Update()
