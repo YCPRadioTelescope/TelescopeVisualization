@@ -5,6 +5,7 @@ using UnityEngine;
 public class DegreeMeasure : MonoBehaviour
 {
     public GameObject Starfield;
+    public GameObject measureCube;
     private GameObject target;
     private bool set = false;
 
@@ -33,7 +34,7 @@ public class DegreeMeasure : MonoBehaviour
                 Debug.Log("No object was found for the measure cube");
             }
             transform.LookAt(target.transform, Vector3.up);
-            Debug.Log("Angle of measure: " + target.transform.localEulerAngles.x);
+            Debug.Log("Angle of measure: " + measureCube.transform.localEulerAngles.x);
         }
     }
     void Update()
