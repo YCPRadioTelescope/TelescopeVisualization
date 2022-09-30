@@ -56,6 +56,11 @@ public class Starfield : MonoBehaviour
 	// Update is called once per frame.
 	void Update()
 	{
+		if(Input.GetKeyDown(KeyCode.PageUp))
+        {
+			hours++;
+			set_star_position_from_date(day, month, year, hours, minutes, seconds);
+		}
 		// Rotate the sky about the Earth's axis at the given rotational speed.
 		// This rotates the particleSystem relative to itself.
 		particleSystem.transform.Rotate(rotationalAxis, RotationalSpeed(number_hours, number_seconds), Space.Self);
@@ -133,19 +138,20 @@ public class Starfield : MonoBehaviour
 
 	public void set_star_position_from_date(int day, int month, int year, int hours, int minutes, int seconds)
     {
+		//NOTE THAT THIS FUNCTION HAS AN ERROR OF BETWEEN 0-2 degrees, this is unnoticible in game
 		DateTime equinox = new DateTime(2022, 3, 20, 15, 33, 00, DateTimeKind.Utc);
 		DateTime newDate = new DateTime(year, month, day, hours, minutes, seconds, DateTimeKind.Utc);
-		Quaternion rotate = Quaternion.Euler(-25.789f, 113.939f, 44.416f);
+		Quaternion rotate = Quaternion.Euler(-26.067f, 112.8f, 44.425f);
 		particleSystem.transform.rotation = rotate;
 		float minuteDifference = (float)(newDate - equinox).TotalMinutes;
 		Debug.Log(equinox);
 		Debug.Log(minuteDifference);
 		//3.831
-		float angleDifference = (float)minuteDifference / 3.98f; //this equals the angles of change
+		float angleDifference = (float)minuteDifference * 0.25068f; //this equals the angles of change 0.25068 degrees per minute
 		Debug.Log(newDate + " is minute difference: " + minuteDifference + " Angle: " + angleDifference);
 
 
-		//Distance between player and merak at vernal equinox of 2022 is 921 units. New rotation for starsystem is (-25.789, 113.939, 44.416)
+		//Distance between player and merak at vernal equinox of 2022 is 921 units. New rotation for starsystem is (-26.067f, 112.8f, 44.425f)
 		//A degree change for the solar system is every 3.98 minutes, find minute distance, then change the angle from that. 
 
 		particleSystem.transform.Rotate(rotationalAxis, (float)angleDifference, Space.Self);

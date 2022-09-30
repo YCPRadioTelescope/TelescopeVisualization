@@ -34,11 +34,12 @@ public class DegreeMeasure : MonoBehaviour
                 Debug.Log("No object was found for the measure cube");
             }
             transform.LookAt(target.transform, Vector3.up);
-            Debug.Log("Angle of measure: " + (measureCube.transform.rotation.eulerAngles.x - 360f));
+
         }
     }
     void Update()
     {
+        Debug.Log("Angle of Alt: " + (measureCube.transform.rotation.eulerAngles.x - 360f));
         if (set)
         {
             transform.LookAt(target.transform, Vector3.up);
