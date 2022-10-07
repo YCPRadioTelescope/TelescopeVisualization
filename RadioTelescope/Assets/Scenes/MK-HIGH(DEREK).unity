@@ -11588,6 +11588,7 @@ GameObject:
   m_Component:
   - component: {fileID: 666708538}
   - component: {fileID: 666708539}
+  - component: {fileID: 666708540}
   m_Layer: 0
   m_Name: Sky_Interaction_Spawner
   m_TagString: Untagged
@@ -11623,6 +11624,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sky_interaction_object: {fileID: 1791192191}
   star_system: {fileID: 1908533016}
+--- !u!114 &666708540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 666708537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be0e9e64014def547b8405ebbd040b82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  description: 
+  RA: 
+  DEC: 
+  Label: 
+  image: {fileID: 0}
+  Canvus_Object: {fileID: 0}
+  Canvus_Object_VR: {fileID: 0}
 --- !u!1 &668600618
 GameObject:
   m_ObjectHideFlags: 0

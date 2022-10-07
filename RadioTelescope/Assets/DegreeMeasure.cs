@@ -22,7 +22,7 @@ public class DegreeMeasure : MonoBehaviour
             {
                 if (child.GetComponent<Star_Object>() != null)
                 {
-                    if (child.GetComponent<Star_Object>().Label.Contains("Merak"))
+                    if (child.GetComponent<Star_Object>().star_Collections[0].Label.Contains("Merak"));
                     {
                         target = child.gameObject;
                         set = true;

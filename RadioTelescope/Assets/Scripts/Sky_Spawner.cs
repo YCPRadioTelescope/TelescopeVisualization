@@ -79,10 +79,6 @@ public class Sky_Spawner : MonoBehaviour
 
     public void Fill_Data(GameObject star_interaction, string RA, string DEC, string label, string desc, Texture2D tex)
     {
-		star_interaction.gameObject.GetComponent<Star_Object>().RA = RA;
-		star_interaction.gameObject.GetComponent<Star_Object>().DEC = DEC;
-		star_interaction.gameObject.GetComponent<Star_Object>().Label = label;
-		star_interaction.gameObject.GetComponent<Star_Object>().description = desc;
-		star_interaction.gameObject.GetComponent<Star_Object>().image = tex;
+		star_interaction.GetComponent<Star_Object>().AddtoCollections(RA, DEC, label, desc, tex);
 	}
 }

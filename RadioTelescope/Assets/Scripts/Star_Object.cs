@@ -10,6 +10,9 @@ public class Star_Object : MonoBehaviour
     public GameObject start;
     public GameObject end;
 
+    public GameObject Canvus_Object;
+    public GameObject Canvus_Object_VR;
+
     public GameObject playerMK;
     public GameObject playerVR;
     private GameObject player;
@@ -21,13 +24,7 @@ public class Star_Object : MonoBehaviour
     public bool vrActive;
 
     //Variables for UI 
-    public string description;
-    public string RA;
-    public string DEC;
-    public string Label;
-    public Texture2D image;
-    public GameObject Canvus_Object;
-    public GameObject Canvus_Object_VR;
+    public List<Star_collection> star_Collections;
 
     public UnityAxis1DAction rightTrigger;
 
@@ -60,8 +57,8 @@ public class Star_Object : MonoBehaviour
             if(Input.GetMouseButtonDown(0) || rightTrigger.IsActivated)
             {
                 animator.SetTrigger("clicked");
-                SetTextandImage(Canvus_Object);
-                SetTextandImage(Canvus_Object_VR);
+                SetTextandImage(Canvus_Object, star_Collections[0]);
+                SetTextandImage(Canvus_Object_VR, star_Collections[0]);
             }
         }
         else
@@ -70,7 +67,7 @@ public class Star_Object : MonoBehaviour
         }
     }
 
-    public void SetTextandImage(GameObject Canvus_Object)
+    public void SetTextandImage(GameObject Canvus_Object, Star_collection star_collection)
     {
         Transform label = Canvus_Object.transform.Find("Label");
         Transform desc = Canvus_Object.transform.Find("Description");
@@ -78,11 +75,17 @@ public class Star_Object : MonoBehaviour
         Transform ra = Canvus_Object.transform.Find("RA");
         Transform dec = Canvus_Object.transform.Find("DEC");
 
-        label.GetComponent<Text>().text = Label;
-        desc.GetComponent<Text>().text = description;
-        tex.GetComponent<RawImage>().texture = image;
-        ra.GetComponent<Text>().text = "RA: " + RA;
-        dec.GetComponent<Text>().text= "DEC: " + DEC;
+        label.GetComponent<Text>().text = star_collection.Label;
+        desc.GetComponent<Text>().text = star_collection.description;
+        tex.GetComponent<RawImage>().texture = star_collection.image;
+        ra.GetComponent<Text>().text = "RA: " + star_collection.RA;
+        dec.GetComponent<Text>().text= "DEC: " + star_collection.DEC;
+    }
+    public void AddtoCollections(string RA, string DEC, string label, string desc, Texture2D tex)
+    {
+        Star_collection star_add = gameObject.AddComponent<Star_collection>();
+        star_add.contstructor(RA, DEC, label, desc, tex);
+        star_Collections.Add(star_add);
     }
 }
 
