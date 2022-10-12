@@ -10,7 +10,7 @@ public class Star_collection : MonoBehaviour
     public string Label;
     public Texture2D image;
 
-    public void contstructor(string ra, string dec, string label, string desc, Texture2D tex)
+    public void constructor(string ra, string dec, string label, string desc, Texture2D tex)
     {
         RA = ra;
         DEC = dec;

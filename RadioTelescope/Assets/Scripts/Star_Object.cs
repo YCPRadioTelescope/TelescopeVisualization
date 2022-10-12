@@ -84,7 +84,7 @@ public class Star_Object : MonoBehaviour
     public void AddtoCollections(string RA, string DEC, string label, string desc, Texture2D tex)
     {
         Star_collection star_add = gameObject.AddComponent<Star_collection>();
-        star_add.contstructor(RA, DEC, label, desc, tex);
+        star_add.constructor(RA, DEC, label, desc, tex);
         star_Collections.Add(star_add);
     }
 }

@@ -4626,7 +4626,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &224018341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11641,8 +11641,6 @@ MonoBehaviour:
   DEC: 
   Label: 
   image: {fileID: 0}
-  Canvus_Object: {fileID: 0}
-  Canvus_Object_VR: {fileID: 0}
 --- !u!1 &668600618
 GameObject:
   m_ObjectHideFlags: 0
@@ -34937,18 +34935,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   start: {fileID: 1831893543}
   end: {fileID: 1840738559}
+  Canvus_Object: {fileID: 1972926783}
+  Canvus_Object_VR: {fileID: 1709628309}
   playerMK: {fileID: 760654021}
   playerVR: {fileID: 200267175}
   animator: {fileID: 0}
   is_hovered: 0
   vrActive: 0
-  description: 
-  RA: 
-  DEC: 
-  Label: 
-  image: {fileID: 0}
-  Canvus_Object: {fileID: 1972926783}
-  Canvus_Object_VR: {fileID: 1709628309}
+  star_Collections: []
   rightTrigger: {fileID: 1228576311}
 --- !u!1 &1796027357
 GameObject:
