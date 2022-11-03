@@ -46,14 +46,33 @@ public class Sky_Spawner : MonoBehaviour
 				string label = components[4];
 				string desc = components[5];
 				string image_name = components[6];
+				string date = components[7];
 				image_name = image_name.Replace("\n", "").Replace("\r", "");
 				Vector3 position = PolarToCartesian(RA, DEC, Dist);
 				position = Vector3.Normalize(position) * 900;
 
-				imageFilepath = Application.streamingAssetsPath + "/Sky_Interaction_Data/" + image_name + ".jpg";
-				byte[] pngBytes = System.IO.File.ReadAllBytes(imageFilepath);
+				try { 
+					imageFilepath = Application.streamingAssetsPath + "/Sky_Interaction_Data/" + image_name + ".jpg";
+					byte[] pngBytes = System.IO.File.ReadAllBytes(imageFilepath);
+				}
+				catch {
+					Debug.Log("Could not find " + image_name + " as a .jpg, trying png");
+					try { 
+						imageFilepath = Application.streamingAssetsPath + "/Sky_Interaction_Data/" + image_name + ".png";
+						byte[] pngBytes = System.IO.File.ReadAllBytes(imageFilepath);
+					}
+					catch { 
+						Debug.Log("Could not find " + image_name + " as a .png either" );
+						imageFilepath = null;
+					}
+				}
+
 				Texture2D new_tex = new Texture2D(128, 128);
-				new_tex.LoadImage(pngBytes);
+				if (imageFilepath != null)
+                {
+					byte[] pngBytes = System.IO.File.ReadAllBytes(imageFilepath);
+					new_tex.LoadImage(pngBytes);
+				}
 
 				GameObject source = isin_created_interactions(RA, DEC);
 				if (source == null)
@@ -63,17 +82,22 @@ public class Sky_Spawner : MonoBehaviour
 					sky_interaction_clone.gameObject.transform.SetParent(star_system.transform);
 
 					Star_collection star_add = gameObject.AddComponent<Star_collection>();
-					star_add.constructor(RA.ToString(), DEC.ToString(), label, desc, new_tex);
+					star_add.constructor(RA.ToString(), DEC.ToString(), label, desc, new_tex, System.DateTime.Parse(date));
 					created_star_interactions.Add(new System.Tuple<Star_collection, GameObject>(star_add, sky_interaction_clone));
 
-					Fill_Data(sky_interaction_clone, RA.ToString(), DEC.ToString(), label, desc, new_tex);
+					Fill_Data(sky_interaction_clone, RA.ToString(), DEC.ToString(), label, desc, new_tex, date);
 					//
 				}
 				else
 				{
-					Fill_Data(source, RA.ToString(), DEC.ToString(), label, desc, new_tex);
+					Fill_Data(source, RA.ToString(), DEC.ToString(), label, desc, new_tex, date);
 				}
 			}
+		}
+
+		foreach (System.Tuple<Star_collection, GameObject> x in created_star_interactions)
+		{
+			x.Item2.GetComponent<Star_Object>().SortCollectionByDate();
 		}
 	}
 
@@ -109,9 +133,8 @@ public class Sky_Spawner : MonoBehaviour
 		return RA;
     }
 
-    public void Fill_Data(GameObject star_interaction, string RA, string DEC, string label, string desc, Texture2D tex)
+    public void Fill_Data(GameObject star_interaction, string RA, string DEC, string label, string desc, Texture2D tex, string date)
     {
-		Debug.Log(star_interaction.name);
-		star_interaction.GetComponent<Star_Object>().AddtoCollections(RA, DEC, label, desc, tex);
+		star_interaction.GetComponent<Star_Object>().AddtoCollections(RA, DEC, label, desc, tex, date);
 	}
 }

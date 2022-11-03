@@ -34,6 +34,7 @@ public class Sky_ray : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     StarCanvus.active = true;
+                    currObj.GetComponent<Star_Object>().is_focused = true;
                 }
             }
             else
@@ -46,6 +47,7 @@ public class Sky_ray : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     StarCanvus.active = false;
+                    if (currObj != null) { currObj.GetComponent<Star_Object>().is_focused = false; }
                 }
             }
         }
@@ -59,6 +61,27 @@ public class Sky_ray : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 StarCanvus.active = false;
+                if (currObj != null) { currObj.GetComponent<Star_Object>().is_focused = false; }
+            }
+        }
+
+        if(StarCanvus.activeInHierarchy)
+        {
+            if(Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                currObj.GetComponent<Star_Object>().AddToIterator(1);
+            }
+            else if(Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                currObj.GetComponent<Star_Object>().SubtractfromIterator(1);
+            }
+            else if (Input.GetKeyDown(KeyCode.PageUp))
+            {
+                currObj.GetComponent<Star_Object>().AddToIterator(50);
+            }
+            else if (Input.GetKeyDown(KeyCode.PageDown))
+            {
+                currObj.GetComponent<Star_Object>().SubtractfromIterator(50);
             }
         }
     }

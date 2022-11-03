@@ -22,7 +22,7 @@ public class DegreeMeasure : MonoBehaviour
             {
                 if (child.GetComponent<Star_Object>() != null)
                 {
-                    if (child.GetComponent<Star_Object>().star_Collections[0].Label.Contains("Merak"));
+                    if (child.GetComponent<Star_Object>().star_Collections[0].Label.Contains("Merak"))
                     {
                         target = child.gameObject;
                         set = true;
@@ -39,7 +39,6 @@ public class DegreeMeasure : MonoBehaviour
     }
     void Update()
     {
-        Debug.Log("Angle of Alt: " + (measureCube.transform.rotation.eulerAngles.x - 360f));
         if (set)
         {
             transform.LookAt(target.transform, Vector3.up);

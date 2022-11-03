@@ -56,11 +56,6 @@ public class Starfield : MonoBehaviour
 	// Update is called once per frame.
 	void Update()
 	{
-		if(Input.GetKeyDown(KeyCode.PageUp))
-        {
-			hours++;
-			set_star_position_from_date(day, month, year, hours, minutes, seconds);
-		}
 		// Rotate the sky about the Earth's axis at the given rotational speed.
 		// This rotates the particleSystem relative to itself.
 		particleSystem.transform.Rotate(rotationalAxis, RotationalSpeed(number_hours, number_seconds), Space.Self);
@@ -144,11 +139,8 @@ public class Starfield : MonoBehaviour
 		Quaternion rotate = Quaternion.Euler(-26.067f, 112.8f, 44.425f);
 		particleSystem.transform.rotation = rotate;
 		float minuteDifference = (float)(newDate - equinox).TotalMinutes;
-		Debug.Log(equinox);
-		Debug.Log(minuteDifference);
 		//3.831
 		float angleDifference = (float)minuteDifference * 0.25068f; //this equals the angles of change 0.25068 degrees per minute
-		Debug.Log(newDate + " is minute difference: " + minuteDifference + " Angle: " + angleDifference);
 
 
 		//Distance between player and merak at vernal equinox of 2022 is 921 units. New rotation for starsystem is (-26.067f, 112.8f, 44.425f)
