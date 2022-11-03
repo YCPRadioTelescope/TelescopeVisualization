@@ -21862,7 +21862,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1364173272
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21890,7 +21890,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -1603.6282, y: 35.96653}
+  m_AnchoredPosition: {x: -1603.6282, y: 35.966522}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1364173273
@@ -37393,11 +37393,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   telescope: {fileID: 1296651328}
-  day: 0
-  month: 0
-  year: 0
-  hours: 0
-  minutes: 0
+  day: 20
+  month: 3
+  year: 2022
+  hours: 15
+  minutes: 33
   seconds: 0
   number_hours: 3
   number_seconds: 60
