@@ -37,6 +37,8 @@ public class Highlight_MK : MonoBehaviour
 	// The renderer that was hit last frame by the raycast.
 	private Renderer rend = null;
 
+	GateMovement gateMovment;
+
 	private void Update()
 	{
 		// The direction of the ray cast is forward the direction of the start object.
@@ -46,6 +48,8 @@ public class Highlight_MK : MonoBehaviour
 		// is hit, hitInfo is changed.
 		if (Physics.Raycast(start.transform.position, dir, out hitInfo, Vector3.Distance(start.transform.position, end.transform.position)))
 		{
+			
+			
 			// If shift is held down, then the player is attempting to teleport. Move the player to the point that was hit.
 			if (player && Input.GetKey(KeyCode.LeftShift) && delayTimer <= 0)
 			{
@@ -56,11 +60,28 @@ public class Highlight_MK : MonoBehaviour
 			delayTimer--;
 			// If shift wasn't held down and we hit something that isn't a telescope part,
 			// reset any previously highlighted part and return.
+			
+			gateMovment = hitInfo.transform.GetComponent<GateMovement>();
+
+			if (hitInfo.transform.GetComponent<GateMovement>())
+			{
+				Debug.Log(hitInfo.transform.name);
+				Debug.Log("OOOOOW");
+				//gateMovment.activateGate();
+
+				Debug.Log(hitInfo.transform.parent.name);
+				hitInfo.transform.parent.GetComponent<GateMovement>().activateGate();
+			}
+			
 			if (!hitInfo.transform.GetComponent<TelescopePartInfo>())
 			{
+				//Debug.Log("tele des");
 				Reset();
 				return;
 			}
+			
+			
+
 
 			// Get the renderer object of the impacted game object.
 			currRend = hitInfo.collider.gameObject.GetComponent<Renderer>();

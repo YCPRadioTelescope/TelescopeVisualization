@@ -25,8 +25,10 @@ public class ActivateDescription : MonoBehaviour
 	{
 		// Check if the mouse button is being held or the right trigger
 		// is being pressed. If so, activate the highlight script.
-		if(Input.GetMouseButtonDown(0))
+		
+		if (Input.GetMouseButtonDown(0))
 			highlight.SetActive(true);
+			
 		else if(Input.GetMouseButtonUp(0))
 			highlight.SetActive(false);
 		
