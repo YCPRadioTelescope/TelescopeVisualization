@@ -10,6 +10,7 @@ using UnityEngine.UI;
 // of the radio telescope, that object is highlighted, and the associated
 // ObjectDesc script's name and description is saved to be displayed to
 // the player.
+
 public class HighlightTarget : MonoBehaviour
 {
 	public UnityAxis1DAction rightTrigger;
@@ -96,49 +97,56 @@ public class HighlightTarget : MonoBehaviour
 		// Cast a ray between the start object and end object. If a part of the telescope
 		// is hit, hitInfo is changed.
 		if (Physics.Raycast(start.transform.position, dir, out hitInfo, Vector3.Distance(start.transform.position, end.transform.position)))
+		{
+			// If shift is held down, then the player is attempting to teleport. Move the player to the point that was hit.
+			if (player && Input.GetKey(KeyCode.LeftShift) && delayTimer <= 0)
 			{
-					// If shift is held down, then the player is attempting to teleport. Move the player to the point that was hit.
-					if (player && Input.GetKey(KeyCode.LeftShift) && delayTimer <= 0)
-					{
-						delayTimer = 10;
-						player.transform.position = hitInfo.point;
-						return;
-					}
-					delayTimer--;
-					// If shift wasn't held down and we hit something that isn't a telescope part,
-					// reset any previously highlighted part and return.
-					if (!hitInfo.transform.GetComponent<TelescopePartInfo>())
-					{
-						Reset();
-						return;
-					}
-
-					// Get the renderer object of the impacted game object.
-					currRend = hitInfo.collider.gameObject.GetComponent<Renderer>();
-
-					// If we already hit this object last frame, don't change anything.
-					if (currRend == rend)
-						return;
-
-					// Get the name and description from the part that was hit.
-					text.text = hitInfo.transform.GetComponent<TelescopePartInfo>().Name + ": " + hitInfo.transform.GetComponent<TelescopePartInfo>().Description;
-					if (background)
-						background.SetActive(true);
-
-					// If we've hit a different object, reset the old object to its original material.
-					if (rend)
-						rend.sharedMaterial = origMat;
-
-					// Save the original material of the impacted object and change its material to the
-					// highlighted texture.
-					rend = currRend;
-					origMat = rend.sharedMaterial;
-					tempMat = new Material(origMat);
-					rend.material = tempMat;
-					rend.material.shader = shader;
+				delayTimer = 10;
+				player.transform.position = hitInfo.point;
+				return;
 			}
-			// If nothing was hit but something had previously been hit, reset the material of that object.
-			else if (rend)
+			delayTimer--;
+			// If shift wasn't held down and we hit something that isn't a telescope part,
+			// reset any previously highlighted part and return.
+
+			if (hitInfo.transform.GetComponent<GateMovement>())
+			{
+				Debug.Log("Gate activate!!!");
+			}
+			else if (!hitInfo.transform.GetComponent<TelescopePartInfo>())
+			{
+				Debug.Log("MISSS");
+				Reset();
+				return;
+			}
+
+			// Get the renderer object of the impacted game object.
+			currRend = hitInfo.collider.gameObject.GetComponent<Renderer>();
+
+			// If we already hit this object last frame, don't change anything.
+			if (currRend == rend)
+				return;
+
+			// Get the name and description from the part that was hit.
+			text.text = hitInfo.transform.GetComponent<TelescopePartInfo>().Name + ": " + hitInfo.transform.GetComponent<TelescopePartInfo>().Description;
+			if (background)
+				background.SetActive(true);
+
+			// If we've hit a different object, reset the old object to its original material.
+			if (rend)
+				rend.sharedMaterial = origMat;
+
+			// Save the original material of the impacted object and change its material to the
+			// highlighted texture.
+			rend = currRend;
+			origMat = rend.sharedMaterial;
+			tempMat = new Material(origMat);
+			rend.material = tempMat;
+			rend.material.shader = shader;
+		}
+		// If nothing was hit but something had previously been hit, reset the material of that object.
+		else if (rend)
+			Debug.Log("nothing hit");
 				Reset();
 	}
 	
@@ -147,7 +155,8 @@ public class HighlightTarget : MonoBehaviour
 	{
 			lr.SetPosition(0, start.transform.position);
 			lr.SetPosition(1, end.transform.position);
-			//}
+		//}
+		
 	}
 	
 	// Resets the state of the last highlighted part, if any, and the description text GUI.
@@ -161,3 +170,4 @@ public class HighlightTarget : MonoBehaviour
 			background.SetActive(false);
 	}
 }
+
