@@ -4,28 +4,5 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes:
-  - enabled: 1
-    path: Assets/Scenes/MK-HIGHINTRO.unity
-    guid: 20b90270f966b754ba86166d3e498cae
-  - enabled: 1
-    path: Assets/Scenes/MK-HIGH.unity
-    guid: 5abde33a144e7d84c8f77c96412e3600
-  - enabled: 1
-    path: Assets/Scenes/Simulator.unity
-    guid: 8a2abb11ff89caa4a903456e15b9a301
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
-  - enabled: 1
-    path: Assets/Scenes/VR-Main.unity
-    guid: 856c8e127ffc7f9438c7971a11efd9e7
-  - enabled: 0
-    path: Assets/Scenes/MK-LOWINTRO.unity
-    guid: 10961406c8fe7e749a76b66fadcbd715
-  - enabled: 0
-    path: Assets/Scenes/MK-LOW.unity
-    guid: 93aec059c14e4204ebdc26fb239271af
-  m_configObjects:
-    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: d1aaeef0f825d764eb5e4db4cf7fe0dd,
-      type: 2}
+  m_Scenes: []
+  m_configObjects: {}
