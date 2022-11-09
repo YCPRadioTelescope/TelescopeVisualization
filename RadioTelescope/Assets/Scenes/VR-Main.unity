@@ -34227,18 +34227,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   start: {fileID: 1831893543}
   end: {fileID: 1840738559}
+  Canvus_Object: {fileID: 1972926783}
+  Canvus_Object_VR: {fileID: 1709628309}
   playerMK: {fileID: 387003121}
   playerVR: {fileID: 200267175}
   animator: {fileID: 0}
   is_hovered: 0
+  is_focused: 0
   vrActive: 0
-  description: 
-  RA: 
-  DEC: 
-  Label: 
-  image: {fileID: 0}
-  Canvus_Object: {fileID: 1972926783}
-  Canvus_Object_VR: {fileID: 1709628309}
+  star_Collections: []
   rightTrigger: {fileID: 1228576311}
 --- !u!1 &1796027357
 GameObject:
@@ -37061,8 +37058,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   telescope: {fileID: 1296651328}
+  day: 0
+  month: 0
+  year: 0
+  hours: 0
+  minutes: 0
+  seconds: 0
   number_hours: 3
-  number_minutes: 60
+  number_seconds: 60
   maxParticles: 5000
   particleSystem: {fileID: 1908533020}
   starCSV: {fileID: 4900000, guid: fcc30760538c5b34ba622b82a0c8bd0c, type: 3}

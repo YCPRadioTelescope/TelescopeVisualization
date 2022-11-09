@@ -29,7 +29,6 @@ public class Star_Object : MonoBehaviour
 
     //Variables for UI 
     public List<Star_collection> star_Collections;
-
     public UnityAxis1DAction rightTrigger;
 
     private void Start()
