@@ -5,7 +5,7 @@ using VRTK.Prefabs.CameraRig.UnityXRCameraRig.Input;
 
 public class Sky_Ray_VR : MonoBehaviour
 {
-
+    public UnityAxis1DAction analogStickL;
     private RaycastHit hitInfo;
     private LineRenderer lr;
     public bool vrActive;
@@ -15,12 +15,12 @@ public class Sky_Ray_VR : MonoBehaviour
     public GameObject currObj;
     public UnityAxis1DAction rightTrigger;
 
+    private bool timeout = false;
     public GameObject StarCanvus;
 
     bool activated = false;
 
     bool ishit = false;
-
 
     private void Update()
     {
@@ -71,11 +71,33 @@ public class Sky_Ray_VR : MonoBehaviour
                 currObj.GetComponent<Star_Object>().is_hovered = false;
             }
         }
+
+
+        if (StarCanvus.activeInHierarchy && !timeout)
+        {
+            if (analogStickL.Value > 0.5)
+            {
+                timeout = true;
+                StartCoroutine(start_timeout());
+                currObj.GetComponent<Star_Object>().AddToIterator(1);
+            }
+            else if (analogStickL.Value < -0.5)
+            {
+                timeout = true;
+                StartCoroutine(start_timeout());
+                currObj.GetComponent<Star_Object>().SubtractfromIterator(1);
+            }
+        }
+    }
+
+    IEnumerator start_timeout()
+    {
+        yield return new WaitForSeconds(0.15f);
+        timeout = false;
     }
     private void TriggerPressed()
     {
         var dir = start.transform.forward * -10000;
-
 
         // Cast a ray between the start object and end object. If a part of the telescope
         // is hit, hitInfo is changed.

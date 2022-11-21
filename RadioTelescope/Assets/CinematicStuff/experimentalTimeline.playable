@@ -83,7 +83,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f55ae47d3e309744b633b50bf465784, type: 3}
   m_Name: SubtitleClip
   m_EditorClassIdentifier: 
-  text: Balls
+  text: This is the First scene
 --- !u!114 &-2136764502379093402
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f55ae47d3e309744b633b50bf465784, type: 3}
   m_Name: SubtitleClip
   m_EditorClassIdentifier: 
-  text: Balls
+  text: This is now the first scene which will restart the the cinematic.
 --- !u!114 &-419335210582784844
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -467,13 +467,49 @@ MonoBehaviour:
     m_BlendOutDuration: 2.283333333333333
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -524,25 +560,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -654,7 +672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f55ae47d3e309744b633b50bf465784, type: 3}
   m_Name: SubtitleClip
   m_EditorClassIdentifier: 
-  text: MORE BALLS
+  text: 'This is the second scene '
 --- !u!114 &5812170622266702836
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -667,4 +685,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f55ae47d3e309744b633b50bf465784, type: 3}
   m_Name: SubtitleClip
   m_EditorClassIdentifier: 
-  text: BIG BALLS
+  text: This is the third scene that has a significant amount of text. This is testing
+    just how much text can be shown in the current configuration. This text should
+    look the same in MK and in VR. This text should resize so it should always fit
+    regardless of the amount of text that is added.

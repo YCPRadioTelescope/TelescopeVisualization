@@ -85,7 +85,6 @@ public class HighlightTarget : MonoBehaviour
     }
     void TriggerPressed()
 	{
-		Debug.Log("BAlls");
 		// The direction of the ray cast is forward the direction of the start object.
 		var dir = start.transform.forward * 10000;
 
@@ -115,7 +114,6 @@ public class HighlightTarget : MonoBehaviour
 			}
 			else if (!hitInfo.transform.GetComponent<TelescopePartInfo>())
 			{
-				Debug.Log("MISSS");
 				Reset();
 				return;
 			}
@@ -153,8 +151,8 @@ public class HighlightTarget : MonoBehaviour
 	// Runs when the user presses the highlight control.
 	void OnEnable()
 	{
-			lr.SetPosition(0, start.transform.position);
-			lr.SetPosition(1, end.transform.position);
+			//lr.SetPosition(0, start.transform.position);
+			//lr.SetPosition(1, end.transform.position);
 		//}
 		
 	}
