@@ -138,8 +138,7 @@ public class Starfield : MonoBehaviour
 		DateTime newDate = new DateTime(year, month, day, hours, minutes, seconds, DateTimeKind.Utc);
 		Quaternion rotate = Quaternion.Euler(-26.067f, 112.8f, 44.425f);
 		particleSystem.transform.rotation = rotate;
-		float minuteDifference = (float)(newDate - equinox).TotalMinutes;
-		//3.831
+		float minuteDifference = ((float)(newDate - equinox).TotalMinutes) % 262800;
 		float angleDifference = (float)minuteDifference * 0.25068f; //this equals the angles of change 0.25068 degrees per minute
 
 
