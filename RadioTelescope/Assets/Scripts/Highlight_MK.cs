@@ -64,18 +64,12 @@ public class Highlight_MK : MonoBehaviour
 			gateMovment = hitInfo.transform.GetComponent<GateMovement>();
 
 			if (hitInfo.transform.GetComponent<GateMovement>())
-			{
-				Debug.Log(hitInfo.transform.name);
-				Debug.Log("OOOOOW");
-				//gateMovment.activateGate();
-
-				Debug.Log(hitInfo.transform.parent.name);
+			{ 
 				hitInfo.transform.parent.GetComponent<GateMovement>().activateGate();
 			}
 			
 			if (!hitInfo.transform.GetComponent<TelescopePartInfo>())
 			{
-				//Debug.Log("tele des");
 				Reset();
 				return;
 			}
