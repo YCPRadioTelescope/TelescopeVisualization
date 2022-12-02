@@ -182,7 +182,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7784091, y: 1}
+    m_SensorSize: {x: 1.778828, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -2119,7 +2119,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7784091, y: 1}
+    m_SensorSize: {x: 1.778828, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -2231,7 +2231,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7784091, y: 1}
+    m_SensorSize: {x: 1.778828, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -3012,7 +3012,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7784091, y: 1}
+    m_SensorSize: {x: 1.778828, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -5100,8 +5100,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: The dish focuses the light onto the feed horn, collecting information about
-    the light, and sending it to our computers.
+  m_text: 'Welcome to the Radio Telescope, developed by York College Students for
+    the York County Astronomical Society. '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
@@ -5170,10 +5170,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: -1.6451486, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 265668697}
-    characterCount: 119
+    characterCount: 109
     spriteCount: 0
-    spaceCount: 19
-    wordCount: 20
+    spaceCount: 16
+    wordCount: 16
     linkCount: 0
     lineCount: 3
     pageCount: 1
@@ -8864,7 +8864,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7784091, y: 1}
+    m_SensorSize: {x: 1.778828, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -10153,7 +10153,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7784091, y: 1}
+    m_SensorSize: {x: 1.778828, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -11286,7 +11286,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7784091, y: 1}
+    m_SensorSize: {x: 1.778828, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -15247,7 +15247,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7784091, y: 1}
+    m_SensorSize: {x: 1.778828, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -16048,7 +16048,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7784091, y: 1}
+    m_SensorSize: {x: 1.778828, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -18646,7 +18646,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7784091, y: 1}
+    m_SensorSize: {x: 1.778828, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -25963,7 +25963,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7784091, y: 1}
+    m_SensorSize: {x: 1.778828, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -34092,7 +34092,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7784091, y: 1}
+    m_SensorSize: {x: 1.778828, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16

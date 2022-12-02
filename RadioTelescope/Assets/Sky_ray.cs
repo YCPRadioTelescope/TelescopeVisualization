@@ -18,6 +18,7 @@ public class Sky_ray : MonoBehaviour
 
     bool ishit = false;
 
+
     private void Update()
     { 
         var dir = start.transform.forward * 10000;
