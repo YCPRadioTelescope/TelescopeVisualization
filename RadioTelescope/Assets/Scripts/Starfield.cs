@@ -148,7 +148,6 @@ public class Starfield : MonoBehaviour
 		else if (leapYear >= 1051200 && leapYear < 1576800) { leapOffset = 0f; } // leap year
 		else { leapOffset = 0.25f; } // one past leap year
 
-		Debug.Log("Leap offset: " + leapOffset);
 		//change star rotation
 		float angleDifference = (float)minuteDifference * 0.25068f + leapOffset; //this equals the angles of change 0.25068 degrees per minute
 
