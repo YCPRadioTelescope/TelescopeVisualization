@@ -4670,13 +4670,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 224018340}
-  m_LocalRotation: {x: -0.32790747, y: -0, z: -0, w: 0.94470984}
-  m_LocalPosition: {x: -26, y: 0, z: -25}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -24.84, y: 0, z: -32.257}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: -38.284, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &224376396
 GameObject:
   m_ObjectHideFlags: 0
@@ -35922,11 +35922,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   telescope: {fileID: 1296651328}
-  day: 20
-  month: 12
-  year: 2030
-  hours: 15
-  minutes: 33
+  day: 30
+  month: 6
+  year: 2027
+  hours: 12
+  minutes: 0
   seconds: 0
   number_hours: 0.01
   number_seconds: 60
