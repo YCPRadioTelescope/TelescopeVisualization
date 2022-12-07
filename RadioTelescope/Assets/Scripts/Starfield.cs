@@ -15,6 +15,7 @@ public class Starfield : MonoBehaviour
 	public int hours;
 	public int minutes;
 	public int seconds;
+	public int dateUnitID;
 
 	public float number_hours = 3f;
 	public float number_seconds = 60f;
@@ -134,18 +135,28 @@ public class Starfield : MonoBehaviour
 	public void set_star_position_from_date(int day, int month, int year, int hours, int minutes, int seconds)
     {
 		//NOTE THAT THIS FUNCTION HAS AN ERROR OF BETWEEN 0-2 degrees, this is unnoticible in game
+		//Create reference point from the spring equinox of 2022, then calc difference in time from that point on a half year basis
 		DateTime equinox = new DateTime(2022, 3, 20, 15, 33, 00, DateTimeKind.Utc);
 		DateTime newDate = new DateTime(year, month, day, hours, minutes, seconds, DateTimeKind.Utc);
 		Quaternion rotate = Quaternion.Euler(-26.067f, 112.8f, 44.425f);
 		particleSystem.transform.rotation = rotate;
-		float minuteDifference = (float)(newDate - equinox).TotalMinutes;
-		//3.831
-		float angleDifference = (float)minuteDifference * 0.25068f; //this equals the angles of change 0.25068 degrees per minute
+		float minuteDifference = ((float)(newDate - equinox).TotalMinutes) % 262800;
+		//Now find angle difference based on position of leap year
+		float leapOffset;
+		float leapYear = ((float)(newDate - equinox).TotalMinutes) % 2102400; //on a 4 year basis
+		if (leapYear < 525600) { leapOffset = 0.5f; } //same as 2022 reference two years past leap
+		else if(leapYear >= 525600 && leapYear < 1051200) { leapOffset = 0.75f;} // three years past leap
+		else if (leapYear >= 1051200 && leapYear < 1576800) { leapOffset = 0f; } // leap year
+		else { leapOffset = 0.25f; } // one past leap year
+
+		//change star rotation
+		float angleDifference = (float)minuteDifference * 0.25068f + leapOffset; //this equals the angles of change 0.25068 degrees per minute
 
 
 		//Distance between player and merak at vernal equinox of 2022 is 921 units. New rotation for starsystem is (-26.067f, 112.8f, 44.425f)
 		//A degree change for the solar system is every 3.98 minutes, find minute distance, then change the angle from that. 
 
+		//rotate the system
 		particleSystem.transform.Rotate(rotationalAxis, (float)angleDifference, Space.Self);
 	}
 }

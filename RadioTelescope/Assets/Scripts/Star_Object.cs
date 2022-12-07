@@ -25,11 +25,10 @@ public class Star_Object : MonoBehaviour
     private RaycastHit hitInfo;
     private LineRenderer lr;
     public bool vrActive;
-    private int StarObjectIterator = 0;
+    public int StarObjectIterator = 0;
 
     //Variables for UI 
     public List<Star_collection> star_Collections;
-
     public UnityAxis1DAction rightTrigger;
 
     private void Start()
@@ -80,6 +79,7 @@ public class Star_Object : MonoBehaviour
         Transform ra = Canvus_Object.transform.Find("RA");
         Transform dec = Canvus_Object.transform.Find("DEC");
         Transform date = Canvus_Object.transform.Find("Date");
+        Transform count = Canvus_Object.transform.Find("Count");
 
         if (label != null) { label.GetComponent<Text>().text = star_collection.Label; }
         if (desc != null) { desc.GetComponent<Text>().text = star_collection.description; }
@@ -87,7 +87,7 @@ public class Star_Object : MonoBehaviour
         if (ra != null) { ra.GetComponent<Text>().text = "RA: " + star_collection.RA; }
         if (dec != null) { dec.GetComponent<Text>().text = "DEC: " + star_collection.DEC; }
         if(date != null) { date.GetComponent<Text>().text = star_collection.Date_text; }
-
+        if (count != null) { count.GetComponent<Text>().text = StarObjectIterator.ToString(); }
     }
     public void AddtoCollections(string RA, string DEC, string label, string desc, Texture2D tex, string date)
     {
@@ -147,8 +147,19 @@ public class Star_Object : MonoBehaviour
 
     public void setArrows()
     {
-        Transform leftarrow = Canvus_Object.transform.Find("LeftArrow");
-        Transform rightarrow = Canvus_Object.transform.Find("RightArrow");
+        Transform leftarrow;
+        Transform rightarrow;
+        if (vrActive)
+        {
+            leftarrow = Canvus_Object_VR.transform.Find("LeftArrow");
+            rightarrow = Canvus_Object_VR.transform.Find("RightArrow");
+        }
+        else
+        {
+            leftarrow = Canvus_Object.transform.Find("LeftArrow");
+            rightarrow = Canvus_Object.transform.Find("RightArrow");
+        }
+
         if (StarObjectIterator == star_Collections.Count - 1 || star_Collections.Count == 1)
         {
             rightarrow.GetComponent<CanvasGroup>().alpha = 0.3f;

@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MK-HIGH(DEREK)(Cinematic).unity
+    guid: 2c8c810a3d3d85a4882f1f70dcd05e2b
+  - enabled: 1
+    path: Assets/Scenes/MK-HIGH(DEREK).unity
+    guid: 466431706a0104941a5d9242d2ec2f72
   m_configObjects: {}

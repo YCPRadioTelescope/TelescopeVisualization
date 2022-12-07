@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VRTK.Prefabs.CameraRig.UnityXRCameraRig.Input;
 
 public class Sky_ray : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class Sky_ray : MonoBehaviour
     public GameObject StarCanvus;
 
     bool ishit = false;
+
 
     private void Update()
     { 
