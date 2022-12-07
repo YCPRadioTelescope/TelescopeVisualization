@@ -15,6 +15,7 @@ public class Starfield : MonoBehaviour
 	public int hours;
 	public int minutes;
 	public int seconds;
+	public int dateUnitID;
 
 	public float number_hours = 3f;
 	public float number_seconds = 60f;
