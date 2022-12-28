@@ -8,27 +8,38 @@ public class DownDateUnitRayCast : MonoBehaviour
     // and one off in the distance, between which the ray is cast.
     public GameObject start;
     public GameObject end;
+    public bool isVr;
+    public VRTK.Prefabs.CameraRig.UnityXRCameraRig.Input.UnityAxis1DAction rightTrigger;
+    public bool timeout = true;
 
     // The object that the raycast hit.
     private RaycastHit hitInfo;
-    // Update is called once per frame
+    // Update is called once per frame]
+
     void Update()
     {
+
         var dir = start.transform.forward * 10000;
+        if (isVr) { dir = dir * -1; }
         if (Physics.Raycast(start.transform.position, dir, out hitInfo, Vector3.Distance(start.transform.position, end.transform.position)))
         {
 
             if (hitInfo.transform.GetComponent<ChangeDateUnitDownward>())
             {
                 Debug.Log("the object has the desried script");
-                if (Input.GetMouseButtonUp(0))
+                if ((Input.GetMouseButtonUp(0) || rightTrigger.IsActivated) && timeout)
                 {
                     Debug.Log("DownDateUnitRayCast works!!!");
                     hitInfo.transform.GetComponent<ChangeDateUnitDownward>().decreaseDateUnit();
-
+                    timeout = false;
+                    StartCoroutine(delay());
                 }
             }
-
+            IEnumerator delay()
+            {
+                yield return new WaitForSeconds(.2f);
+                timeout = true;
+            }
         }
     }
 }
