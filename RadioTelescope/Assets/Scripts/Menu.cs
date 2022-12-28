@@ -20,14 +20,7 @@ public class Menu : MonoBehaviour
         IEnumerator StartFade()
         {
             yield return new WaitForSeconds(3);
-            if(SceneManager.GetActiveScene().name == "MK-HIGHINTRO")
-            {
-                SceneManager.LoadScene("MK-HIGH", LoadSceneMode.Single);
-            }
-            else
-            {
-                SceneManager.LoadScene("MK-LOW", LoadSceneMode.Single);
-            }
+            SceneManager.LoadScene(1);
         }
     }
 }

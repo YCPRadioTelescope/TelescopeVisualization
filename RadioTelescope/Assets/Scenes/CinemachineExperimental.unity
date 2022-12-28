@@ -378,7 +378,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7807692, y: 1}
+    m_SensorSize: {x: 1.4517685, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -839,7 +839,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: This is now the first scene which will restart the the cinematic.
+  m_text: This is the First scene
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -848,8 +848,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 67108863
-  m_fontColor: {r: 1, g: 1, b: 1, a: 0.012740731}
+    rgba: 16777215
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -867,7 +867,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 28.95
+  m_fontSize: 41.55
   m_fontSizeBase: 15
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -908,12 +908,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: -1.6451486, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 826852075}
-    characterCount: 65
+    characterCount: 23
     spriteCount: 0
-    spaceCount: 11
-    wordCount: 12
+    spaceCount: 4
+    wordCount: 5
     linkCount: 0
-    lineCount: 2
+    lineCount: 1
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -1229,7 +1229,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7807692, y: 1}
+    m_SensorSize: {x: 1.4517685, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -1682,7 +1682,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7807692, y: 1}
+    m_SensorSize: {x: 1.4517685, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -1816,7 +1816,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &1919242182
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1850,7 +1850,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 39.390846
+  field of view: 39.39
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -1875,8 +1875,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1919242181}
-  m_LocalRotation: {x: 0.11162401, y: 0.1913362, z: -0.021905625, w: 0.9749106}
-  m_LocalPosition: {x: 4.9905586, y: 62.182217, z: -129.3282}
+  m_LocalRotation: {x: 0.17426206, y: 0.1741498, z: 0.07017076, w: 0.96663374}
+  m_LocalPosition: {x: -25.92, y: 25.34055, z: -47.0522}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2167,7 +2167,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7807692, y: 1}
+    m_SensorSize: {x: 1.4517685, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -10322,7 +10322,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5515280258381324316
 Transform:
   m_ObjectHideFlags: 0

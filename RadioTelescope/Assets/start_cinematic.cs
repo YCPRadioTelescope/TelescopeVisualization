@@ -29,16 +29,16 @@ public class start_cinematic : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0) || rightTrigger.IsActivated)
             {
-                Debug.Log(hitInfo.transform.name);
                 if (hitInfo.transform.name == transform.name)
                 {
                     if (isVR)
                     {
                         //vr scene
+                        SceneManager.LoadScene(1);
                     }
                     else
                     {
-                        SceneManager.LoadScene("MK-HIGH(DEREK)(Cinematic)", LoadSceneMode.Single);
+                        SceneManager.LoadScene(2);
                     }
                 }
             }

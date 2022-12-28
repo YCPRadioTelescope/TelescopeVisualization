@@ -140,9 +140,10 @@ public class Starfield : MonoBehaviour
 		DateTime newDate = new DateTime(year, month, day, hours, minutes, seconds, DateTimeKind.Utc);
 		Quaternion rotate = Quaternion.Euler(-26.067f, 112.8f, 44.425f);
 		particleSystem.transform.rotation = rotate;
-		float minuteDifference = ((float)(newDate - equinox).TotalMinutes) % 262800;
+
+		float minuteDifference = ((float)(newDate - equinox).TotalMinutes) % (2102400 /2) ;
 		//Now find angle difference based on position of leap year
-		float leapOffset;
+		float leapOffset = 0;
 		float leapYear = ((float)(newDate - equinox).TotalMinutes) % 2102400; //on a 4 year basis
 		if (leapYear < 525600) { leapOffset = 0.5f; } //same as 2022 reference two years past leap
 		else if(leapYear >= 525600 && leapYear < 1051200) { leapOffset = 0.75f;} // three years past leap
@@ -150,8 +151,8 @@ public class Starfield : MonoBehaviour
 		else { leapOffset = 0.25f; } // one past leap year
 
 		//change star rotation
-		float angleDifference = (float)minuteDifference * 0.25068f + leapOffset; //this equals the angles of change 0.25068 degrees per minute
-
+		//float angleDifference = (float)minuteDifference * 0.25068f + leapOffset; //this equals the angles of change 0.25068 degrees per minute
+		float angleDifference = ((float)minuteDifference * 1.0027379155f * 0.25068f) + leapOffset;
 
 		//Distance between player and merak at vernal equinox of 2022 is 921 units. New rotation for starsystem is (-26.067f, 112.8f, 44.425f)
 		//A degree change for the solar system is every 3.98 minutes, find minute distance, then change the angle from that. 

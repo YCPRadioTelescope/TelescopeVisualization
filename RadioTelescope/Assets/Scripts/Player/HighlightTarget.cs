@@ -42,6 +42,7 @@ public class HighlightTarget : MonoBehaviour
 	// A line that gets drawn when this script is active. Only drawn if in VR.
 	public LineRenderer lr;
 	public bool vrActive;
+	GateMovement gateMovment;
 
 	bool activated = false;
 
@@ -108,15 +109,21 @@ public class HighlightTarget : MonoBehaviour
 			// If shift wasn't held down and we hit something that isn't a telescope part,
 			// reset any previously highlighted part and return.
 
-			if (hitInfo.transform.GetComponent<GateMovement>())
+			Debug.Log("Trigger pressed on " + hitInfo.transform.name);
+			//Gate stuff
+		
+			if (hitInfo.transform.GetComponent<GateMovement>() != null)
 			{
-				Debug.Log("Gate activate!!!");
+				gateMovment = hitInfo.transform.GetComponent<GateMovement>();
+				hitInfo.transform.parent.GetComponent<GateMovement>().activateGate();
 			}
-			else if (!hitInfo.transform.GetComponent<TelescopePartInfo>())
+
+			if (!hitInfo.transform.GetComponent<TelescopePartInfo>())
 			{
 				Reset();
 				return;
 			}
+
 
 			// Get the renderer object of the impacted game object.
 			currRend = hitInfo.collider.gameObject.GetComponent<Renderer>();
@@ -144,8 +151,7 @@ public class HighlightTarget : MonoBehaviour
 		}
 		// If nothing was hit but something had previously been hit, reset the material of that object.
 		else if (rend)
-			Debug.Log("nothing hit");
-				Reset();
+			Reset();
 	}
 	
 	// Runs when the user presses the highlight control.
